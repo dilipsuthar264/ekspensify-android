@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Budget Buddy</string>
+    <string name="become_your_own_money_manager_and_make_every_rupee_count">Become your own money manager and make every Rupee count</string>
+    <string name="sign_up">Sign up</string>
+    <string name="login">Login</string>
+    <string name="please_enter_your_email">please enter your email</string>
+    <string name="please_enter_a_valid_email">please enter a valid email</string>
+    <string name="please_enter_your_password">please enter your password</string>
+    <string name="password_must_be_at_least_8_characters">password must be at least 8 characters</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="by_signing_up_you_agree_to_the_terms_of_service_and_privacy_policy">By signing up, you agree to the Terms of Service and Privacy Policy</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="please_enter_your_name">Please enter your name</string>
+    <string name="please_accept_terms_and_conditions">please accept terms and conditions</string>
+</resources>
