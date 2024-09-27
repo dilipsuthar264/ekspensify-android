@@ -40,7 +40,9 @@ import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.AuthRequestModel
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
-import com.memeusix.budgetbuddy.navigation.RouteNames
+import com.memeusix.budgetbuddy.navigation.LoginScreenRoute
+import com.memeusix.budgetbuddy.navigation.OtpVerificationScreenRoute
+import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
 import com.memeusix.budgetbuddy.ui.components.AppBar
 import com.memeusix.budgetbuddy.ui.components.CustomOutlineTextField
@@ -157,7 +159,21 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = hil
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.clickable {
-
+                    if (email.value.value.isEmpty()) {
+                        email.value =
+                            email.value.copy(error = context.getString(R.string.please_enter_your_email_first))
+                    } else if (!email.value.value.isValidEmail()) {
+                        email.value =
+                            email.value.copy(error = context.getString(R.string.please_enter_a_valid_email))
+                    } else {
+                        navController.navigate(
+                            OtpVerificationScreenRoute(
+                                name = null,
+                                email = email.value.value,
+                                password = null
+                            )
+                        )
+                    }
                 }
             )
             Spacer(Modifier.height(33.dp))
@@ -194,8 +210,8 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = hil
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .clickable {
-                        navController.navigate(RouteNames.REGISTER_SCREEN){
-                            popUpTo(RouteNames.LOGIN_SCREEN) { inclusive = true }
+                        navController.navigate(RegisterScreenRoute) {
+                            popUpTo(LoginScreenRoute) { inclusive = true }
                         }
                     }
             ) {

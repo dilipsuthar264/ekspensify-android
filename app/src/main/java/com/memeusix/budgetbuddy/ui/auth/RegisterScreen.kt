@@ -33,9 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.data.model.AuthRequestModel
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
-import com.memeusix.budgetbuddy.navigation.RouteNames
+import com.memeusix.budgetbuddy.navigation.LoginScreenRoute
+import com.memeusix.budgetbuddy.navigation.OtpVerificationScreenRoute
+import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
 import com.memeusix.budgetbuddy.ui.components.AppBar
 import com.memeusix.budgetbuddy.ui.components.CustomOutlineTextField
@@ -109,29 +110,36 @@ fun RegisterScreen(
                 FilledButton(text = stringResource(R.string.sign_up),
                     shape = RoundedCornerShape(16.dp),
                     onClick = {
-                        if (
-                            validateAndSubmit(
-                                nameState,
-                                emailState,
-                                passwordState,
-                                isCheckBoxCheck,
-                                context
+                        navController.navigate(
+                            OtpVerificationScreenRoute(
+                                name = nameState.value.value,
+                                email = emailState.value.value,
+                                password = passwordState.value.value
                             )
-                        ) {
-                            authViewModel.register(
-                                AuthRequestModel(
-                                    name = nameState.value.value,
-                                    email = emailState.value.value,
-                                    password = passwordState.value.value
-                                )
-                            )
-                        }
+                        )
+//                        if (
+//                            validateAndSubmit(
+//                                nameState,
+//                                emailState,
+//                                passwordState,
+//                                isCheckBoxCheck,
+//                                context
+//                            )
+//                        ) {
+//                            authViewModel.register(
+//                                AuthRequestModel(
+//                                    name = nameState.value.value,
+//                                    email = emailState.value.value,
+//                                    password = passwordState.value.value
+//                                )
+//                            )
+//                        }
                     })
             }
             Spacer(Modifier.height(20.dp))
             Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.clickable {
-                navController.navigate(RouteNames.LOGIN_SCREEN){
-                    popUpTo(RouteNames.REGISTER_SCREEN) { inclusive = true }
+                navController.navigate(LoginScreenRoute) {
+                    popUpTo(RegisterScreenRoute) { inclusive = true }
                 }
             }) {
                 Text(
@@ -190,8 +198,11 @@ fun validateAndSubmit(
         }
 
         !isCheckBoxCheck -> {
-            Toast.makeText(context,
-                context.getString(R.string.please_accept_terms_and_conditions), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.please_accept_terms_and_conditions),
+                Toast.LENGTH_SHORT
+            ).show()
             false
         }
 

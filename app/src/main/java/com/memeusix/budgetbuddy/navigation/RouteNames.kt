@@ -1,14 +1,35 @@
 package com.memeusix.budgetbuddy.navigation
 
-class RouteNames {
-    companion object{
-        const val SPLASH_SCREEN = "splash_screen"
+import kotlinx.serialization.Serializable
 
-        // Auth
-        const val INTRO_SCREEN = "intro_screen"
-        const val LOGIN_SCREEN = "login_screen"
-        const val REGISTER_SCREEN = "register_screen"
-        const val VERIFICATION_SCREEN = "verification_screen"
+//object RouteNames {
+//
+//    const val SPLASH_SCREEN = "splashscreen"
+//    const val INTRO_SCREEN = "introScreen"
+//    const val LOGIN_SCREEN = "loginScreen"
+//    const val REGISTER_SCREEN = "registerScreen"
+//    const val OTP_VERIFICATION_SCREEN = "ogpVerificationScreen"
+//
+//}
 
-    }
-}
+@Serializable
+object SplashScreenRoute
+
+@Serializable
+object IntroScreenRoute
+
+@Serializable
+object LoginScreenRoute
+
+@Serializable
+object RegisterScreenRoute
+
+@Serializable
+data class OtpVerificationScreenRoute(
+    val name: String?,
+    val email: String?,
+    val password: String?
+)
+
+@Serializable
+object BottomNavRoute

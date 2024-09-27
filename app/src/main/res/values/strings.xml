@@ -14,4 +14,11 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="please_enter_your_name">Please enter your name</string>
     <string name="please_accept_terms_and_conditions">please accept terms and conditions</string>
+    <string name="verification">Verification</string>
+    <string name="enter_your_verification_code">Enter your\nVerification Code</string>
+    <string name="we_send_verification_code_to_your_email">"We send verification code to\nyour email "</string>
+    <string name="you_can_check_your_inbox">. You can check your inbox.</string>
+    <string name="please_enter_your_email_first">please enter your email first</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="_00">00:%1$s</string>
 </resources>

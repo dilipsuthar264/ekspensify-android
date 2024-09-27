@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    kotlin("plugin.serialization") version "2.0.20"
 
     //for hilt
     id("kotlin-kapt")
@@ -144,6 +145,24 @@ dependencies {
     /**
      * Google sign in
      */
-    implementation (libs.play.services.auth)
+    implementation(libs.play.services.auth)
+
+    /**
+     * Room database
+     */
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    /**
+     *  Serializable for Type safe Navigation
+     */
+    implementation(libs.kotlinx.serialization.json)
+
+//
+//    implementation ("androidx.compose.material:material:1.5.0")
+//    implementation ("androidx.compose.animation:animation:1.7.2")
+//}
 
 }
