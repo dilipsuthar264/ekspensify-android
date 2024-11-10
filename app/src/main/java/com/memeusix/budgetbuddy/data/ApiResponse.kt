@@ -1,10 +1,15 @@
 package com.memeusix.budgetbuddy.data
 
-sealed class ApiResponse<T>(
-    val isSuccess : Boolean,
-    val data : T?,
-    val errorResponse : String?
+
+sealed class ApiResponse<out T>(
+    val data: T?, val errorResponse: ErrorResponseModel?
 ) {
-    class Success<T>(val responseData : T?) : ApiResponse<T>(isSuccess = true, data = responseData, errorResponse = null)
-    class Failure<T>(val errorData: String) : ApiResponse<T>(isSuccess = false, data = null, errorResponse = errorData)
+    data class Success<out T>(private val response: T?) :
+        ApiResponse<T>(data = response, errorResponse = null)
+
+    data class Failure<out T>(private val error: ErrorResponseModel?) :
+        ApiResponse<T>(data = null, errorResponse = error)
+
+    data object Loading : ApiResponse<Nothing>(data = null, errorResponse = null)
+    data object Idle : ApiResponse<Nothing>(data = null, errorResponse = null)
 }

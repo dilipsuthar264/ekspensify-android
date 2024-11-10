@@ -1,6 +1,7 @@
 package com.memeusix.budgetbuddy.di
 
 import android.app.Application
+import com.memeusix.budgetbuddy.BuildConfig
 import com.memeusix.budgetbuddy.data.services.AuthApi
 import com.memeusix.budgetbuddy.utils.SpUtils
 import dagger.Module
@@ -28,7 +29,7 @@ class AppModule {
             httpClient.addInterceptor(getLoggingInterceptor())
             httpClient.addInterceptor(getAuthenticationInterceptor(""))
             return Retrofit.Builder()
-                .baseUrl("https://api.coupon.marwadtech.com/api/v1/")
+                .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClient.build())
                 .build()

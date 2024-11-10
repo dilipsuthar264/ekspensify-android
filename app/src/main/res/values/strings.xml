@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Budget Buddy</string>
     <string name="become_your_own_money_manager_and_make_every_rupee_count">Become your own money manager and make every Rupee count</string>
-    <string name="sign_up">Sign up</string>
+    <string name="sign_up">Sign Up</string>
     <string name="login">Login</string>
     <string name="please_enter_your_email">please enter your email</string>
     <string name="please_enter_a_valid_email">please enter a valid email</string>
@@ -21,4 +21,11 @@
     <string name="please_enter_your_email_first">please enter your email first</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="_00">00:%1$s</string>
+    <string name="account_balance">Account Balance</string>
+    <string name="total_debit">Total Debit</string>
+    <string name="total_credit">Total Credit</string>
+    <string name="income_expenses_insights">Income/Expenses Insights</string>
+    <string name="email">Email</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="verify">Verify</string>
 </resources>

@@ -28,6 +28,7 @@ val Light60 = Color(0xFFF7F9FA)
 val Light80 = Color(0xFFFBFBFB)
 val Light100 = Color(0xFFFFFFFF)
 
+
 // Violet Colors
 val Violet20 = Color(0xFFEEE5FF)
 val Violet40 = Color(0xFFD3BDFF)

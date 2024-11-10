@@ -5,13 +5,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.memeusix.budgetbuddy.data.model.AuthRequestModel
+import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
 import com.memeusix.budgetbuddy.ui.SplashScreen
 import com.memeusix.budgetbuddy.ui.auth.IntroScreen
 import com.memeusix.budgetbuddy.ui.auth.LoginScreen
 import com.memeusix.budgetbuddy.ui.auth.OtpVerificationScreen
 import com.memeusix.budgetbuddy.ui.auth.RegisterScreen
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.BottomNav
+import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
+import com.memeusix.budgetbuddy.ui.dashboard.user.CreateUserScreen
 import com.memeusix.budgetbuddy.utils.SpUtils
 
 
@@ -34,7 +36,6 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
             val args = it.toRoute<OtpVerificationScreenRoute>()
             val authRequestModel = AuthRequestModel(
                 name = args.name,
-                password = args.password,
                 email = args.email
             )
             OtpVerificationScreen(navController = navController, navArgs = authRequestModel)
@@ -44,6 +45,17 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
         // Bottom Nav Screen
         composable<BottomNavRoute> {
             BottomNav(navController)
+        }
+
+        // other screens
+        composable<CreateUserScreenRoute> {
+            CreateUserScreen(navController)
+        }
+
+        composable<TransactionScreenRoute> {
+            val args = it.toRoute<TransactionScreenRoute>()
+
+            TransactionScreen(navController,args)
         }
     }
 }

@@ -1,19 +1,14 @@
 package com.memeusix.budgetbuddy.ui.theme
 
-import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
+//
 //private val DarkColorScheme = darkColorScheme(
-//    primary = Purple80,
+//    primary = Violet100,
 //    secondary = PurpleGrey80,
 //    tertiary = Pink80
 //)
@@ -33,23 +28,27 @@ import androidx.compose.ui.platform.LocalContext
 //    onSurface = Color(0xFF1C1B1F),
 //    */
 //)
-
+//
 private val AppColorPalette = lightColorScheme(
-    primary = Violet80,
-    primaryContainer = Violet100,
-    secondary = Blue80,
+    primary = Violet100,
+    onPrimary = Light80,
+    secondary = Violet20,
+    onSecondary = Violet100,
     background = Light100,
-    surface = Light80,
-    onPrimary = Light100,
-    onSecondary = Light100,
+    onSurfaceVariant = Light20,
     onBackground = Dark100,
-    onSurface = Dark100
+    surface = Light100,
+    onSurface = Dark100,
+    surfaceContainerLow = Light40,
+    surfaceContainerHigh = Dark25
 )
 
 
-
 @Composable
-fun BudgetBuddyTheme(content: @Composable () -> Unit) {
+fun BudgetBuddyTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     MaterialTheme(
         colorScheme = AppColorPalette,
         typography = Typography, // Define Typography separately if needed
@@ -68,16 +67,14 @@ fun BudgetBuddyTheme(content: @Composable () -> Unit) {
 //    val colorScheme = when {
 //        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
 //            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//            dynamicLightColorScheme(context)
 //        }
 //
-//        darkTheme -> DarkColorScheme
-//        else -> LightColorScheme
+//        else -> AppColorPalette
 //    }
-//
 //    MaterialTheme(
 //        colorScheme = colorScheme,
-//        typography = Typography,
-//        content = content
+//        typography = Typography, // Define Typography separately if needed
+//        content = content,
 //    )
 //}

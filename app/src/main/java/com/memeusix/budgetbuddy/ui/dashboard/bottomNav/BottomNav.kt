@@ -29,13 +29,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.memeusix.budgetbuddy.ui.dashboard.budget.BudgetScreen
+import com.memeusix.budgetbuddy.ui.components.AppBar
 import com.memeusix.budgetbuddy.ui.dashboard.home.HomeScreen
-import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileScreen
-import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
+import com.memeusix.budgetbuddy.ui.dashboard.user.UsersScreen
 import com.memeusix.budgetbuddy.ui.theme.Light100
 import com.memeusix.budgetbuddy.ui.theme.Light20
-import com.memeusix.budgetbuddy.ui.theme.Light80
 import com.memeusix.budgetbuddy.ui.theme.Typography
 import com.memeusix.budgetbuddy.ui.theme.Violet100
 
@@ -46,12 +44,20 @@ fun BottomNav(navController: NavController) {
     var currentIndex by remember { mutableIntStateOf(0) }
     val items = listOf(
         BottomNavItem.Home,
-        BottomNavItem.Transaction,
+//        BottomNavItem.Transaction,
         BottomNavItem.Action,
-        BottomNavItem.Budget,
+//        BottomNavItem.Budget,
         BottomNavItem.Profile
     )
     Scaffold(
+        topBar = {
+            AppBar(
+                heading = items[currentIndex].label,
+                navController = navController,
+                elevation = true,
+                isBackNavigation = false
+            )
+        },
         bottomBar = {
             BottomBar(
                 items = items,
@@ -90,9 +96,9 @@ fun BottomNav(navController: NavController) {
             // Render screens based on the current selected index
             when (items[currentIndex]) {
                 is BottomNavItem.Home -> HomeScreen(navController)
-                is BottomNavItem.Transaction -> TransactionScreen(navController)
-                is BottomNavItem.Budget -> BudgetScreen(navController)
-                is BottomNavItem.Profile -> ProfileScreen(navController)
+//                is BottomNavItem.Transaction -> TransactionScreen(navController)
+//                is BottomNavItem.Budget -> BudgetScreen(navController)
+                is BottomNavItem.Profile -> UsersScreen(navController)
                 is BottomNavItem.Action -> {}
             }
         }
@@ -108,7 +114,7 @@ fun BottomBar(
     onFabClick: () -> Unit
 ) {
     Surface(
-        shadowElevation = 2.dp,
+        shadowElevation = 1.dp,
         color = Light100,
         modifier = Modifier
             .fillMaxWidth()

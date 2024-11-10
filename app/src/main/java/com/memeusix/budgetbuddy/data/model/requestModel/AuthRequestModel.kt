@@ -1,4 +1,4 @@
-package com.memeusix.budgetbuddy.data.model
+package com.memeusix.budgetbuddy.data.model.requestModel
 
 data class AuthRequestModel(
     val email: String? = null,

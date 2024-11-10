@@ -1,28 +1,34 @@
 package com.memeusix.budgetbuddy.ui.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
-import androidx.compose.material3.CardElevation
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.memeusix.budgetbuddy.ui.theme.Dark100
-import com.memeusix.budgetbuddy.ui.theme.Light100
+import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.ui.theme.Typography
+import com.memeusix.budgetbuddy.utils.singleClick
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(heading: String, navController: NavController, elevation: Boolean) {
+fun AppBar(
+    heading: String,
+    navController: NavController,
+    elevation: Boolean,
+    isBackNavigation: Boolean = true
+) {
     Surface(
         shadowElevation = if (elevation) 0.5.dp else 0.dp,
     ) {
@@ -32,24 +38,21 @@ fun AppBar(heading: String, navController: NavController, elevation: Boolean) {
                     text = heading,
                     style = Typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
-                    letterSpacing = TextUnit(3f, TextUnitType.Sp)
                 )
             },
-            colors = TopAppBarColors(
-                containerColor = Light100,
-                titleContentColor = Dark100,
-                scrolledContainerColor = Light100,
-                navigationIconContentColor = Dark100,
-                actionIconContentColor = Dark100
-            ),
             navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                        contentDescription = "Back"
-                    )
+                if (isBackNavigation) {
+                    IconButton(
+                        onClick = singleClick { navController.popBackStack() },
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
+                            contentDescription = "Back",
+                        )
+                    }
                 }
-            }
+            },
+            expandedHeight = 50.dp,
         )
     }
 }

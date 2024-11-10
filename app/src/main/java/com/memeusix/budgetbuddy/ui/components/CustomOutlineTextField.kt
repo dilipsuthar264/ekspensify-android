@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -25,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
@@ -38,30 +41,33 @@ fun CustomOutlineTextField(
     placeholder: String,
     modifier: Modifier = Modifier,
     isPassword: Boolean = false,
+    radius: Dp = 16.dp,
+    color: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        unfocusedBorderColor = Color.Transparent,
+        focusedBorderColor = Color.Transparent,
+        errorBorderColor = Color.Transparent,
+    ),
     maxLength: Int = Int.MAX_VALUE,
+    isExpendable: Boolean,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
         OutlinedTextField(
-            value = state.value.value,
-            singleLine = true,
+            value = state.value.text,
+            singleLine = !isExpendable,
             onValueChange = {
                 if (it.length <= maxLength) {
-                    state.value = state.value.copy(value = it)
+                    state.value = state.value.copy(text = it)
                     state.value = state.value.copy(error = null)
                 }
             },
             placeholder = {
                 Text(placeholder, color = Light20)
             },
-            maxLines = 1,
-            colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Color.Transparent,
-                focusedBorderColor = Color.Transparent,
-                errorBorderColor = Color.Transparent
-            ),
+            colors = color,
             suffix = {
                 if (isPassword) {
                     IconButton(onClick = {
@@ -75,16 +81,17 @@ fun CustomOutlineTextField(
                     }
                 }
             },
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(radius),
             visualTransformation = if (isPassword && !isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
             modifier = Modifier
                 .border(
                     width = 1.dp,
                     color = if (state.value.isValid()) Light20 else Red100,
-                    RoundedCornerShape(16.dp)
+                    RoundedCornerShape(radius)
                 )
                 .fillMaxWidth()
-                .then(modifier)
+                .then(modifier),
+            keyboardOptions = keyboardOptions
         )
         state.value.error?.let {
             Text(
