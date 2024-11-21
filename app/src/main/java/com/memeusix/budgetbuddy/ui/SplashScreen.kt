@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
 import com.memeusix.budgetbuddy.navigation.BottomNavRoute
 import com.memeusix.budgetbuddy.navigation.IntroScreenRoute
 import com.memeusix.budgetbuddy.navigation.SplashScreenRoute
@@ -25,19 +26,24 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(navController: NavHostController, spUtils: SpUtils) {
     LaunchedEffect(Unit) {
-        delay(1000)
-        if (spUtils.isLoggedIn) {
-            //TODO : go to dashboard
+        delay(200)
+        if (spUtils.isLoggedIn && spUtils.accessToken.isNotEmpty()) {
+            if (spUtils.user?.accounts == 0) {
+                navController.navigate(AccountScreenRoute()) {
+                    popUpTo(0) { inclusive = true }
+                }
+            } else {
+                navController.navigate(
+                    BottomNavRoute
+                ) {
+                    popUpTo(0) { inclusive = true }
+                }
+            }
         } else {
             navController.navigate(IntroScreenRoute) {
                 popUpTo(SplashScreenRoute) { inclusive = true }
             }
         }
-
-
-    //        navController.navigate(BottomNavRoute) {
-//            popUpTo(SplashScreenRoute) { inclusive = true }
-//        }
     }
     Box(
         modifier = Modifier

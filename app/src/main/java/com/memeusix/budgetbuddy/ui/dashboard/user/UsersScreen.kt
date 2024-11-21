@@ -2,6 +2,7 @@ package com.memeusix.budgetbuddy.ui.dashboard.user
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
 import com.memeusix.budgetbuddy.ui.theme.Green100
 import com.memeusix.budgetbuddy.ui.theme.Light100
 import com.memeusix.budgetbuddy.ui.theme.Light20
@@ -94,7 +96,14 @@ fun UsersScreen(
                     .border(1.dp, Green100, RoundedCornerShape(10.dp))
                     .aspectRatio(1f)
                     .fillMaxHeight()
-                    .padding(10.dp),
+                    .padding(10.dp)
+                    .clickable {
+                        navController.navigate(
+                            AccountScreenRoute(
+                                isFromProfile = true
+                            )
+                        )
+                    },
             )
         }
     }

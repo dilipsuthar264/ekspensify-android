@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -28,18 +29,42 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.ui.components.AppBar
 import com.memeusix.budgetbuddy.ui.dashboard.home.HomeScreen
+import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.user.UsersScreen
 import com.memeusix.budgetbuddy.ui.theme.Light100
 import com.memeusix.budgetbuddy.ui.theme.Light20
 import com.memeusix.budgetbuddy.ui.theme.Typography
 import com.memeusix.budgetbuddy.ui.theme.Violet100
+import com.memeusix.budgetbuddy.utils.SpUtils
 
 
 @Composable
-fun BottomNav(navController: NavController) {
+fun BottomNav(
+    navController: NavController,
+    spUtils: SpUtils,
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+) {
+
+    /**
+     * Get Me State
+     */
+    val getMe by profileViewModel.getMe.collectAsStateWithLifecycle()
+    LaunchedEffect(getMe) {
+        when (getMe) {
+            is ApiResponse.Success -> {
+                spUtils.user = getMe.data
+            }
+
+            else -> Unit
+        }
+    }
+
     var isFabExpended by remember { mutableStateOf(false) }
     var currentIndex by remember { mutableIntStateOf(0) }
     val items = listOf(

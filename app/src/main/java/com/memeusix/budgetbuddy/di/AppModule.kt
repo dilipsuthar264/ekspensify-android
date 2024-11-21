@@ -2,7 +2,9 @@ package com.memeusix.budgetbuddy.di
 
 import android.app.Application
 import com.memeusix.budgetbuddy.BuildConfig
+import com.memeusix.budgetbuddy.data.services.AccountApi
 import com.memeusix.budgetbuddy.data.services.AuthApi
+import com.memeusix.budgetbuddy.data.services.ProfileApi
 import com.memeusix.budgetbuddy.utils.SpUtils
 import dagger.Module
 import dagger.Provides
@@ -21,13 +23,20 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class AppModule {
 
+    @Provides
+    @Singleton
+    fun provideSpUtils(application: Application): SpUtils {
+        return SpUtils(application.applicationContext)
+    }
+
+
     companion object {
-        fun getRetrofit(): Retrofit {
+        fun getRetrofit(spUtils: SpUtils): Retrofit {
             val httpClient = OkHttpClient.Builder()
-            httpClient.readTimeout(20, TimeUnit.SECONDS)
-            httpClient.connectTimeout(20, TimeUnit.SECONDS)
-            httpClient.addInterceptor(getLoggingInterceptor())
-            httpClient.addInterceptor(getAuthenticationInterceptor(""))
+                .readTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor(getLoggingInterceptor())
+                .addInterceptor(getAuthenticationInterceptor(spUtils.accessToken))
             return Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -41,30 +50,38 @@ class AppModule {
             return httpLoggingInterceptor
         }
 
-        private fun getAuthenticationInterceptor(token : String): Interceptor {
+        private fun getAuthenticationInterceptor(token: String): Interceptor {
             return Interceptor { chain ->
                 var request = chain.request()
-                request =  if (token.isNotEmpty()){
+                request = if (token.isNotEmpty()) {
                     request.newBuilder()
                         .addHeader("Authorization", "Bearer $token")
                         .build()
-                }else{
+                } else {
                     request
                 }
                 chain.proceed(request)
             }
         }
+
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(spUtils: SpUtils): AuthApi {
+        return getRetrofit(spUtils).create(AuthApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun providerSpUtils(application : Application) : SpUtils {
-        return SpUtils(application.applicationContext)
+    fun provideAccountApi(spUtils: SpUtils): AccountApi {
+        return getRetrofit(spUtils).create(AccountApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun providerAuthApi() : AuthApi {
-        return getRetrofit().create(AuthApi::class.java)
+    fun provideProfileApi(spUtils: SpUtils): ProfileApi {
+        return getRetrofit(spUtils).create(ProfileApi::class.java)
     }
 }

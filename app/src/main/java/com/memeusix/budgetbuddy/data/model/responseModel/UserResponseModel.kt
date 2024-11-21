@@ -1,15 +1,13 @@
 package com.memeusix.budgetbuddy.data.model.responseModel
 
-import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 
-@Parcelize
 data class UserResponseModel(
     @SerializedName("id")
     @Expose
-    var id: String? = null,
+    var id: Int? = null,
 
     @SerializedName("name")
     @Expose
@@ -27,6 +25,10 @@ data class UserResponseModel(
     @Expose
     var status: String? = null,
 
+    @SerializedName("accounts")
+    @Expose
+    var accounts: Int? = null,
+
     @SerializedName("is_verified")
     @Expose
     var isVerified: Boolean? = null,
@@ -38,4 +40,4 @@ data class UserResponseModel(
     @SerializedName("updated_at")
     @Expose
     var updatedAt: String? = null,
-) : Parcelable
+) : Serializable

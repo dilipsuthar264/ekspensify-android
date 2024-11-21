@@ -53,6 +53,16 @@ android {
             buildConfigField("String", "BASE_URL", project.property("HOST_API").toString())
             signingConfig = signingConfigs.getByName("debug")
         }
+//
+//        create("staging") {
+//            initWith(getByName("release"))
+//            proguardFiles(
+//                getDefaultProguardFile("proguard-android-optimize.txt"),
+//                "proguard-rules.pro"
+//            )
+//            buildConfigField("String", "BASE_URL", project.property("HOST_API_IP").toString())
+//            signingConfig = signingConfigs.getByName("debug")
+//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -115,19 +125,19 @@ dependencies {
      * FOR VIEW MODEL AND LIVE DATA
      */
 
-    // ViewModel
+// ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    // ViewModel utilities for Compose
+// ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    // LiveData
+// LiveData
     implementation(libs.androidx.lifecycle.livedata.ktx)
-    // Lifecycle utilities for Compose
+// Lifecycle utilities for Compose
     implementation(libs.androidx.lifecycle.runtime.compose)
 
-    // Saved state module for ViewModel
+// Saved state module for ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
 
-    // Annotation processor
+// Annotation processor
     kapt(libs.androidx.lifecycle.compiler)
 
     /**
@@ -180,6 +190,11 @@ dependencies {
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
+
+    implementation("androidx.appcompat:appcompat:1.3.1")
+
+
+    implementation("io.coil-kt:coil-compose:2.7.0")
 
 
 }

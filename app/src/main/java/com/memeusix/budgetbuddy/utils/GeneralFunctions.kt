@@ -1,5 +1,7 @@
 package com.memeusix.budgetbuddy.utils
 
+import com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -23,3 +25,14 @@ fun singleClick(delayMillis: Long = 300, onClick: () -> Unit): () -> Unit {
         }
     }
 }
+
+
+val gson = Gson()
+inline fun <reified T> T?.toJson(): String {
+    return gson.toJson(this)
+}
+
+inline fun <reified T> String?.fromJson(): T? {
+    return gson.fromJson(this, object : TypeToken<T>() {}.type)
+}
+

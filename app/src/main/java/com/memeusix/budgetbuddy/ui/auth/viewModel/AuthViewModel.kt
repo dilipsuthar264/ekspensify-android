@@ -43,7 +43,7 @@ class AuthViewModel @Inject constructor(
     val signInWithGoogle: StateFlow<ApiResponse<AuthResponseModel>> get() = _signInWithGoogle
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
-            _signInWithGoogle.value = ApiResponse.Loading
+            _signInWithGoogle.value = ApiResponse.Loading()
             _signInWithGoogle.value = authRepository.signInWithGoogle(idToken)
             delay(500)
             _signInWithGoogle.value = ApiResponse.Idle
@@ -58,7 +58,7 @@ class AuthViewModel @Inject constructor(
     val signUpWithGoogle: StateFlow<ApiResponse<AuthResponseModel>> get() = _signUpWithGoogle
     fun signUpWithGoogle(idToken: String) {
         viewModelScope.launch {
-            _signUpWithGoogle.value = ApiResponse.Loading
+            _signUpWithGoogle.value = ApiResponse.Loading()
             _signUpWithGoogle.value = authRepository.signUpWithGoogle(idToken)
             delay(500)
             _signUpWithGoogle.value = ApiResponse.Idle
@@ -72,7 +72,7 @@ class AuthViewModel @Inject constructor(
     val login: StateFlow<ApiResponse<AuthResponseModel>> get() = _login
     fun login(authRequestModel: AuthRequestModel) {
         viewModelScope.launch {
-            _login.value = ApiResponse.Loading
+            _login.value = ApiResponse.Loading()
             _login.value = authRepository.login(authRequestModel)
 
             delay(500)
@@ -89,7 +89,7 @@ class AuthViewModel @Inject constructor(
 
     fun register(authRequestModel: AuthRequestModel) {
         viewModelScope.launch {
-            _register.value = ApiResponse.Loading
+            _register.value = ApiResponse.Loading()
             _register.value = authRepository.register(authRequestModel)
 
             delay(500)
@@ -104,7 +104,7 @@ class AuthViewModel @Inject constructor(
     val sendOtp: StateFlow<ApiResponse<Any>> get() = _sendOtp
     fun sendOtp(authRequestModel: AuthRequestModel) {
         viewModelScope.launch {
-            _sendOtp.value = ApiResponse.Loading
+            _sendOtp.value = ApiResponse.Loading()
             _sendOtp.value = authRepository.sendOtp(authRequestModel)
             delay(500)
             _sendOtp.value = ApiResponse.Idle

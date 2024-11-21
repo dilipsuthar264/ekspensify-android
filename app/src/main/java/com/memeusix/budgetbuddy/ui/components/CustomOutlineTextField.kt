@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.ui.theme.Light20
@@ -48,6 +49,7 @@ fun CustomOutlineTextField(
         errorBorderColor = Color.Transparent,
     ),
     maxLength: Int = Int.MAX_VALUE,
+    type: TextFieldType = TextFieldType.TEXT,
     isExpendable: Boolean,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
@@ -60,8 +62,16 @@ fun CustomOutlineTextField(
             singleLine = !isExpendable,
             onValueChange = {
                 if (it.length <= maxLength) {
-                    state.value = state.value.copy(text = it)
-                    state.value = state.value.copy(error = null)
+                    when (type) {
+                        TextFieldType.NUMBER -> {
+                            if (it.isDigitsOnly()) {
+                                state.value = state.value.copy(text = it, error = null)
+                            }
+                        }
+                        else -> {
+                            state.value = state.value.copy(text = it, error = null)
+                        }
+                    }
                 }
             },
             placeholder = {
@@ -89,8 +99,7 @@ fun CustomOutlineTextField(
                     color = if (state.value.isValid()) Light20 else Red100,
                     RoundedCornerShape(radius)
                 )
-                .fillMaxWidth()
-                .then(modifier),
+                .fillMaxWidth(),
             keyboardOptions = keyboardOptions
         )
         state.value.error?.let {
@@ -106,4 +115,9 @@ fun CustomOutlineTextField(
         }
 
     }
+}
+
+enum class TextFieldType {
+    TEXT,
+    NUMBER
 }

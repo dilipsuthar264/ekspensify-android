@@ -1,6 +1,5 @@
 package com.memeusix.budgetbuddy.ui.auth
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -36,7 +36,6 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
-import com.memeusix.budgetbuddy.navigation.BottomNavRoute
 import com.memeusix.budgetbuddy.navigation.LoginScreenRoute
 import com.memeusix.budgetbuddy.navigation.OtpVerificationScreenRoute
 import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
@@ -48,10 +47,25 @@ import com.memeusix.budgetbuddy.ui.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.ui.components.FilledButton
 import com.memeusix.budgetbuddy.ui.loader.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
+import com.memeusix.budgetbuddy.utils.SpUtils
+import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
 import com.memeusix.budgetbuddy.utils.isValidEmail
+import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
+import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
+import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
 
 @Composable
-fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = hiltViewModel()) {
+fun LoginScreen(
+    navController: NavController,
+    spUtils: SpUtils,
+    authViewModel: AuthViewModel = hiltViewModel()
+) {
+
+    // For toast state
+    var toastState by remember { mutableStateOf<CustomToastModel?>(null) }
+    CustomToast(toastState) {
+        toastState = null
+    }
 
     // email and password states
     val email: MutableState<TextFieldStateModel> =
@@ -85,27 +99,45 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = hil
 
             is ApiResponse.Failure -> {
                 sendOtpResponse.errorResponse?.apply {
-                    email.value = email.value.copy(error = this.message)
+                    if (!this.details.isNullOrEmpty()) {
+                        email.value = email.value.copy(error = this.message)
+                    } else {
+                        toastState = CustomToastModel(
+                            message = this.message,
+                            isVisible = true,
+                            type = ToastType.ERROR
+                        )
+                    }
                 }
             }
 
             else -> {}
         }
     }
+
     LaunchedEffect(loginWithGoogleResponse) {
         when (loginWithGoogleResponse) {
             is ApiResponse.Success -> {
-                navController.navigate(
-                    BottomNavRoute
-                )
+                loginWithGoogleResponse.data?.apply {
+                    if (user != null && !token.isNullOrEmpty()) {
+                        spUtils.user = user
+                        spUtils.accessToken = token!!
+                        spUtils.isLoggedIn = true
+
+                        goToNextScreenAfterLogin(navController)
+                    }
+
+                }
             }
 
             is ApiResponse.Failure -> {
-                Toast.makeText(
-                    context,
-                    loginWithGoogleResponse.errorResponse?.message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                loginWithGoogleResponse.errorResponse?.apply {
+                    toastState = CustomToastModel(
+                        message = this.message,
+                        isVisible = true,
+                        type = ToastType.ERROR
+                    )
+                }
             }
 
             else -> {}
@@ -138,12 +170,13 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = hil
                 state = email,
                 placeholder = stringResource(R.string.email),
                 modifier = Modifier,
-                isExpendable = false
+                isExpendable = false,
+                maxLength = 40
             )
             Spacer(Modifier.height(24.dp))
             FilledButton(text = stringResource(R.string.send_otp),
                 shape = RoundedCornerShape(16.dp),
-                textModifier = Modifier.padding(vertical = 8.dp),
+                textModifier = Modifier.padding(vertical = 17.dp),
                 onClick = {
                     when {
                         email.value.text.trim().isEmpty() -> {
@@ -175,6 +208,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = hil
             )
             Spacer(Modifier.height(15.dp))
             GoogleAuthBtn(
+                text = stringResource(R.string.login_with_google),
                 onClick = {
                     authViewModel.launchGoogleAuth(context, coroutines) { tokenId ->
                         authViewModel.signInWithGoogle(tokenId)
@@ -193,6 +227,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = hil
         }
 
     }
+
 }
 
 

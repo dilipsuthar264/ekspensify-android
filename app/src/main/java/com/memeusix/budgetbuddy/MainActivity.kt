@@ -1,22 +1,29 @@
 package com.memeusix.budgetbuddy
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.remember
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.compose.rememberNavController
 import com.memeusix.budgetbuddy.navigation.NavGraph
 import com.memeusix.budgetbuddy.ui.theme.BudgetBuddyTheme
 import com.memeusix.budgetbuddy.utils.SpUtils
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var spUtils: SpUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(
+            AppCompatDelegate.MODE_NIGHT_NO
+        )
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(
                 android.graphics.Color.TRANSPARENT,
@@ -27,11 +34,13 @@ class MainActivity : ComponentActivity() {
                 android.graphics.Color.TRANSPARENT,
             )
         )
+
         setContent {
-            val spUtils = remember { SpUtils(applicationContext) }
             val navController = rememberNavController()
             BudgetBuddyTheme() {
-                NavGraph(navController, spUtils)
+                NavGraph(
+                    navController, spUtils
+                )
             }
         }
     }

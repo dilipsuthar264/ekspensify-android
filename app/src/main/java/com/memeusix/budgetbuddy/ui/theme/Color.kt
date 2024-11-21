@@ -16,6 +16,8 @@ val Pink40 = Color(0xFF7D5260)
  */
 
 // Dark Colors
+val Dark10 = Color(0xFFE0E2E9)
+val Dark15 = Color(0xFFF1F1FA)
 val Dark25 = Color(0xFF464A4D)
 val Dark50 = Color(0xFF464A4D)
 val Dark75 = Color(0xFF161719)
@@ -42,6 +44,8 @@ val Red40 = Color(0xFFFDA2A9)
 val Red60 = Color(0xFFFD6F7A)
 val Red80 = Color(0xFFFD5662)
 val Red100 = Color(0xFFFD3C4A)
+val Red120 = Color(0xFFFF0010)
+val Red130 = Color(0xFFE62D2D)
 
 // Green Colors
 val Green20 = Color(0xFFCFFAEA)
@@ -49,6 +53,7 @@ val Green40 = Color(0xFF93EACA)
 val Green60 = Color(0xFF65D1AA)
 val Green80 = Color(0xFF2AB784)
 val Green100 = Color(0xFF00A86B)
+val Green120 = Color(0xFF007348)
 
 // Yellow Colors
 val Yellow20 = Color(0xFFFCEED4)
@@ -56,6 +61,7 @@ val Yellow40 = Color(0xFFFCDDA1)
 val Yellow60 = Color(0xFFFCCC6F)
 val Yellow80 = Color(0xFFFCBB3C)
 val Yellow100 = Color(0xFFFCAC12)
+val Yellow120 = Color(0xFF80570C)
 
 // Blue Colors
 val Blue20 = Color(0xFFBDDCFF)

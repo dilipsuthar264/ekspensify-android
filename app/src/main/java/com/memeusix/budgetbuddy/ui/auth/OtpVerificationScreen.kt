@@ -1,10 +1,10 @@
 package com.memeusix.budgetbuddy.ui.auth
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -37,19 +37,24 @@ import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
-import com.memeusix.budgetbuddy.navigation.BottomNavRoute
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
 import com.memeusix.budgetbuddy.ui.components.AppBar
 import com.memeusix.budgetbuddy.ui.components.FilledButton
 import com.memeusix.budgetbuddy.ui.components.OtpInputField
 import com.memeusix.budgetbuddy.ui.loader.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
+import com.memeusix.budgetbuddy.utils.SpUtils
+import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
+import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
+import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
+import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
 import kotlinx.coroutines.delay
 
 @Composable
 fun OtpVerificationScreen(
     navController: NavController,
     navArgs: AuthRequestModel,
+    spUtils: SpUtils,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     // getting Context
@@ -65,7 +70,18 @@ fun OtpVerificationScreen(
     // Login state for api
     val loginResponse by authViewModel.login.collectAsState()
 
-    val isLoading = loginResponse is ApiResponse.Loading
+    val sendOtpResponse by authViewModel.sendOtp.collectAsState()
+
+    val isLoading = loginResponse is ApiResponse.Loading || sendOtpResponse is ApiResponse.Loading
+
+
+    /**
+     * Setting up Toast
+     */
+    var toastState by remember { mutableStateOf<CustomToastModel?>(null) }
+    CustomToast(toastState) {
+        toastState = null
+    }
 
 
     LaunchedEffect(key1 = timeRemaining) {
@@ -86,16 +102,54 @@ fun OtpVerificationScreen(
         when (loginResponse) {
             is ApiResponse.Success -> {
                 loginResponse.data?.apply {
-                    navController.navigate(
-                        BottomNavRoute
-                    )
+                    if (user != null && !token.isNullOrEmpty()) {
+                        spUtils.user = user
+                        spUtils.accessToken = token!!
+                        spUtils.isLoggedIn = true
+
+                        goToNextScreenAfterLogin(navController)
+                    }
+
                 }
             }
 
             is ApiResponse.Failure -> {
-                // Show Error Message
-                Toast.makeText(context, loginResponse.errorResponse?.message, Toast.LENGTH_SHORT)
-                    .show()
+                loginResponse.errorResponse?.apply {
+                    toastState = CustomToastModel(
+                        message = this.message,
+                        isVisible = true,
+                        type = ToastType.ERROR
+                    )
+                }
+            }
+
+            else -> {}
+        }
+    }
+
+    LaunchedEffect(sendOtpResponse) {
+        when (sendOtpResponse) {
+            is ApiResponse.Success -> {
+                // Show Success Message
+                timeRemaining = 30
+                isResendEnable = false
+
+                toastState = CustomToastModel(
+                    message = context.getString(R.string.otp_sent_successfully),
+                    isVisible = true,
+                    type = ToastType.SUCCESS
+                )
+
+            }
+
+            is ApiResponse.Failure -> {
+                sendOtpResponse.errorResponse?.apply {
+                    toastState = CustomToastModel(
+                        message = this.message,
+                        isVisible = true,
+                        type = ToastType.ERROR
+                    )
+                }
             }
 
             else -> {}
@@ -126,16 +180,18 @@ fun OtpVerificationScreen(
         ) {
             Text(
                 stringResource(R.string.enter_your_verification_code),
-                style = Typography.titleLarge
+                style = Typography.titleLarge,
             )
             OtpInputField(
                 modifier = Modifier
-                    .focusRequester(focusRequester),
+                    .focusRequester(focusRequester)
+                    .fillMaxWidth(0.7f),
                 otpText = otpValue,
-                shouldCursorBlink = false,
+                shouldCursorBlink = true,
                 onOTPChanged = { value ->
                     otpValue = value
-                }
+                },
+                shouldShowCursor = true,
             )
             Text(
                 text = if (isResendEnable) stringResource(R.string.resend_otp) else stringResource(
@@ -147,8 +203,9 @@ fun OtpVerificationScreen(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .clickable(enabled = isResendEnable) {
-                        timeRemaining = 30
-                        isResendEnable = false
+                        authViewModel.sendOtp(
+                            AuthRequestModel(email = navArgs.email)
+                        )
                     }
             )
             Text(
@@ -167,7 +224,7 @@ fun OtpVerificationScreen(
             FilledButton(
                 text = stringResource(R.string.verify),
                 shape = RoundedCornerShape(16.dp),
-                textModifier = Modifier.padding(vertical = 8.dp),
+                textModifier = Modifier.padding(vertical = 17.dp),
                 onClick = {
                     if (otpValue.isNotEmpty() && otpValue.length == 6) {
                         authViewModel.login(
@@ -177,7 +234,8 @@ fun OtpVerificationScreen(
                             )
                         )
                     }
-                }
+                },
+                enabled = otpValue.length == 6
             )
         }
     }

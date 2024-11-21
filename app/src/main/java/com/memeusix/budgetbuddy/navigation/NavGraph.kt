@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
 import com.memeusix.budgetbuddy.ui.SplashScreen
+import com.memeusix.budgetbuddy.ui.acounts.AccountsScreen
+import com.memeusix.budgetbuddy.ui.acounts.CreateAccountScreen
 import com.memeusix.budgetbuddy.ui.auth.IntroScreen
 import com.memeusix.budgetbuddy.ui.auth.LoginScreen
 import com.memeusix.budgetbuddy.ui.auth.OtpVerificationScreen
@@ -27,10 +29,10 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
             IntroScreen(navController)
         }
         composable<LoginScreenRoute> {
-            LoginScreen(navController)
+            LoginScreen(navController = navController, spUtils = spUtils)
         }
         composable<RegisterScreenRoute> {
-            RegisterScreen(navController)
+            RegisterScreen(navController = navController, spUtils = spUtils)
         }
         composable<OtpVerificationScreenRoute> {
             val args = it.toRoute<OtpVerificationScreenRoute>()
@@ -38,13 +40,17 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
                 name = args.name,
                 email = args.email
             )
-            OtpVerificationScreen(navController = navController, navArgs = authRequestModel)
+            OtpVerificationScreen(
+                navController = navController,
+                navArgs = authRequestModel,
+                spUtils = spUtils
+            )
         }
 
 
         // Bottom Nav Screen
         composable<BottomNavRoute> {
-            BottomNav(navController)
+            BottomNav(navController, spUtils)
         }
 
         // other screens
@@ -54,8 +60,22 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
 
         composable<TransactionScreenRoute> {
             val args = it.toRoute<TransactionScreenRoute>()
+            TransactionScreen(navController, args)
+        }
 
-            TransactionScreen(navController,args)
+        // Account Screens
+        composable<AccountScreenRoute> {
+            val args = it.toRoute<AccountScreenRoute>()
+            AccountsScreen(navController,args)
+        }
+        composable<CreateAccountScreenRoute> {
+            val args = it.toRoute<CreateAccountScreenRoute>()
+            CreateAccountScreen(
+                navController,
+                args
+            )
         }
     }
 }
+
+

@@ -18,14 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.ui.theme.Dark50
 
 @Composable
 fun GoogleAuthBtn(
+    text: String,
     onClick: () -> Unit
 ) {
     Row(horizontalArrangement = Arrangement.Center,
@@ -50,7 +49,7 @@ fun GoogleAuthBtn(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            stringResource(R.string.login_with_google),
+            text = text,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.surfaceContainerHigh

@@ -1,16 +1,12 @@
 package com.memeusix.budgetbuddy.ui.components
 
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -27,8 +23,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.memeusix.budgetbuddy.ui.theme.Dark25
-import com.memeusix.budgetbuddy.ui.theme.Violet100
+import com.memeusix.budgetbuddy.ui.theme.Dark10
+import com.memeusix.budgetbuddy.ui.theme.Violet20
+import com.memeusix.budgetbuddy.ui.theme.Violet40
 import kotlinx.coroutines.delay
 
 @Composable
@@ -58,17 +55,20 @@ fun OtpInputField(
             imeAction = ImeAction.Done
         ),
         decorationBox = {
-            Row(horizontalArrangement = Arrangement.Start) {
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                modifier = modifier
+            ) {
                 repeat(otpLength) { index ->
                     CharacterContainer(
                         index = index,
                         text = otpText,
                         shouldShowCursor = shouldShowCursor,
                         shouldCursorBlink = shouldCursorBlink,
-                        modifier = modifier.weight(5f)
+                        modifier = modifier.weight(1f)
                     )
-                    Spacer(Modifier.weight(1f))
                 }
+
             }
         }
     )
@@ -89,6 +89,7 @@ internal fun CharacterContainer(
         else -> ""
     }
 
+
     // Cursor visibility state
     val cursorVisible = remember { mutableStateOf(shouldShowCursor) }
 
@@ -103,36 +104,47 @@ internal fun CharacterContainer(
     }
 
     Box(
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.CenterStart,
         modifier = Modifier
             .height(50.dp)
-            .border(
-                width = when {
-                    isFocused -> 2.dp
-                    else -> 1.dp
-                },
-                color = when {
-                    isFocused -> MaterialTheme.colorScheme.primary
-                    else -> MaterialTheme.colorScheme.surfaceContainerHigh
-                },
-                shape = RoundedCornerShape(6.dp)
-            )
+//            .border(
+//                width = when {
+//                    isFocused -> 2.dp
+//                    else -> 1.dp
+//                },
+//                color = when {
+//                    isFocused -> MaterialTheme.colorScheme.primary
+//                    else -> MaterialTheme.colorScheme.surfaceContainerHigh
+//                },
+//                shape = RoundedCornerShape(6.dp)
+//            )
             .then(modifier)
     ) {
-        Text(
-            text = character,
-            textAlign = TextAlign.Center
-        )
-
-        // Display cursor when focused
-        AnimatedVisibility(visible = isFocused && cursorVisible.value) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .width(2.dp)
-                    .height(24.dp) // Adjust height according to your design
-                    .background(Dark25)
+        if (character.isEmpty()) {
+            Canvas(
+                modifier = Modifier.fillMaxSize(0.4f),
+                onDraw = {
+                    drawCircle(color = if (isFocused && cursorVisible.value) Violet40 else Dark10)
+                },
+            )
+        } else {
+            Text(
+                text = character,
+                textAlign = TextAlign.Center,
+                color =
+                MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleLarge,
             )
         }
+        // Display cursor when focused
+//        AnimatedVisibility(visible = isFocused && cursorVisible.value) {
+//            Box(
+//                modifier = Modifier
+//                    .align(Alignment.Center)
+//                    .width(2.dp)
+//                    .height(24.dp) // Adjust height according to your design
+//                    .background(Dark25)
+//            )
+//        }
     }
 }
