@@ -77,7 +77,7 @@ fun IntroScreen(navController: NavController) {
             },
             shape = RoundedCornerShape(16.dp),
             textModifier = Modifier.padding(vertical = 17.dp),
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 20.dp)
         )
         Spacer(modifier = Modifier.height(30.dp))
         FilledButton(
@@ -91,7 +91,7 @@ fun IntroScreen(navController: NavController) {
             },
             shape = RoundedCornerShape(16.dp),
             textModifier = Modifier.padding(vertical = 17.dp),
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 20.dp)
         )
     }
 }

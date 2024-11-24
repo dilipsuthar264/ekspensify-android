@@ -173,7 +173,7 @@ fun OtpVerificationScreen(
             modifier = Modifier
                 .imePadding()
                 .padding(
-                    start = 16.dp, end = 16.dp, top = paddingValues.calculateTopPadding() + 20.dp
+                    start = 20.dp, end = 20.dp, top = paddingValues.calculateTopPadding() + 20.dp
                 )
                 .fillMaxSize()
                 .verticalScroll(scrollState),

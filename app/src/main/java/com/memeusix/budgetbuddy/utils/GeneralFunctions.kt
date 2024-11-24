@@ -17,7 +17,7 @@ const val TAG: String = "GENERAL FUNCTIONS"
 
 
 private var isClicked = false
-fun singleClick(delayMillis: Long = 300, onClick: () -> Unit): () -> Unit {
+fun singleClick(delayMillis: Long = 100, onClick: () -> Unit): () -> Unit {
     return {
         if (!isClicked) {
             isClicked = true

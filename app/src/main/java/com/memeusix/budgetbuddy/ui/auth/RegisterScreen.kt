@@ -166,7 +166,7 @@ fun RegisterScreen(
             modifier = Modifier
                 .imePadding()
                 .padding(
-                    start = 16.dp, end = 16.dp, top = paddingValues.calculateTopPadding() + 56.dp
+                    start = 20.dp, end = 20.dp, top = paddingValues.calculateTopPadding() + 56.dp
                 )
                 .fillMaxSize()
                 .verticalScroll(scrollState),

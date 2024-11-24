@@ -98,6 +98,6 @@ fun String.getInitials(count: Int = 2): String {
     if (this.isBlank()) return ""
     return this.split(" ")
         .filter { it.isNotEmpty() }
-        .take(2)
+        .take(count)
         .joinToString("") { it[0].toString() }.uppercase()
 }

@@ -160,7 +160,7 @@ fun LoginScreen(
             modifier = Modifier
                 .imePadding()
                 .padding(
-                    start = 16.dp, end = 16.dp, top = paddingValues.calculateTopPadding()
+                    start = 20.dp, end = 20.dp, top = paddingValues.calculateTopPadding()
                 )
                 .fillMaxSize()
                 .verticalScroll(scrollState),

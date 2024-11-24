@@ -79,8 +79,6 @@ fun EditProfileBottomSheet(
         user.name?.let {
             editTextState.value = editTextState.value.copy(text = it)
         }
-        delay(100)
-        bottomSheetState.expand()
     }
 
 
@@ -90,16 +88,13 @@ fun EditProfileBottomSheet(
         if (isKeyboardOpen) {
             delay(300)
             bottomSheetState.expand()
-            focusRequester.requestFocus()
         }
     }
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss(null) },
         sheetState = bottomSheetState,
-        modifier = Modifier
-            .imeNestedScroll()
-            .imePadding(),
+        modifier = Modifier,
         properties = ModalBottomSheetProperties(
             shouldDismissOnBackPress = true,
         ),

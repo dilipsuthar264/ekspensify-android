@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -174,7 +175,7 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.Start,
             ) {
                 Text(
-                    "General",
+                    stringResource(R.string.general),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(bottom = 10.dp)
                 )
@@ -185,7 +186,7 @@ fun ProfileScreen(
                     HorizontalDivider(color = Dark10.copy(alpha = 0.5f))
                 }
                 Text(
-                    "Danger",
+                    stringResource(R.string.danger),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(vertical = 10.dp)
                 )
