@@ -1,11 +1,17 @@
 package com.memeusix.budgetbuddy.utils
 
 import android.icu.text.NumberFormat
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.data.model.responseModel.AuthResponseModel
 import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
@@ -61,4 +67,37 @@ fun Modifier.drawTopAndBottomBorders(
         end = Offset(width, size.height - strokePx / 2),
         strokeWidth = strokePx
     )
+}
+
+
+@Composable
+fun Modifier.drawImageCutoutCenter(
+    bitmap: ImageBitmap
+): Modifier {
+    return this.drawWithContent {
+        with(drawContext.canvas.nativeCanvas) {
+            val checkpoint = saveLayer(null, null)
+
+            // Draw the content underneath
+            drawContent()
+
+            val centerX = (size.width / 2 - bitmap.width / 2).toInt() + 3
+            val centerY = 0
+            drawImage(
+                image = bitmap,
+                dstSize = IntSize(width = bitmap.width, height = bitmap.height),
+                dstOffset = IntOffset(centerX, centerY),
+                blendMode = androidx.compose.ui.graphics.BlendMode.DstOut
+            )
+            restoreToCount(checkpoint)
+        }
+    }
+}
+
+fun String.getInitials(count: Int = 2): String {
+    if (this.isBlank()) return ""
+    return this.split(" ")
+        .filter { it.isNotEmpty() }
+        .take(2)
+        .joinToString("") { it[0].toString() }.uppercase()
 }

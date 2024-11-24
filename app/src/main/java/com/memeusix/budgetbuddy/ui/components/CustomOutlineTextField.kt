@@ -22,6 +22,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -51,7 +53,8 @@ fun CustomOutlineTextField(
     maxLength: Int = Int.MAX_VALUE,
     type: TextFieldType = TextFieldType.TEXT,
     isExpendable: Boolean,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    focusRequester: FocusRequester = FocusRequester()
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     Column(
@@ -68,6 +71,7 @@ fun CustomOutlineTextField(
                                 state.value = state.value.copy(text = it, error = null)
                             }
                         }
+
                         else -> {
                             state.value = state.value.copy(text = it, error = null)
                         }
@@ -99,6 +103,7 @@ fun CustomOutlineTextField(
                     color = if (state.value.isValid()) Light20 else Red100,
                     RoundedCornerShape(radius)
                 )
+                .focusRequester(focusRequester)
                 .fillMaxWidth(),
             keyboardOptions = keyboardOptions
         )

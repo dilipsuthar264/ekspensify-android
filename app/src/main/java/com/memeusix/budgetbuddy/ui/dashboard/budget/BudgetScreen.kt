@@ -1,4 +1,4 @@
-package com.memeusix.budgetbuddy.ui.dashboard.transactions
+package com.memeusix.budgetbuddy.ui.dashboard.budget
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.ui.theme.Light100
 
 @Composable
-fun TransactionScreen(
+fun BudgetScreen(
     navController: NavController,
 ) {
 

@@ -63,13 +63,13 @@ fun CreateAccountScreen(
 ) {
 
     // States
-    val balanceState = remember { mutableStateOf(TextFieldStateModel()) }
     val scrollState = rememberScrollState()
     var toastState by remember { mutableStateOf<CustomToastModel?>(null) }
     var deleteDialogState by remember { mutableStateOf(false) }
 
     val argsAccountDetails = remember { args?.accountResponseArgs.fromJson<AccountResponseModel>() }
 
+    val balanceState = remember { mutableStateOf(TextFieldStateModel()) }
     var selectedAccountType by rememberSaveable { mutableStateOf(AccountType.BANK) }
     val bankList = remember { mutableStateListOf(*BankModel.getBanks().toTypedArray()) }
     val walletList = remember { mutableStateListOf(*BankModel.getWallet().toTypedArray()) }

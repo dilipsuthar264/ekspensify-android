@@ -41,4 +41,5 @@
     <string name="balance">Balance</string>
     <string name="i_understand_delete_this_account">I understand, Delete this account</string>
     <string name="are_you_absolutely_sure">Are you absolutely sure?</string>
+    <string name="edit_profile">Edit Profile</string>
 </resources>

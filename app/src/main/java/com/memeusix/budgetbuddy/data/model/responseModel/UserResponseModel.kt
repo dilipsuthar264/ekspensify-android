@@ -13,6 +13,10 @@ data class UserResponseModel(
     @Expose
     var name: String? = null,
 
+    @SerializedName("avatar")
+    @Expose
+    var avatar: String? = null,
+
     @SerializedName("email")
     @Expose
     var email: String? = null,

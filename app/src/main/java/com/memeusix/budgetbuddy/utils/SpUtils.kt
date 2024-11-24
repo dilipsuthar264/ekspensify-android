@@ -44,11 +44,14 @@ class SpUtils @Inject constructor(context: Context) {
         pref.edit().putString(key, value).apply()
     }
 
+    fun logout(){
+        pref.edit().clear().apply()
+    }
+
     companion object {
         private const val TAG = "SpUtils"
         private const val ACCESS_TOKEN = "ACCESS_TOKEN"
         private const val IS_LOGGED_IN = "IS_LOGGED_IN"
         private const val USER_MODEL = "USER_MODEL"
-
     }
 }

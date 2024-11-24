@@ -26,6 +26,7 @@ uiTextGoogleFonts = "1.7.2"
 serialization = "1.6.3"
 constraintlayout = "2.2.0"
 material3 = "1.3.1"
+uiTestAndroid = "1.7.5"
 
 
 [libraries]
@@ -70,6 +71,7 @@ play-services-auth = { module = "com.google.android.gms:play-services-auth", ver
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-ui-test-android = { group = "androidx.compose.ui", name = "ui-test-android", version.ref = "uiTestAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

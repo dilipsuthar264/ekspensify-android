@@ -39,12 +39,6 @@ object BottomNavRoute
 @Serializable
 object CreateUserScreenRoute
 
-@Serializable
-data class TransactionScreenRoute(
-    val userId: Int? = null,
-)
-
-
 /**
  * Account Screens
  */

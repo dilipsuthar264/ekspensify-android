@@ -19,7 +19,6 @@ private val AppColorPalette = lightColorScheme(
     surfaceContainerHigh = Dark25
 )
 
-
 @Composable
 fun BudgetBuddyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit

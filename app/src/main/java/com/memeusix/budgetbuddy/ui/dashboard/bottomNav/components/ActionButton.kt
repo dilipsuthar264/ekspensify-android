@@ -1,10 +1,7 @@
-package com.memeusix.budgetbuddy.ui.dashboard.bottomNav
+package com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -29,13 +26,10 @@ fun ActionButton(isFabExpended: Boolean, modifier: Modifier, onFabClicked: () ->
     )
     IconButton(
         onClick = onFabClicked,
-        modifier = modifier.then(
-            Modifier
-                .size(55.dp)
-                .clip(CircleShape)
-                .border(BorderStroke(6.dp, Light100), CircleShape)
-                .background(Violet100)
-        )
+        modifier = modifier
+            .size(54.dp)
+            .clip(CircleShape)
+            .background(Violet100)
     ) {
         Icon(
             painterResource(R.drawable.ic_close),
@@ -47,7 +41,6 @@ fun ActionButton(isFabExpended: Boolean, modifier: Modifier, onFabClicked: () ->
                 .rotate(rotateIcon)
 
         )
-
     }
 }
 

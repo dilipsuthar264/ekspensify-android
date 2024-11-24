@@ -22,6 +22,7 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val accountRepository: AccountRepository
 ) : ViewModel() {
+
     @Inject
     lateinit var spUtils: SpUtils
 

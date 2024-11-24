@@ -14,8 +14,6 @@ import com.memeusix.budgetbuddy.ui.auth.LoginScreen
 import com.memeusix.budgetbuddy.ui.auth.OtpVerificationScreen
 import com.memeusix.budgetbuddy.ui.auth.RegisterScreen
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.BottomNav
-import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
-import com.memeusix.budgetbuddy.ui.dashboard.user.CreateUserScreen
 import com.memeusix.budgetbuddy.utils.SpUtils
 
 
@@ -53,20 +51,10 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
             BottomNav(navController, spUtils)
         }
 
-        // other screens
-        composable<CreateUserScreenRoute> {
-            CreateUserScreen(navController)
-        }
-
-        composable<TransactionScreenRoute> {
-            val args = it.toRoute<TransactionScreenRoute>()
-            TransactionScreen(navController, args)
-        }
-
         // Account Screens
         composable<AccountScreenRoute> {
             val args = it.toRoute<AccountScreenRoute>()
-            AccountsScreen(navController,args)
+            AccountsScreen(navController, args)
         }
         composable<CreateAccountScreenRoute> {
             val args = it.toRoute<CreateAccountScreenRoute>()
