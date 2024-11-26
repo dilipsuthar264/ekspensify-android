@@ -1,4 +1,4 @@
-package com.memeusix.budgetbuddy.ui.components
+package com.memeusix.budgetbuddy.components
 
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api

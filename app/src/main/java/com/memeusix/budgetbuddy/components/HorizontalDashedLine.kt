@@ -1,4 +1,4 @@
-package com.memeusix.budgetbuddy.ui.components
+package com.memeusix.budgetbuddy.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +8,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import com.memeusix.budgetbuddy.ui.theme.Dark10
 import com.memeusix.budgetbuddy.ui.theme.Dark15
 import com.memeusix.budgetbuddy.ui.theme.Light20
 import com.memeusix.budgetbuddy.ui.theme.Light40
@@ -15,7 +16,7 @@ import com.memeusix.budgetbuddy.ui.theme.Light40
 @Composable
 fun HorizontalDashedLine(
     width: Float = 2f,
-    color: Color = Light20,
+    color: Color = Dark10,
     modifier: Modifier = Modifier.fillMaxWidth()
 ) {
     val stroke = Stroke(

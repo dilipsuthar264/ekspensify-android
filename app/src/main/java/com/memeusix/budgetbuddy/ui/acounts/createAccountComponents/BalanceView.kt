@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.ui.acounts.components.AmountText
-import com.memeusix.budgetbuddy.ui.acounts.model.BankModel
+import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
 
 @Composable
 fun BalanceView(

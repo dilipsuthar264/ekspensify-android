@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -34,7 +35,7 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.IntroPages
 import com.memeusix.budgetbuddy.navigation.LoginScreenRoute
 import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
-import com.memeusix.budgetbuddy.ui.components.FilledButton
+import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.utils.singleClick
 
 @Composable
@@ -113,6 +114,7 @@ fun PageIndicator(isSelected: Boolean) {
 @Composable
 fun PageView(introPages: IntroPages) {
     Column(
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {

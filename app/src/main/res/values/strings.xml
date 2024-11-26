@@ -44,4 +44,8 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="general">General</string>
     <string name="danger">Danger</string>
+    <string name="create_category">Create Category</string>
+    <string name="name">Name</string>
+    <string name="select_any_relevant_category_icon">Select any relevant category icon</string>
+    <string name="categories">Categories</string>
 </resources>

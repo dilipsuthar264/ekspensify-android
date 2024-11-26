@@ -1,10 +1,11 @@
-package com.memeusix.budgetbuddy.ui.components
+package com.memeusix.budgetbuddy.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -24,7 +25,7 @@ fun AccountCardToggleWithHorizontalDashLine(
         CustomToggleButton(
             text = AccountType.BANK.getVal(),
             isSelected = selectedAccountType == AccountType.BANK,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).padding(vertical = 10.dp),
             onClick = {
                 onTypeChange(AccountType.BANK)
             }
@@ -32,7 +33,7 @@ fun AccountCardToggleWithHorizontalDashLine(
         CustomToggleButton(
             text = AccountType.WALLET.getVal(),
             isSelected = selectedAccountType == AccountType.WALLET,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).padding(vertical = 10.dp),
             onClick = {
                 onTypeChange(AccountType.WALLET)
             }

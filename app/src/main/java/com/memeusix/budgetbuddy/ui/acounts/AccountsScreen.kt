@@ -1,6 +1,8 @@
 package com.memeusix.budgetbuddy.ui.acounts
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -42,14 +45,16 @@ import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
 import com.memeusix.budgetbuddy.navigation.CreateAccountScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.components.AccountListItem
-import com.memeusix.budgetbuddy.ui.acounts.components.EmptyListView
 import com.memeusix.budgetbuddy.ui.acounts.components.AmountText
+import com.memeusix.budgetbuddy.ui.acounts.components.EmptyListView
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
-import com.memeusix.budgetbuddy.ui.components.AccountCardToggleWithHorizontalDashLine
-import com.memeusix.budgetbuddy.ui.components.AppBar
-import com.memeusix.budgetbuddy.ui.components.FilledButton
+import com.memeusix.budgetbuddy.components.AccountCardToggleWithHorizontalDashLine
+import com.memeusix.budgetbuddy.components.AppBar
+import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.ui.loader.ShowLoader
+import com.memeusix.budgetbuddy.ui.theme.Dark10
 import com.memeusix.budgetbuddy.ui.theme.Light20
+import com.memeusix.budgetbuddy.ui.theme.Light40
 import com.memeusix.budgetbuddy.utils.AccountType
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.singleClick
@@ -89,18 +94,21 @@ fun AccountsScreen(
     }
 
     // Main Ui
-    Scaffold(topBar = {
-        AppBar(
-            heading = stringResource(R.string.accounts),
-            navController = navController,
-            isBackNavigation = args.isFromProfile,
-            elevation = false
-        )
-    }) { paddingValues ->
+    Scaffold(
+        topBar = {
+            AppBar(
+                heading = stringResource(R.string.accounts),
+                navController = navController,
+                isBackNavigation = args.isFromProfile,
+                elevation = false
+            )
+        },
+    ) { paddingValues ->
         PullToRefreshBox(
             isRefreshing = isLoading,
             onRefresh = viewModel::getAllAccounts,
         ) {
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -155,7 +163,7 @@ fun AccountsScreen(
     // Custom Toast
     CustomToast(toastState) { toastState = null }
 
-    // Loader
+//    // Loader
     ShowLoader(isLoading)
 }
 
@@ -205,7 +213,7 @@ private fun AccountsCard(
             .clip(RoundedCornerShape(16.dp))
             .fillMaxWidth()
             .border(
-                width = 1.dp, color = Light20, RoundedCornerShape(16.dp)
+                width = 1.dp, color = Dark10, RoundedCornerShape(16.dp)
             )
             .animateContentSize(),
     ) {
@@ -245,7 +253,7 @@ private fun AccountList(
             it.id ?: 0
         }) { account ->
             AccountListItem(isListItem = true, account, onClick = singleClick { onClick(account) })
-            HorizontalDivider()
+            HorizontalDivider(color = Dark10)
         }
     }
 }
@@ -256,5 +264,6 @@ private fun AddMoreBtn(args: AccountScreenRoute, onClick: () -> Unit) {
     FilledButton(text = text,
         textModifier = Modifier.padding(vertical = 17.dp),
         shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.padding(top = 10.dp),
         onClick = singleClick { onClick() })
 }

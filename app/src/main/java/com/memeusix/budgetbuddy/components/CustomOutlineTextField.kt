@@ -1,4 +1,4 @@
-package com.memeusix.budgetbuddy.ui.components
+package com.memeusix.budgetbuddy.components
 
 
 import androidx.compose.foundation.border
@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -26,15 +27,19 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
+import com.memeusix.budgetbuddy.ui.theme.Dark10
 import com.memeusix.budgetbuddy.ui.theme.Light20
+import com.memeusix.budgetbuddy.ui.theme.Light40
 import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.ui.theme.Typography
 
@@ -79,7 +84,10 @@ fun CustomOutlineTextField(
                 }
             },
             placeholder = {
-                Text(placeholder, color = Light20)
+                Text(placeholder, color = Light20, style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal
+                ))
             },
             colors = color,
             suffix = {
@@ -100,7 +108,7 @@ fun CustomOutlineTextField(
             modifier = Modifier
                 .border(
                     width = 1.dp,
-                    color = if (state.value.isValid()) Light20 else Red100,
+                    color = if (state.value.isValid()) Dark10 else Red100,
                     RoundedCornerShape(radius)
                 )
                 .focusRequester(focusRequester)

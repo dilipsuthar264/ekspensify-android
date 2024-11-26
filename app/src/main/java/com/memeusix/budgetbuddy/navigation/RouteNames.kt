@@ -36,9 +36,6 @@ data class OtpVerificationScreenRoute(
 @Serializable
 object BottomNavRoute
 
-@Serializable
-object CreateUserScreenRoute
-
 /**
  * Account Screens
  */
@@ -48,7 +45,6 @@ data class AccountScreenRoute(
     val isFromProfile: Boolean = false
 )
 
-
 typealias AccountListArgs = String
 
 @Serializable
@@ -57,4 +53,12 @@ data class CreateAccountScreenRoute(
     val accountList: AccountListArgs? = null,
     val isFromProfile: Boolean = false,
 )
-// for args
+
+// Categories Screen
+@Serializable
+object CategoriesScreenRoute
+
+@Serializable
+data class CreateCategoryScreenRoute(
+    val categoryResponseModelArgs: String? = null
+)

@@ -1,5 +1,8 @@
 package com.memeusix.budgetbuddy.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,13 +16,20 @@ import com.memeusix.budgetbuddy.ui.auth.IntroScreen
 import com.memeusix.budgetbuddy.ui.auth.LoginScreen
 import com.memeusix.budgetbuddy.ui.auth.OtpVerificationScreen
 import com.memeusix.budgetbuddy.ui.auth.RegisterScreen
+import com.memeusix.budgetbuddy.ui.categories.CategoriesScreen
+import com.memeusix.budgetbuddy.ui.categories.CreateCategoryScreen
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.BottomNav
 import com.memeusix.budgetbuddy.utils.SpUtils
 
 
 @Composable
 fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
-    NavHost(navController = navController, startDestination = SplashScreenRoute) {
+    NavHost(
+        navController = navController,
+        startDestination = SplashScreenRoute,
+        enterTransition = { fadeIn(animationSpec = tween(300)) },
+        exitTransition = { fadeOut(animationSpec = tween(300)) }
+    ) {
         composable<SplashScreenRoute> {
             SplashScreen(navController, spUtils)
         }
@@ -51,8 +61,10 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
             BottomNav(navController, spUtils)
         }
 
+
         // Account Screens
-        composable<AccountScreenRoute> {
+        composable<AccountScreenRoute>(
+        ) {
             val args = it.toRoute<AccountScreenRoute>()
             AccountsScreen(navController, args)
         }
@@ -61,6 +73,19 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
             CreateAccountScreen(
                 navController,
                 args
+            )
+        }
+
+        // Categories Screens
+        composable<CategoriesScreenRoute> {
+            CategoriesScreen(navController)
+        }
+
+        composable<CreateCategoryScreenRoute> {
+            val args = it.toRoute<CreateCategoryScreenRoute>()
+            CreateCategoryScreen(
+                navController = navController,
+                args = args
             )
         }
     }

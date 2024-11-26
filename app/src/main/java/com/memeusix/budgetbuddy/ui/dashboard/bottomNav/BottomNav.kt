@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.data.ApiResponse
-import com.memeusix.budgetbuddy.ui.components.AppBar
+import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.ActionButton
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.BottomBarContent
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.ExpandableFab

@@ -47,7 +47,7 @@ fun DeleteAccountDialog(
     accountDetails: AccountResponseModel,
     onDismiss: (Boolean) -> Unit,
 ) {
-    val textToDelete = remember(accountDetails.name) { "Delete ${accountDetails.name}" }
+    val textToDelete = remember(accountDetails.name) { "Delete ${accountDetails.name}".lowercase() }
     var textState by remember { mutableStateOf("") }
 
     Dialog(

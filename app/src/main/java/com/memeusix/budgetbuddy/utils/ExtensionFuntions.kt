@@ -101,3 +101,8 @@ fun String.getInitials(count: Int = 2): String {
         .take(count)
         .joinToString("") { it[0].toString() }.uppercase()
 }
+
+
+fun String.generateIconSlug(): String {
+    return "ic_" + this.trim().lowercase().replace(' ', '_')
+}

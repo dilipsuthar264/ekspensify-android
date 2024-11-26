@@ -1,7 +1,7 @@
-package com.memeusix.budgetbuddy.ui.acounts.model
+package com.memeusix.budgetbuddy.ui.acounts.data
 
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
+import com.memeusix.budgetbuddy.utils.generateIconSlug
 
 data class BankModel(
     val icon: Int?,
@@ -24,7 +24,7 @@ data class BankModel(
                 createBankModel("Central Bank of India", R.drawable.ic_centeral_bank_of_india),
                 createBankModel("YES Bank", R.drawable.ic_yes_bank),
                 createBankModel("Citi Bank", R.drawable.ic_citi_bank),
-                createBankModel("IDFC FIRST Bank ", R.drawable.ic_idfc_bank),
+                createBankModel("IDFC FIRST Bank", R.drawable.ic_idfc_bank),
                 createBankModel("India Post Payments Bank", R.drawable.ic_post_payments_bank),
                 createBankModel("Indian Bank", R.drawable.ic_indian_bank),
                 createBankModel("IndusInd Bank", R.drawable.ic_induslnd_bank),
@@ -46,30 +46,6 @@ data class BankModel(
                 iconSlug = name.generateIconSlug(),
                 isSelected = isSelected
             )
-        }
-
-        fun String.generateIconSlug(): String {
-            return "ic_" + this.trim().lowercase().replace(' ', '_')
-        }
-
-
-        fun updateList(
-            sourceList: MutableList<BankModel>,
-            selectedItem: BankModel?,
-            iconSlugSet: Set<String?>
-        ): MutableList<BankModel> {
-            // Filter out items whose iconSlug is in accountIconSlugSet
-            val filteredList =
-                sourceList.filterNot { iconSlugSet.contains(it.iconSlug) }.toMutableList()
-
-            // Add the selected item if it's not already in the list
-            selectedItem?.let {
-                if (!filteredList.contains(it)) {
-                    filteredList.add(it)
-                }
-            }
-
-            return filteredList
         }
     }
 }

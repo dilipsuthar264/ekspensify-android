@@ -197,4 +197,7 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.7.0")
 
+
+    implementation ("androidx.compose.animation:animation:1.7.5")
+
 }

@@ -1,4 +1,4 @@
-package com.memeusix.budgetbuddy.ui.components
+package com.memeusix.budgetbuddy.components
 
 
 import androidx.compose.foundation.Canvas

@@ -38,9 +38,9 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
-import com.memeusix.budgetbuddy.ui.components.AppBar
-import com.memeusix.budgetbuddy.ui.components.FilledButton
-import com.memeusix.budgetbuddy.ui.components.OtpInputField
+import com.memeusix.budgetbuddy.components.AppBar
+import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.OtpInputField
 import com.memeusix.budgetbuddy.ui.loader.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
 import com.memeusix.budgetbuddy.utils.SpUtils

@@ -44,9 +44,9 @@ import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
 import com.memeusix.budgetbuddy.ui.auth.components.DontHaveAccountText
 import com.memeusix.budgetbuddy.ui.auth.components.GoogleAuthBtn
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
-import com.memeusix.budgetbuddy.ui.components.AppBar
-import com.memeusix.budgetbuddy.ui.components.CustomOutlineTextField
-import com.memeusix.budgetbuddy.ui.components.FilledButton
+import com.memeusix.budgetbuddy.components.AppBar
+import com.memeusix.budgetbuddy.components.CustomOutlineTextField
+import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.ui.loader.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
 import com.memeusix.budgetbuddy.utils.SpUtils

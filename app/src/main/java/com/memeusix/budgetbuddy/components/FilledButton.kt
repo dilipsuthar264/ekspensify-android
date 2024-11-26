@@ -1,7 +1,8 @@
-package com.memeusix.budgetbuddy.ui.components
+package com.memeusix.budgetbuddy.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -23,7 +24,7 @@ fun FilledButton(
         contentColor = MaterialTheme.colorScheme.onPrimary,
     ),
     textModifier: Modifier = Modifier,
-    shape: Shape = ButtonDefaults.shape,
+    shape: Shape = RoundedCornerShape(16.dp),
     enabled: Boolean = true
 ) {
     Button(

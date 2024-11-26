@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.ui.components.FilledButton
+import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.ui.theme.interFontFamily
 
 // Empty List View

@@ -4,6 +4,7 @@ import android.app.Application
 import com.memeusix.budgetbuddy.BuildConfig
 import com.memeusix.budgetbuddy.data.services.AccountApi
 import com.memeusix.budgetbuddy.data.services.AuthApi
+import com.memeusix.budgetbuddy.data.services.CategoryApi
 import com.memeusix.budgetbuddy.data.services.ProfileApi
 import com.memeusix.budgetbuddy.utils.SpUtils
 import dagger.Module
@@ -84,4 +85,11 @@ class AppModule {
     fun provideProfileApi(spUtils: SpUtils): ProfileApi {
         return getRetrofit(spUtils).create(ProfileApi::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideCategoryApi(spUtils: SpUtils): CategoryApi {
+        return getRetrofit(spUtils).create(CategoryApi::class.java)
+    }
+
 }

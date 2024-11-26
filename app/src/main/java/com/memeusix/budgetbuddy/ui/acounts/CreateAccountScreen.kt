@@ -31,6 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.AppBar
+import com.memeusix.budgetbuddy.components.CustomOutlineTextField
+import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.TextFieldType
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.requestModel.AccountRequestModel
@@ -40,12 +44,8 @@ import com.memeusix.budgetbuddy.navigation.CreateAccountScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.createAccountComponents.AccountTypeCard
 import com.memeusix.budgetbuddy.ui.acounts.createAccountComponents.BalanceView
 import com.memeusix.budgetbuddy.ui.acounts.dialog.DeleteAccountDialog
-import com.memeusix.budgetbuddy.ui.acounts.model.BankModel
+import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
-import com.memeusix.budgetbuddy.ui.components.AppBar
-import com.memeusix.budgetbuddy.ui.components.CustomOutlineTextField
-import com.memeusix.budgetbuddy.ui.components.FilledButton
-import com.memeusix.budgetbuddy.ui.components.TextFieldType
 import com.memeusix.budgetbuddy.ui.loader.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Light20
 import com.memeusix.budgetbuddy.utils.AccountType
@@ -75,15 +75,21 @@ fun CreateAccountScreen(
     val walletList = remember { mutableStateListOf(*BankModel.getWallet().toTypedArray()) }
     var selectedBank by remember { mutableStateOf<BankModel?>(null) }
     var selectedWallet by remember { mutableStateOf<BankModel?>(null) }
+    val accountLists = remember { args?.accountList.fromJson<List<AccountResponseModel>>() }
+
 
     // Api States
     val createAccountResponse by viewModel.createAccount.collectAsState()
     val updateAccountResponse by viewModel.updateAccount.collectAsState()
     val deleteAccountResponse by viewModel.deleteAccount.collectAsState()
 
+    val isLoading =
+        createAccountResponse is ApiResponse.Loading
+                || updateAccountResponse is ApiResponse.Loading
+                || deleteAccountResponse is ApiResponse.Loading
+
     // Initial Data Set
     LaunchedEffect(Unit) {
-        val accountLists = args?.accountList.fromJson<List<AccountResponseModel>>()
         val accountIconSlugSet = accountLists?.map { it.icon }?.toSet() ?: emptySet()
 
         argsAccountDetails?.let { details ->
@@ -196,20 +202,14 @@ fun CreateAccountScreen(
         toastState = null
     }
 
-    // Shows Loader
-    ShowLoader(
-        createAccountResponse is ApiResponse.Loading
-                || updateAccountResponse is ApiResponse.Loading
-                || deleteAccountResponse is ApiResponse.Loading
-    )
 
     // Main Ui
     Scaffold(topBar = {
         AppBar(
             heading = stringResource(R.string.add_account),
             navController = navController,
-            isBackNavigation = false,
-            elevation = true
+            isBackNavigation = true,
+            elevation = false
         )
     }) { paddingValues ->
         Column(
@@ -233,7 +233,7 @@ fun CreateAccountScreen(
                     selectedWallet
                 }
             },
-                showDelete = argsAccountDetails != null,
+                showDelete = argsAccountDetails != null && (accountLists?.size ?: 0) > 1,
                 onDeleteClick = {
                     deleteDialogState = !deleteDialogState
                 })
@@ -309,6 +309,10 @@ fun CreateAccountScreen(
                 }
             )
         }
+
+
+        // showLoader
+        ShowLoader(isLoading)
     }
 }
 

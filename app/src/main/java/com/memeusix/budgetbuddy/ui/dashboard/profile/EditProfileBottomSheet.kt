@@ -49,8 +49,8 @@ import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
-import com.memeusix.budgetbuddy.ui.components.CustomOutlineTextField
-import com.memeusix.budgetbuddy.ui.components.FilledButton
+import com.memeusix.budgetbuddy.components.CustomOutlineTextField
+import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.ui.dashboard.profile.model.AvatarOptions
 import com.memeusix.budgetbuddy.ui.theme.Light20
 import com.memeusix.budgetbuddy.ui.theme.Violet20

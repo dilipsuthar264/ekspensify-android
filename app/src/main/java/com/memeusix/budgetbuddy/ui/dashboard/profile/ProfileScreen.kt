@@ -2,11 +2,11 @@ package com.memeusix.budgetbuddy.ui.dashboard.profile
 
 import android.util.Log
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,8 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -40,12 +38,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.CustomListItem
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
+import com.memeusix.budgetbuddy.navigation.CategoriesScreenRoute
 import com.memeusix.budgetbuddy.navigation.IntroScreenRoute
 import com.memeusix.budgetbuddy.ui.dashboard.profile.componets.ProfileAvatar
-import com.memeusix.budgetbuddy.ui.dashboard.profile.componets.ProfileListItem
 import com.memeusix.budgetbuddy.ui.dashboard.profile.model.ProfileOptionProvider
 import com.memeusix.budgetbuddy.ui.dashboard.profile.model.ProfileOptions
 import com.memeusix.budgetbuddy.ui.theme.Dark10
@@ -77,7 +76,7 @@ fun ProfileScreen(
         .border(
             width = 1.dp, color = Dark10, RoundedCornerShape(16.dp)
         )
-        .padding(15.dp)
+        .padding(vertical = 15.dp)
         .animateContentSize()
 
     LaunchedEffect(getMeState, updateMeState) {
@@ -177,28 +176,49 @@ fun ProfileScreen(
                 Text(
                     stringResource(R.string.general),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(bottom = 10.dp)
+                    modifier = Modifier.padding(bottom = 10.dp, start = 15.dp, end = 15.dp)
                 )
                 ProfileOptionProvider.getGeneralOptions().forEach { profileOptions ->
-                    ProfileListItem(profileOptions, onClick = singleClick {
-                        handleProfileOptionClick(profileOptions, navController, viewmodel)
-                    })
-                    HorizontalDivider(color = Dark10.copy(alpha = 0.5f))
+                    ProfileListItem(
+                        profileOptions = profileOptions,
+                        onClick = singleClick {
+                            handleProfileOptionClick(profileOptions, navController, viewmodel)
+                        }
+                    )
+                    HorizontalDivider(color = Dark10)
                 }
                 Text(
                     stringResource(R.string.danger),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(vertical = 10.dp)
+                    modifier = Modifier.padding(vertical = 10.dp, horizontal = 15.dp)
                 )
                 ProfileOptionProvider.getDangerOptions().forEach { profileOptions ->
-                    ProfileListItem(profileOptions, onClick = singleClick {
-                        handleProfileOptionClick(profileOptions, navController, viewmodel)
-                    })
+                    ProfileListItem(
+                        profileOptions = profileOptions,
+                        onClick = singleClick {
+                            handleProfileOptionClick(profileOptions, navController, viewmodel)
+                        }
+                    )
                 }
             }
-
         }
     }
+}
+
+@Composable
+private fun ProfileListItem(profileOptions: ProfileOptions, onClick: () -> Unit) {
+    CustomListItem(
+        title = profileOptions.title,
+        icon = profileOptions.icon,
+        modifier = Modifier.padding(horizontal = 15.dp, vertical = 9.dp),
+        leading = {
+            Image(
+                painter = painterResource(R.drawable.ic_arrow_right),
+                contentDescription = null,
+            )
+        },
+        onClick = onClick
+    )
 }
 
 
@@ -209,7 +229,6 @@ private fun handleProfileOptionClick(
 ) {
     when (profileOptions) {
         ProfileOptions.ACCOUNT -> {
-            Log.e(TAG, "handleProfileOptionClick: ACCOUNT CLICK")
             navController.navigate(
                 AccountScreenRoute(
                     isFromProfile = true
@@ -218,7 +237,7 @@ private fun handleProfileOptionClick(
         }
 
         ProfileOptions.CATEGORY -> {
-            Log.e(TAG, "handleProfileOptionClick: CATEGORY CLICK")
+            navController.navigate(CategoriesScreenRoute)
         }
 
         ProfileOptions.EXPORT -> {

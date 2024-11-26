@@ -22,13 +22,13 @@ import com.memeusix.budgetbuddy.ui.dashboard.profile.model.ProfileOptions
 
 
 @Composable
-fun ProfileListItem(profileOptions: ProfileOptions, onClick: () -> Unit) {
+fun ProfileListItem(profileOptions: ProfileOptions, modifier: Modifier, onClick: () -> Unit) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .clickable { onClick() }
-            .padding(vertical = 10.dp)
+            .then(modifier)
     ) {
         Image(
             painter = painterResource(profileOptions.icon),

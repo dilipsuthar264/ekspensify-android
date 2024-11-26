@@ -1,18 +1,6 @@
 package com.memeusix.budgetbuddy.ui.dashboard.bottomNav
 
-import androidx.compose.foundation.background
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.graphicsLayer
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Light100
 
 sealed class BottomNavItem(val icon: Int, val selectedIcon: Int, val label: String) {
     data object Home : BottomNavItem(R.drawable.ic_home_new, R.drawable.ic_home_new_fill, "Home")
