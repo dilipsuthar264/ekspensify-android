@@ -1,6 +1,7 @@
 package com.memeusix.budgetbuddy.navigation
 
 import com.memeusix.budgetbuddy.utils.AccountResponseArgs
+import com.memeusix.budgetbuddy.utils.TransactionType
 import kotlinx.serialization.Serializable
 
 typealias accountResponseJson = String
@@ -61,4 +62,10 @@ object CategoriesScreenRoute
 @Serializable
 data class CreateCategoryScreenRoute(
     val categoryResponseModelArgs: String? = null
+)
+
+// Transaction Screens
+@Serializable
+data class CreateTransactionScreenRoute(
+    val transactionType : TransactionType
 )

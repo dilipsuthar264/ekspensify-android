@@ -30,8 +30,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.components.AppBar
+import com.memeusix.budgetbuddy.data.ApiResponse
+import com.memeusix.budgetbuddy.navigation.CreateTransactionScreenRoute
+import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
+import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.ActionButton
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.BottomBarContent
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.ExpandableFab
@@ -41,15 +44,15 @@ import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileScreen
 import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
 import com.memeusix.budgetbuddy.ui.theme.Violet5
-import com.memeusix.budgetbuddy.ui.theme.Yellow20
 import com.memeusix.budgetbuddy.utils.SpUtils
 
 
 @Composable
 fun BottomNav(
     navController: NavController,
-    spUtils: SpUtils,
     profileViewModel: ProfileViewModel = hiltViewModel(),
+    categoryViewModel: CategoryViewModel = hiltViewModel(),
+    accountViewModel: AccountViewModel = hiltViewModel()
 ) {
     var currentIndex by rememberSaveable { mutableIntStateOf(0) }
     var isFabExpanded by rememberSaveable { mutableStateOf(false) }
@@ -62,15 +65,6 @@ fun BottomNav(
             BottomNavItem.Budget,
             BottomNavItem.Profile
         )
-    }
-
-
-    LaunchedEffect(Unit) {
-        profileViewModel.getMe.collect { response ->
-            if (response is ApiResponse.Success) {
-                spUtils.user = response.data
-            }
-        }
     }
 
     Scaffold(
@@ -100,7 +94,14 @@ fun BottomNav(
         },
         floatingActionButton = {
             ExpandableFab(
-                isFabExpanded = isFabExpanded
+                isFabExpanded = isFabExpanded,
+                onClick = { type ->
+                    navController.navigate(
+                        CreateTransactionScreenRoute(
+                            transactionType = type
+                        )
+                    )
+                }
             )
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -110,7 +111,8 @@ fun BottomNav(
             isFabExpended = isFabExpanded,
             onFabChange = { isFabExpanded = it },
             currentItem = items[currentIndex],
-            navController = navController
+            navController = navController,
+            profileViewModel = profileViewModel
         )
     }
 }
@@ -153,7 +155,8 @@ private fun ContentView(
     isFabExpended: Boolean,
     onFabChange: (Boolean) -> Unit,
     currentItem: BottomNavItem,
-    navController: NavController
+    navController: NavController,
+    profileViewModel: ProfileViewModel
 ) {
     Surface(
         color = Color.Transparent,
@@ -182,7 +185,7 @@ private fun ContentView(
             is BottomNavItem.Home -> HomeScreen(navController)
             is BottomNavItem.Transaction -> TransactionScreen(navController)
             is BottomNavItem.Budget -> BudgetScreen(navController)
-            is BottomNavItem.Profile -> ProfileScreen(navController)
+            is BottomNavItem.Profile -> ProfileScreen(navController, profileViewModel)
             is BottomNavItem.Action -> Unit
         }
     }

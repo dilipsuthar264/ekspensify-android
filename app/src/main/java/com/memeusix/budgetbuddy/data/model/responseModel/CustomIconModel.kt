@@ -1,12 +1,10 @@
 package com.memeusix.budgetbuddy.data.model.responseModel
 
-import androidx.compose.runtime.Immutable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-@Immutable
-data class CategoryResponseModel(
+data class CustomIconModel(
     @SerializedName("id")
     @Expose
     var id: Int? = null,
@@ -15,25 +13,25 @@ data class CategoryResponseModel(
     @Expose
     var name: String? = null,
 
-    @SerializedName("slug")
+    @SerializedName("path")
     @Expose
-    var slug: String? = null,
+    var path: String? = null,
+
+    @SerializedName("mime")
+    @Expose
+    var mime: String? = null,
 
     @SerializedName("type")
     @Expose
     var type: String? = null,
 
-    @SerializedName("icon")
+    @SerializedName("size")
     @Expose
-    var icon: String? = null,
+    var size: Int? = null,
 
-    @SerializedName("icon_id")
+    @SerializedName("collection")
     @Expose
-    var iconId: Int? = null,
-
-    @SerializedName("user_id")
-    @Expose
-    var userId: Int? = null,
+    var collection: String? = null,
 
     @SerializedName("created_at")
     @Expose
@@ -46,8 +44,4 @@ data class CategoryResponseModel(
     @SerializedName("deleted_at")
     @Expose
     var deletedAt: String? = null
-) : Serializable
-
-data class CategoryListModel(
-    val categories: List<CategoryResponseModel>
 ) : Serializable

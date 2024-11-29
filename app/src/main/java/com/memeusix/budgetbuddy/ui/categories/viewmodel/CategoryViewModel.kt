@@ -3,8 +3,12 @@ package com.memeusix.budgetbuddy.ui.categories.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.memeusix.budgetbuddy.data.ApiResponse
+import com.memeusix.budgetbuddy.data.BaseViewModel
+import com.memeusix.budgetbuddy.data.model.responseModel.CategoryListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
+import com.memeusix.budgetbuddy.data.model.responseModel.CustomIconModel
 import com.memeusix.budgetbuddy.data.repository.CategoryRepository
+import com.memeusix.budgetbuddy.utils.SpUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +21,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
-    private val categoryRepository: CategoryRepository
-) : ViewModel() {
+    private val categoryRepository: CategoryRepository,
+    val spUtils: SpUtils
+) : ViewModel(), BaseViewModel {
 
     /**
      * get Categories
@@ -26,12 +31,18 @@ class CategoryViewModel @Inject constructor(
     private val _getCategories =
         MutableStateFlow<ApiResponse<List<CategoryResponseModel>>>(ApiResponse.Idle)
     val getCategories = _getCategories.asStateFlow()
-        .onStart { getCategories() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Lazily,
-            initialValue = _getCategories.value
-        )
+
+    init {
+        loadCategoriesFromSpUtils()
+    }
+
+    private fun loadCategoriesFromSpUtils() {
+        spUtils.categoriesData?.categories?.takeIf { it.isNotEmpty() }?.let {
+            _getCategories.value = ApiResponse.Success(it)
+        } ?: run {
+            getCategories()
+        }
+    }
 
     fun getCategories() {
         viewModelScope.launch {
@@ -39,7 +50,34 @@ class CategoryViewModel @Inject constructor(
                 currentData = _getCategories.value.data,
                 currentError = null
             )
-            _getCategories.value = categoryRepository.getCategories()
+            val response = handleData(_getCategories.value) { categoryRepository.getCategories() }
+            if (response is ApiResponse.Success) {
+                spUtils.categoriesData = CategoryListModel(categories = response.data.orEmpty())
+            }
+            _getCategories.value = response
+        }
+    }
+
+    /**
+     * get category icons
+     */
+    private val _getCustomIcons =
+        MutableStateFlow<ApiResponse<List<CustomIconModel>>>(ApiResponse.Idle)
+    val getCustomIcons = _getCustomIcons.asStateFlow()
+        .onStart { getCustomIcons() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(10000),
+            ApiResponse.Idle
+        )
+
+    fun getCustomIcons() {
+        viewModelScope.launch {
+            _getCustomIcons.value = ApiResponse.Loading(
+                currentData = _getCustomIcons.value.data,
+            )
+            _getCustomIcons.value =
+                handleData(_getCustomIcons.value) { categoryRepository.getCustomIcons() }
         }
     }
 

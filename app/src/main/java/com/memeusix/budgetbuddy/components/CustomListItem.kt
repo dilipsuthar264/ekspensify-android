@@ -22,12 +22,18 @@ import com.memeusix.budgetbuddy.ui.theme.interFontFamily
 fun CustomListItem(
     title: String,
     subtitle: String = "",
-    @DrawableRes icon: Int,
+    @DrawableRes icon: Int? = null,
     enable: Boolean = true,
     modifier: Modifier = Modifier,
-    leading: @Composable () -> Unit,
+    leadingContent: @Composable () -> Unit = {},
+    trailingContent: @Composable () -> Unit,
+    titleStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colorScheme.onBackground
+    ),
     onClick: () -> Unit,
 ) {
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -36,19 +42,18 @@ fun CustomListItem(
             .clickable(enabled = enable, onClick = onClick)
             .then(modifier)
     ) {
-        ListIcon(icon)
+        if (icon != null) {
+            ListIcon(icon)
+        } else {
+            leadingContent()
+        }
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Text(
                 text = title,
-                style = TextStyle(
-                    fontFamily = interFontFamily,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onBackground
-                ),
+                style = titleStyle,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
@@ -64,6 +69,6 @@ fun CustomListItem(
                 )
             }
         }
-        leading()
+        trailingContent()
     }
 }

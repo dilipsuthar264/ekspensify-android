@@ -59,7 +59,6 @@ import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
 fun ProfileScreen(
     navController: NavController, viewmodel: ProfileViewModel = hiltViewModel()
 ) {
-    val user by viewmodel.user.collectAsStateWithLifecycle()
     val getMeState by viewmodel.getMe.collectAsStateWithLifecycle()
     val updateMeState by viewmodel.updateMe.collectAsStateWithLifecycle()
     var toastState by remember { mutableStateOf<CustomToastModel?>(null) }
@@ -83,7 +82,6 @@ fun ProfileScreen(
         when (getMeState) {
             is ApiResponse.Success -> {
                 getMeState.data?.let {
-                    viewmodel.updateUser(it)
                 }
             }
 
@@ -102,7 +100,6 @@ fun ProfileScreen(
         when (updateMeState) {
             is ApiResponse.Success -> {
                 updateMeState.data?.let {
-                    viewmodel.updateUser(it)
                 }
             }
 
@@ -128,7 +125,7 @@ fun ProfileScreen(
 
     // Edit Profile Bottom Sheet
     if (showEditBottomSheet) {
-        EditProfileBottomSheet(user = user ?: UserResponseModel()) { userModel ->
+        EditProfileBottomSheet(user = getMeState.data ?: UserResponseModel()) { userModel ->
             userModel?.let {
                 viewmodel.updateMe(it)
             }
@@ -150,7 +147,7 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            user?.let { details ->
+            getMeState.data?.let { details ->
                 ProfileAvatar(details, onEditClick = singleClick {
                     showEditBottomSheet = true
                 })
@@ -211,7 +208,7 @@ private fun ProfileListItem(profileOptions: ProfileOptions, onClick: () -> Unit)
         title = profileOptions.title,
         icon = profileOptions.icon,
         modifier = Modifier.padding(horizontal = 15.dp, vertical = 9.dp),
-        leading = {
+        trailingContent = {
             Image(
                 painter = painterResource(R.drawable.ic_arrow_right),
                 contentDescription = null,

@@ -4,6 +4,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,7 +19,9 @@ import com.memeusix.budgetbuddy.ui.auth.OtpVerificationScreen
 import com.memeusix.budgetbuddy.ui.auth.RegisterScreen
 import com.memeusix.budgetbuddy.ui.categories.CategoriesScreen
 import com.memeusix.budgetbuddy.ui.categories.CreateCategoryScreen
+import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.BottomNav
+import com.memeusix.budgetbuddy.ui.dashboard.transactions.CreateTransactionScreen
 import com.memeusix.budgetbuddy.utils.SpUtils
 
 
@@ -58,7 +61,7 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
 
         // Bottom Nav Screen
         composable<BottomNavRoute> {
-            BottomNav(navController, spUtils)
+            BottomNav(navController)
         }
 
 
@@ -83,10 +86,19 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
 
         composable<CreateCategoryScreenRoute> {
             val args = it.toRoute<CreateCategoryScreenRoute>()
+            val parentEntry = navController.getBackStackEntry(CategoriesScreenRoute)
+            val viewModel: CategoryViewModel = hiltViewModel(parentEntry)
             CreateCategoryScreen(
                 navController = navController,
-                args = args
+                args = args,
+                viewModel = viewModel
             )
+        }
+
+        // Transaction Screens
+        composable<CreateTransactionScreenRoute> {
+            val args = it.toRoute<CreateTransactionScreenRoute>()
+            CreateTransactionScreen(navController, args)
         }
     }
 }

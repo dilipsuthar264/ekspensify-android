@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -35,11 +36,13 @@ import com.memeusix.budgetbuddy.ui.theme.Blue100
 import com.memeusix.budgetbuddy.ui.theme.Green100
 import com.memeusix.budgetbuddy.ui.theme.Light100
 import com.memeusix.budgetbuddy.ui.theme.Red100
+import com.memeusix.budgetbuddy.utils.TransactionType
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ExpandableFab(
-    isFabExpanded: Boolean
+    isFabExpanded: Boolean,
+    onClick: (TransactionType) -> Unit
 ) {
 
     AnimatedVisibility(
@@ -51,28 +54,29 @@ fun ExpandableFab(
             .wrapContentSize(Alignment.BottomCenter)
             .zIndex(1f)
     ) {
-        val horizontalSpacing = 60.dp
-        val verticalSpacing = 11.dp
-        FlowRow(
-            maxItemsInEachRow = 3,
+        val horizontalSpacing = 40.dp
+        Row(
             horizontalArrangement = Arrangement.spacedBy(
                 horizontalSpacing,
                 Alignment.CenterHorizontally
             ),
-            verticalArrangement = Arrangement.spacedBy(verticalSpacing, Alignment.CenterVertically)
+            modifier = Modifier.padding(bottom = 10.dp)
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-            ActionBtnItem(bgColor = Blue100, icon = R.drawable.ic_transfer, onClick = {})
-            Spacer(modifier = Modifier.weight(1f))
-            ActionBtnItem(bgColor = Green100, icon = R.drawable.ic_income, onClick = {})
-            ActionBtnItem(bgColor = Red100, icon = R.drawable.ic_expense, onClick = {})
+            ActionBtnItem(
+                bgColor = Green100,
+                icon = R.drawable.ic_income,
+                onClick = { onClick(TransactionType.DEBIT) })
+            ActionBtnItem(
+                bgColor = Red100,
+                icon = R.drawable.ic_expense,
+                onClick = { onClick(TransactionType.CREDIT) })
         }
     }
 }
 
 @Composable
 fun ActionBtnItem(bgColor: Color, @DrawableRes icon: Int, onClick: () -> Unit) {
-    val iconSize = 50.dp
+    val iconSize = 55.dp
     val paddingSize = 10.dp
     Box(
         modifier = Modifier

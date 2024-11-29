@@ -3,6 +3,7 @@ package com.memeusix.budgetbuddy.data.repository
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.BaseRepository
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
+import com.memeusix.budgetbuddy.data.model.responseModel.CustomIconModel
 import com.memeusix.budgetbuddy.data.services.CategoryApi
 import javax.inject.Inject
 
@@ -12,6 +13,10 @@ class CategoryRepository @Inject constructor(
 
     suspend fun getCategories(): ApiResponse<List<CategoryResponseModel>> {
         return handleResponse { categoryApi.getCategories() }
+    }
+
+    suspend fun getCustomIcons(): ApiResponse<List<CustomIconModel>> {
+        return handleResponse { categoryApi.getCustomIcons() }
     }
 
     suspend fun createCategory(

@@ -1,21 +1,21 @@
 package com.memeusix.budgetbuddy.ui.categories
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,11 +26,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
@@ -43,7 +45,7 @@ import com.memeusix.budgetbuddy.ui.categories.data.getCategoryType
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
 import com.memeusix.budgetbuddy.ui.loader.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Dark40
+import com.memeusix.budgetbuddy.ui.theme.Dark15
 import com.memeusix.budgetbuddy.ui.theme.Red75
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
@@ -60,7 +62,6 @@ fun CategoriesScreen(
     val deleteCategories by categoryViewModel.deleteCategory.collectAsStateWithLifecycle()
     val isLoading = getCategories is ApiResponse.Loading || deleteCategories is ApiResponse.Loading
 
-    val icons = remember { CategoryIcons.getCategoryIcons().associateBy { it.iconSlug } }
 
     val scrollState = rememberLazyListState()
 
@@ -93,14 +94,12 @@ fun CategoriesScreen(
         }
     }
 
-
-
     LaunchedEffect(deleteCategories) {
         when (val response = deleteCategories) {
             is ApiResponse.Success -> {
                 response.data?.let {
-                    categoryViewModel.removeDeletedFromList(it)
-//                    categoryViewModel.getCategories()
+//                    categoryViewModel.removeDeletedFromList(it)
+                    categoryViewModel.getCategories()
                 }
             }
 
@@ -118,6 +117,7 @@ fun CategoriesScreen(
         }
     }
 
+
     //Main Ui
     Scaffold(
         topBar = {
@@ -128,102 +128,87 @@ fun CategoriesScreen(
                 elevation = false
             )
         },
+        floatingActionButton = {
+
+        },
+        floatingActionButtonPosition = FabPosition.Center
     ) { paddingValues ->
 
         PullToRefreshBox(
             isRefreshing = false,
             onRefresh = categoryViewModel::getCategories
         ) {
-            Column(
-                modifier = Modifier.padding(paddingValues)
+            LazyColumn(
+                state = scrollState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = paddingValues.calculateTopPadding()),
             ) {
-                LazyColumn(
-                    state = scrollState,
-                    modifier = Modifier
-                        .weight(1f),
-                ) {
-                    items(
-                        getCategories.data ?: emptyList(),
-                        key = { it.id!! }
-                    ) { category ->
-                        val subtitle = category.type.getCategoryType()
-                        val icon = icons[category.icon]?.icon ?: R.drawable.ic_other_category
-
-                        CustomListItem(
-                            title = category.name.orEmpty(),
-                            subtitle = subtitle,
-                            icon = icon,
-                            modifier = Modifier.padding(vertical = 14.dp, horizontal = 20.dp),
-                            enable = false,
-                            leading = {
-                                ActionButtons(
-                                    onEditClick = {},
-                                    onDeleteClick = { categoryViewModel.deleteCategory(category.id!!) },
-                                    enable = category.userId != null
-                                )
-                            },
-                            onClick = {}
-                        )
-
-                        HorizontalDivider(color = Dark10)
-                    }
-                }
-                FilledButton(
-                    text = "Add",
-                    onClick = {
-                        navController.navigate(
-                            CreateCategoryScreenRoute(
-                                categoryResponseModelArgs = null
+                items(
+                    getCategories.data ?: emptyList(),
+                    key = { it.id!! }
+                ) { category ->
+                    val subtitle = category.type.getCategoryType()
+                    CustomListItem(
+                        title = category.name.orEmpty(),
+                        subtitle = subtitle,
+                        leadingContent = {
+                            AsyncImage(
+                                model = category.icon,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Dark15)
+                                    .size(38.dp)
+                                    .padding(7.dp)
                             )
-                        )
-                    },
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp, vertical = 20.dp),
-                    textModifier = Modifier.padding(vertical = 17.dp)
-                )
+                        },
+                        modifier = Modifier.padding(vertical = 14.dp, horizontal = 20.dp),
+                        enable = false,
+                        trailingContent = {
+                            Icon(
+                                painter = rememberAsyncImagePainter(R.drawable.ic_delete),
+                                contentDescription = "Delete",
+                                tint = Red75,
+                                modifier = Modifier
+                                    .clickable(
+                                        enabled = category.userId != null,
+                                        onClick = { categoryViewModel.deleteCategory(category.id!!) },
+                                    )
+                                    .alpha(if (category.userId != null) 1f else 0.2f)
+                                    .border(1.dp, Dark10, RoundedCornerShape(12.dp))
+                                    .padding(vertical = 7.dp, horizontal = 10.dp)
+                            )
+                        },
+                        onClick = {}
+                    )
+                    HorizontalDivider(
+                        color = Dark10,
+                    )
+                }
+                item {
+                    Spacer(
+                        modifier = Modifier.padding(bottom = 95.dp)
+                    )
+                }
             }
+            FilledButton(
+                text = "Add",
+                onClick = {
+                    navController.navigate(
+                        CreateCategoryScreenRoute(
+                            categoryResponseModelArgs = null
+                        )
+                    )
+                },
+                modifier = Modifier
+                    .padding(20.dp)
+                    .align(Alignment.BottomCenter),
+                textModifier = Modifier.padding(vertical = 17.dp)
+            )
         }
-
-
         // show Loader
         ShowLoader(isLoading)
 
-    }
-}
-
-@Composable
-private fun ActionButtons(
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit,
-    enable: Boolean = true
-) {
-    val editIcon = rememberAsyncImagePainter(R.drawable.ic_edit)
-    val deleteIcon = rememberAsyncImagePainter(R.drawable.ic_delete)
-
-    Row(
-        modifier = Modifier
-            .border(1.dp, Dark10, RoundedCornerShape(12.dp))
-            .padding(vertical = 7.dp, horizontal = 10.dp)
-            .alpha(if (enable) 1f else 0.2f),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Icon(
-            painter = editIcon,
-            contentDescription = "Edit",
-            tint = Dark40,
-            modifier = Modifier.clickable(enabled = enable, onClick = onEditClick)
-        )
-        VerticalDivider(
-            color = Dark10,
-            thickness = 1.dp,
-            modifier = Modifier.height(20.dp)
-        )
-        Icon(
-            painter = deleteIcon,
-            contentDescription = "Delete",
-            tint = Red75,
-            modifier = Modifier.clickable(enabled = enable, onClick = onDeleteClick)
-        )
     }
 }

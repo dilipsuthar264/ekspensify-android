@@ -68,7 +68,7 @@ fun EditProfileBottomSheet(
     var selectedAvatarOptions by remember { mutableStateOf(AvatarOptions.DEFAULT) }
     val focusRequester = remember { FocusRequester() }
     val bottomSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = false,
+        skipPartiallyExpanded = true,
     )
 
     LaunchedEffect(Unit) {
@@ -78,16 +78,6 @@ fun EditProfileBottomSheet(
         }
         user.name?.let {
             editTextState.value = editTextState.value.copy(text = it)
-        }
-    }
-
-
-    val isKeyboardOpen by keyboardAsState()
-
-    LaunchedEffect(isKeyboardOpen) {
-        if (isKeyboardOpen) {
-            delay(300)
-            bottomSheetState.expand()
         }
     }
 

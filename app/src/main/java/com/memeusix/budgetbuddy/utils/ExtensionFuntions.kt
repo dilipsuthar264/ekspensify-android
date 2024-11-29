@@ -1,6 +1,9 @@
 package com.memeusix.budgetbuddy.utils
 
+import android.content.Context
+import android.content.Intent
 import android.icu.text.NumberFormat
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -105,4 +108,13 @@ fun String.getInitials(count: Int = 2): String {
 
 fun String.generateIconSlug(): String {
     return "ic_" + this.trim().lowercase().replace(' ', '_')
+}
+
+
+fun Context.openImage(imageUri: Uri) {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(imageUri, "image/*")
+        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    }
+    startActivity(intent)
 }

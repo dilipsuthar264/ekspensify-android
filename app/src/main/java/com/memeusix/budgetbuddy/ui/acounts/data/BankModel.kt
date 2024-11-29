@@ -37,6 +37,8 @@ data class BankModel(
             )
         }
 
+        fun getAccounts() = getBanks() + getWallet()
+
         private fun createBankModel(
             name: String, icon: Int, isSelected: Boolean = false
         ): BankModel {

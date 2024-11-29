@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,19 +29,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
@@ -49,25 +50,24 @@ import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
+import com.memeusix.budgetbuddy.data.model.responseModel.CustomIconModel
 import com.memeusix.budgetbuddy.navigation.CreateCategoryScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.components.CustomToggleButton
-import com.memeusix.budgetbuddy.ui.categories.data.CategoryIcons
 import com.memeusix.budgetbuddy.ui.categories.data.CategoryType
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
 import com.memeusix.budgetbuddy.ui.loader.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Dark10
 import com.memeusix.budgetbuddy.ui.theme.Light20
+import com.memeusix.budgetbuddy.ui.theme.Light60
+import com.memeusix.budgetbuddy.ui.theme.Violet80
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CreateCategoryScreen(
-    navController: NavController,
-    args: CreateCategoryScreenRoute,
-    viewModel: CategoryViewModel = hiltViewModel()
+    navController: NavController, args: CreateCategoryScreenRoute, viewModel: CategoryViewModel
 ) {
 
     // States
@@ -75,13 +75,15 @@ fun CreateCategoryScreen(
 
     val nameState = remember { mutableStateOf(TextFieldStateModel()) }
 
-    val icons = remember { CategoryIcons.getCategoryIcons() }
-
-    val selectedIcon = remember { mutableStateOf(icons.last()) }
+    val selectedIcon = remember { mutableStateOf(CustomIconModel()) }
 
     val scrollState = rememberScrollState()
 
     val createCategory by viewModel.createCategory.collectAsStateWithLifecycle()
+    val customIconsState by viewModel.getCustomIcons.collectAsStateWithLifecycle()
+    val isIconsLoading = customIconsState is ApiResponse.Loading
+    val icons = customIconsState.data.orEmpty()
+
     val isLoading = createCategory is ApiResponse.Loading
 
     // ShowToast
@@ -90,7 +92,7 @@ fun CreateCategoryScreen(
         toastState = null
     }
 
-    LaunchedEffect(createCategory) {
+    LaunchedEffect(createCategory, customIconsState) {
         Log.e("", "CreateCategoryScreen: $createCategory")
         when (val response = createCategory) {
             is ApiResponse.Success -> {
@@ -105,9 +107,27 @@ fun CreateCategoryScreen(
             is ApiResponse.Failure -> {
                 response.errorResponse?.let {
                     toastState = CustomToastModel(
-                        message = it.message,
-                        type = ToastType.ERROR,
-                        isVisible = true
+                        message = it.message, type = ToastType.ERROR, isVisible = true
+                    )
+                }
+            }
+
+            else -> Unit
+        }
+
+        when (val response = customIconsState) {
+            is ApiResponse.Success -> {
+                response.data?.let {
+                    if (it.isNotEmpty()) {
+                        selectedIcon.value = it[0]
+                    }
+                }
+            }
+
+            is ApiResponse.Failure -> {
+                response.errorResponse?.let {
+                    toastState = CustomToastModel(
+                        message = it.message, type = ToastType.ERROR, isVisible = true
                     )
                 }
             }
@@ -149,34 +169,35 @@ fun CreateCategoryScreen(
                 maxLength = 10
             )
 
-            IconSelectionCard(
-                icons,
-                selectedIcon.value,
-                onClick = { selectedIcon.value = it }
-            )
-
+            if (isIconsLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .align(Alignment.CenterHorizontally),
+                    color = Violet80
+                )
+            }
+            if (icons.isNotEmpty()) {
+                IconSelectionCard(icons, selectedIcon.value, onClick = { selectedIcon.value = it })
+            }
             Text(
                 stringResource(R.string.select_any_relevant_category_icon),
                 style = MaterialTheme.typography.labelSmall.copy(
-                    fontSize = 12.sp,
-                    color = Light20
+                    fontSize = 12.sp, color = Light20
                 ),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(Modifier.weight(1f))
             FilledButton(
-                text = "Add",
-                enabled = nameState.value.text.isNotEmpty(),
-                onClick = {
+                text = "Add", enabled = nameState.value.text.isNotEmpty(), onClick = {
                     val categoryResponse = CategoryResponseModel(
                         name = nameState.value.text,
                         type = selectedCategoryType.getValue(),
-                        icon = selectedIcon.value.iconSlug
+                        iconId = selectedIcon.value.id
                     )
                     viewModel.createCategory(categoryResponse)
-                },
-                textModifier = Modifier.padding(vertical = 17.dp)
+                }, textModifier = Modifier.padding(vertical = 17.dp)
             )
         }
 
@@ -187,8 +208,7 @@ fun CreateCategoryScreen(
 
 @Composable
 private fun CategoryTypeSelectionToggle(
-    selectedCategoryType: CategoryType,
-    onClick: (CategoryType) -> Unit
+    selectedCategoryType: CategoryType, onClick: (CategoryType) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -205,8 +225,7 @@ private fun CategoryTypeSelectionToggle(
                 radius = 24.dp,
                 isBorder = true,
                 fontStyle = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
+                    fontSize = 14.sp, fontWeight = FontWeight.Medium
                 )
             )
         }
@@ -216,9 +235,7 @@ private fun CategoryTypeSelectionToggle(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun IconSelectionCard(
-    icons: List<CategoryIcons>,
-    selectedIcon: CategoryIcons,
-    onClick: (CategoryIcons) -> Unit
+    icons: List<CustomIconModel>, selectedIcon: CustomIconModel, onClick: (CustomIconModel) -> Unit
 ) {
     val size = remember { mutableStateOf(IntSize.Zero) }
     val itemsPerRow =
@@ -239,24 +256,22 @@ fun IconSelectionCard(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        icons.forEach {
-            val selectedModifier = if (selectedIcon == it)
-                Modifier.border(
-                    1.dp,
-                    it.iconColor,
-                    RoundedCornerShape(8.dp)
-                ) else Modifier
 
-            Icon(
-                painter = rememberAsyncImagePainter(it.icon),
+        icons.forEach {
+            val selectedModifier = if (selectedIcon.id == it.id) Modifier.border(
+                1.dp, Violet80, RoundedCornerShape(8.dp)
+            ) else Modifier
+            AsyncImage(
+                model = it.path,
                 contentDescription = null,
-                tint = it.iconColor,
+                placeholder = painterResource(R.drawable.ic_loading),
+                error = painterResource(R.drawable.ic_loading),
                 modifier = Modifier
                     .padding(5.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(it.iconColor.copy(alpha = 0.2f))
+                    .background(Light60)
                     .size(38.dp)
-                    .clickable { onClick(it) }
+                    .clickable(interactionSource = null, indication = null) { onClick(it) }
                     .then(selectedModifier)
                     .padding(7.dp),
             )

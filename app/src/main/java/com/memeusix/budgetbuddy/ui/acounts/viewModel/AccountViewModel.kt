@@ -1,30 +1,63 @@
 package com.memeusix.budgetbuddy.ui.acounts.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.memeusix.budgetbuddy.data.ApiResponse
+import com.memeusix.budgetbuddy.data.BaseViewModel
 import com.memeusix.budgetbuddy.data.model.requestModel.AccountRequestModel
+import com.memeusix.budgetbuddy.data.model.responseModel.AccountListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.repository.AccountRepository
 import com.memeusix.budgetbuddy.utils.SpUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val accountRepository: AccountRepository
-) : ViewModel() {
+    private val accountRepository: AccountRepository,
+    private val spUtils: SpUtils
+) : ViewModel(), BaseViewModel {
 
-    @Inject
-    lateinit var spUtils: SpUtils
+    /**
+     * Get All Accounts
+     */
+    private val _getAllAccounts =
+        MutableStateFlow<ApiResponse<List<AccountResponseModel>>>(
+            ApiResponse.Idle
+        )
+    val getAllAccounts = _getAllAccounts.asStateFlow()
+
+    init {
+        loadAccounts()
+    }
+
+    private fun loadAccounts() {
+        if (spUtils.accountData != null && spUtils.accountData?.accounts?.isNotEmpty() == true) {
+            _getAllAccounts.value = ApiResponse.Success(spUtils.accountData?.accounts)
+        } else {
+            getAllAccounts()
+        }
+    }
+
+    fun getAllAccounts() {
+        viewModelScope.launch {
+            _getAllAccounts.value = ApiResponse.Loading(
+                currentData = getAllAccounts.value.data,
+                currentError = getAllAccounts.value.errorResponse
+            )
+            val response = handleData(_getAllAccounts.value) { accountRepository.getAllAccounts() }
+            if (response is ApiResponse.Success) {
+                spUtils.accountData = AccountListModel(response.data.orEmpty())
+            }
+            _getAllAccounts.value = response
+        }
+    }
+
 
     /**
      * Create Account Api
@@ -72,32 +105,5 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Get All Accounts
-     */
-    private val _getAllAccounts =
-        MutableStateFlow<ApiResponse<List<AccountResponseModel>>>(
-            ApiResponse.Idle
-        )
-    val getAllAccounts: StateFlow<ApiResponse<List<AccountResponseModel>>> = _getAllAccounts
-        .onStart {
-            getAllAccounts()
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.Lazily,
-            initialValue = _getAllAccounts.value
-        )
-
-    fun getAllAccounts() {
-        viewModelScope.launch {
-            Log.e("VIEWMODEL", "getAllAccounts: ${spUtils.accessToken}")
-            Log.e("VIEWMODEL", "getAllAccounts: ${spUtils.user}")
-            _getAllAccounts.value = ApiResponse.Loading(
-                currentData = getAllAccounts.value.data,
-                currentError = getAllAccounts.value.errorResponse
-            )
-            _getAllAccounts.value = accountRepository.getAllAccounts()
-        }
-    }
 
 }

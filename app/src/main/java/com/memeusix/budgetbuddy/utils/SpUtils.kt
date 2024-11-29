@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.data.model.responseModel.AccountListModel
+import com.memeusix.budgetbuddy.data.model.responseModel.CategoryListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import javax.inject.Inject
 
@@ -31,6 +33,29 @@ class SpUtils @Inject constructor(context: Context) {
             pref.edit().putString(USER_MODEL, json).apply()
         }
 
+    var accountData: AccountListModel?
+        get() {
+            val gson = Gson()
+            val json = getDataByKey(ACCOUNTS)
+            return gson.fromJson(json, AccountListModel::class.java)
+        }
+        set(accountData) {
+            val gson = Gson()
+            val json = gson.toJson(accountData)
+            pref.edit().putString(ACCOUNTS, json).apply()
+        }
+
+    var categoriesData: CategoryListModel?
+        get() {
+            val gson = Gson()
+            val json = getDataByKey(CATEGORIES)
+            return gson.fromJson(json, CategoryListModel::class.java)
+        }
+        set(categoriesData) {
+            val gson = Gson()
+            val json = gson.toJson(categoriesData)
+            pref.edit().putString(CATEGORIES, json).apply()
+        }
 
     private fun getDataByKey(key: String): String {
         return if (pref.contains(key)) {
@@ -44,7 +69,7 @@ class SpUtils @Inject constructor(context: Context) {
         pref.edit().putString(key, value).apply()
     }
 
-    fun logout(){
+    fun logout() {
         pref.edit().clear().apply()
     }
 
@@ -53,5 +78,7 @@ class SpUtils @Inject constructor(context: Context) {
         private const val ACCESS_TOKEN = "ACCESS_TOKEN"
         private const val IS_LOGGED_IN = "IS_LOGGED_IN"
         private const val USER_MODEL = "USER_MODEL"
+        private const val ACCOUNTS = "ACCOUNTS"
+        private const val CATEGORIES = "CATEGORIES"
     }
 }

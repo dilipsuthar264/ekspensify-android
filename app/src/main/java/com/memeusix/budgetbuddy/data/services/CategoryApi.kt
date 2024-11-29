@@ -1,6 +1,7 @@
 package com.memeusix.budgetbuddy.data.services
 
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
+import com.memeusix.budgetbuddy.data.model.responseModel.CustomIconModel
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -13,10 +14,14 @@ interface CategoryApi {
     @GET("categories")
     suspend fun getCategories(): Response<List<CategoryResponseModel>>
 
+    @GET("categories/custom-icons")
+    suspend fun getCustomIcons(): Response<List<CustomIconModel>>
+
     @POST("categories")
     suspend fun createCategory(
         @Body categoryResponseModel: CategoryResponseModel
     ): Response<CategoryResponseModel>
+
 
     @DELETE("categories/{id}")
     suspend fun deleteCategory(
