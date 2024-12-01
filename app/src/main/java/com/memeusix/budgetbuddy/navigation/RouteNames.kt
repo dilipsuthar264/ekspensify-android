@@ -1,10 +1,8 @@
 package com.memeusix.budgetbuddy.navigation
 
-import com.memeusix.budgetbuddy.utils.AccountResponseArgs
 import com.memeusix.budgetbuddy.utils.TransactionType
 import kotlinx.serialization.Serializable
 
-typealias accountResponseJson = String
 
 @Serializable
 object SplashScreenRoute
@@ -50,7 +48,7 @@ typealias AccountListArgs = String
 
 @Serializable
 data class CreateAccountScreenRoute(
-    val accountResponseArgs: AccountResponseArgs? = null,
+    val accountResponseArgs: String? = null,
     val accountList: AccountListArgs? = null,
     val isFromProfile: Boolean = false,
 )
@@ -67,5 +65,5 @@ data class CreateCategoryScreenRoute(
 // Transaction Screens
 @Serializable
 data class CreateTransactionScreenRoute(
-    val transactionType : TransactionType
+    val transactionType: TransactionType
 )

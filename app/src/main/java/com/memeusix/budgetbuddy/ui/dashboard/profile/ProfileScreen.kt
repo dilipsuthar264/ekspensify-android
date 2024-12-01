@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.CustomListItem
+import com.memeusix.budgetbuddy.components.ListIcon
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
@@ -61,7 +62,7 @@ fun ProfileScreen(
 ) {
     val getMeState by viewmodel.getMe.collectAsStateWithLifecycle()
     val updateMeState by viewmodel.updateMe.collectAsStateWithLifecycle()
-    var toastState by remember { mutableStateOf<CustomToastModel?>(null) }
+    val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
 
     var showEditBottomSheet by remember { mutableStateOf(false) }
 
@@ -87,7 +88,7 @@ fun ProfileScreen(
 
             is ApiResponse.Failure -> {
                 getMeState.errorResponse?.let {
-                    toastState = CustomToastModel(
+                    toastState.value = CustomToastModel(
                         message = it.message,
                         isVisible = true,
                         type = ToastType.ERROR
@@ -105,7 +106,7 @@ fun ProfileScreen(
 
             is ApiResponse.Failure -> {
                 updateMeState.errorResponse?.let {
-                    toastState = CustomToastModel(
+                    toastState.value = CustomToastModel(
                         message = it.message,
                         isVisible = true,
                         type = ToastType.ERROR
@@ -118,9 +119,7 @@ fun ProfileScreen(
     }
 
     // Custom Toast
-    CustomToast(toastState) {
-        toastState = null
-    }
+    CustomToast(toastState)
 
 
     // Edit Profile Bottom Sheet
@@ -206,7 +205,9 @@ fun ProfileScreen(
 private fun ProfileListItem(profileOptions: ProfileOptions, onClick: () -> Unit) {
     CustomListItem(
         title = profileOptions.title,
-        icon = profileOptions.icon,
+        leadingContent = {
+            ListIcon(profileOptions.icon)
+        },
         modifier = Modifier.padding(horizontal = 15.dp, vertical = 9.dp),
         trailingContent = {
             Image(

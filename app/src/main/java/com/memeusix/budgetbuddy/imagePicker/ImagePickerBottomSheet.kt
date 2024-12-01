@@ -6,7 +6,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -38,9 +38,6 @@ import com.memeusix.budgetbuddy.ui.theme.Dark10
 fun ImagePickerBottomSheet(
     onDismiss: (Uri?) -> Unit
 ) {
-
-    val TAG = "ImagePickerBottomSheet"
-
     val context = LocalContext.current
 
     val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -62,7 +59,6 @@ fun ImagePickerBottomSheet(
 
     val imagePickerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            Log.e(TAG, "Gallery Picker URI: $uri")
             selectedImageUri.value = uri
             onDismiss(selectedImageUri.value)
         }
@@ -70,16 +66,14 @@ fun ImagePickerBottomSheet(
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
             if (success) {
-                Log.e(TAG, "Camera Capture Success: URI -> ${selectedImageUri.value}")
                 onDismiss(selectedImageUri.value)
-            } else {
-                Log.e(TAG, "Camera Capture Failed")
             }
         }
 
 
     ModalBottomSheet(
         onDismissRequest = { onDismiss(null) },
+        containerColor = MaterialTheme.colorScheme.background,
     ) {
         Row(
             modifier = Modifier

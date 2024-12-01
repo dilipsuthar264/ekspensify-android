@@ -1,6 +1,5 @@
 package com.memeusix.budgetbuddy.components
 
-import androidx.compose.foundation.background
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -10,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -26,11 +24,19 @@ import com.memeusix.budgetbuddy.utils.singleClick
 fun AppBar(
     heading: String,
     navController: NavController,
-    elevation: Boolean,
+    elevation: Boolean = false,
     isBackNavigation: Boolean = true,
     isLightColor: Boolean = false,
     bgColor: Color = MaterialTheme.colorScheme.background
 ) {
+    val titleTextStyle = Typography.titleSmall.copy(
+        fontWeight = FontWeight.SemiBold,
+        color = if (isLightColor) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+    )
+
+    val navigationIconTint =
+        if (isLightColor) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+
     Surface(
         shadowElevation = if (elevation) 0.5.dp else 0.dp,
     ) {
@@ -38,23 +44,16 @@ fun AppBar(
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = bgColor
             ),
-            title = {
-                Text(
-                    text = heading,
-                    style = Typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
-                    color = if (isLightColor) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
-                )
-            },
+            title = { Text(heading, style = titleTextStyle) },
             navigationIcon = {
                 if (isBackNavigation) {
                     IconButton(
-                        onClick = singleClick { navController.popBackStack() },
+                        onClick = singleClick(onClick = navController::popBackStack),
                     ) {
                         Icon(
                             imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
                             contentDescription = "Back",
-                            tint = if (isLightColor) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
+                            tint = navigationIconTint
                         )
                     }
                 }

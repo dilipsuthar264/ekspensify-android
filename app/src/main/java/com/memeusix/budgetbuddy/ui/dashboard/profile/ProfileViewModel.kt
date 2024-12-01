@@ -31,7 +31,7 @@ class ProfileViewModel @Inject constructor(
     fun getMe() {
         viewModelScope.launch {
             _getMe.value = ApiResponse.Loading(
-                currentData = _getMe.value.data, currentError = null
+                currentData = _getMe.value.data,
             )
             val response = handleData(_getMe.value) { profileRepository.getMe() }
             _getMe.value = response
@@ -50,7 +50,7 @@ class ProfileViewModel @Inject constructor(
     fun updateMe(user: UserResponseModel) {
         viewModelScope.launch {
             _updateMe.value = ApiResponse.Loading(
-                currentData = _updateMe.value.data, currentError = null
+                currentData = _updateMe.value.data,
             )
             val response = profileRepository.updateMe(user)
             _updateMe.value = response

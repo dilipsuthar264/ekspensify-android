@@ -49,4 +49,9 @@
     <string name="select_any_relevant_category_icon">Select any relevant category icon</string>
     <string name="categories">Categories</string>
     <string name="select_category">Select Category</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="total">Total</string>
+    <string name="continue_">Continue</string>
+    <string name="delete">Delete</string>
+    <string name="how_much">How much?</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.memeusix.budgetbuddy.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.memeusix.budgetbuddy.ui.theme.Dark10
+import com.memeusix.budgetbuddy.ui.theme.Light40
 
 @Composable
 fun FilledButton(
@@ -30,10 +33,13 @@ fun FilledButton(
     Button(
         shape = shape,
         onClick = onClick,
-        colors = colors,
+        colors = colors.copy(
+            disabledContainerColor = Light40
+        ),
         enabled = enabled,
         contentPadding = PaddingValues(0.dp),
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
     ) {
         Text(
             text = text,

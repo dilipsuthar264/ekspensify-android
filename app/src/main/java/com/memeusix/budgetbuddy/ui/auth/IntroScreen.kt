@@ -7,16 +7,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,10 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.model.IntroPages
 import com.memeusix.budgetbuddy.navigation.LoginScreenRoute
 import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
-import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.utils.singleClick
 
 @Composable
@@ -46,18 +50,25 @@ fun IntroScreen(navController: NavController) {
         initialPage = 0,
         initialPageOffsetFraction = 0f
     )
-
+    val textModifier = Modifier.padding(vertical = 17.dp)
+    val btnModifier = Modifier.padding(horizontal = 20.dp)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
+            .safeContentPadding()
+            .imePadding()
+            .padding(vertical = 10.dp)
             .fillMaxSize()
-            .safeDrawingPadding()
+            .verticalScroll(rememberScrollState())
     ) {
-        HorizontalPager(state = pagerState) { page ->
-            PageView(introPages[page])
+        Spacer(Modifier.weight(1f))
+        HorizontalPager(
+            state = pagerState,
+        ) { page ->
+            PageView(introPages[page], modifier = Modifier.fillMaxWidth())
         }
-        Spacer(modifier = Modifier.height(30.dp))
+        VerticalSpace(30.dp)
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
@@ -66,21 +77,16 @@ fun IntroScreen(navController: NavController) {
                 PageIndicator(pagerState.currentPage == it)
             }
         }
-        Spacer(modifier = Modifier.height(30.dp))
+        VerticalSpace(30.dp)
         FilledButton(
             text = stringResource(R.string.sign_up),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ),
             onClick = singleClick {
                 navController.navigate(RegisterScreenRoute)
             },
-            shape = RoundedCornerShape(16.dp),
-            textModifier = Modifier.padding(vertical = 17.dp),
-            modifier = Modifier.padding(horizontal = 20.dp)
+            textModifier = textModifier,
+            modifier = btnModifier
         )
-        Spacer(modifier = Modifier.height(30.dp))
+        VerticalSpace(30.dp)
         FilledButton(
             text = stringResource(R.string.login),
             colors = ButtonDefaults.buttonColors(
@@ -90,17 +96,17 @@ fun IntroScreen(navController: NavController) {
             onClick = singleClick {
                 navController.navigate(LoginScreenRoute)
             },
-            shape = RoundedCornerShape(16.dp),
-            textModifier = Modifier.padding(vertical = 17.dp),
-            modifier = Modifier.padding(horizontal = 20.dp)
+            textModifier = textModifier,
+            modifier = btnModifier
         )
+        Spacer(modifier = Modifier.weight(1f))
     }
 }
 
 @Composable
-fun PageIndicator(isSelected: Boolean) {
+private fun PageIndicator(isSelected: Boolean) {
     Box(
-        modifier = Modifier
+        Modifier
             .padding(6.dp)
             .size(if (isSelected) 10.dp else 5.dp)
             .clip(CircleShape)
@@ -112,13 +118,20 @@ fun PageIndicator(isSelected: Boolean) {
 }
 
 @Composable
-fun PageView(introPages: IntroPages) {
+fun PageView(introPages: IntroPages, modifier: Modifier) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Image(painter = painterResource(introPages.image), null)
+        Image(
+            painter = painterResource(id = introPages.image),
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 40.dp)
+                .aspectRatio(1f)
+        )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
             introPages.title,

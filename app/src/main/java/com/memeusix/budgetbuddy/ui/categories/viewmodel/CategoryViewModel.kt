@@ -48,7 +48,6 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             _getCategories.value = ApiResponse.Loading(
                 currentData = _getCategories.value.data,
-                currentError = null
             )
             val response = handleData(_getCategories.value) { categoryRepository.getCategories() }
             if (response is ApiResponse.Success) {

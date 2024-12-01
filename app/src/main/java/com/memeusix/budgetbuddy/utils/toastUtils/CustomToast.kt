@@ -1,15 +1,9 @@
 package com.memeusix.budgetbuddy.utils.toastUtils
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.EaseInOut
-import androidx.compose.animation.core.EaseOutBounce
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -20,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -35,24 +30,23 @@ import com.memeusix.budgetbuddy.ui.theme.Red20
 import com.memeusix.budgetbuddy.ui.theme.Yellow120
 import com.memeusix.budgetbuddy.ui.theme.Yellow20
 import kotlinx.coroutines.delay
-import kotlin.let
-
 
 @Composable
-fun CustomToast(toastState: CustomToastModel?, onDismiss: () -> Unit) {
-    LaunchedEffect(toastState?.isVisible) {
-        delay(toastState?.duration ?: 1000)
-        onDismiss()
+fun CustomToast(toastState: MutableState<CustomToastModel?>) {
+
+    LaunchedEffect(toastState.value?.isVisible) {
+        delay(toastState.value?.duration ?: 1000)
+        toastState.value = null
     }
 
     val alpha = animateFloatAsState(
-        targetValue = if (toastState?.isVisible == true) 1f else 0f,
+        targetValue = if (toastState.value?.isVisible == true) 1f else 0f,
         animationSpec = tween(
             durationMillis = 1000,
             easing = LinearOutSlowInEasing
         ), label = ""
     )
-    toastState?.let {
+    toastState.value?.let {
         AnimatedVisibility(
             visible = it.isVisible,
             modifier = Modifier
@@ -63,13 +57,13 @@ fun CustomToast(toastState: CustomToastModel?, onDismiss: () -> Unit) {
             Popup(
                 alignment = Alignment.BottomCenter,
                 offset = IntOffset(0, -200),
-                onDismissRequest = { toastState.isVisible = false }
+                onDismissRequest = { it.isVisible = false }
             ) {
                 Text(
-                    text = toastState.message
+                    text = it.message
                         ?: "",
                     style = MaterialTheme.typography.labelSmall,
-                    color = when (toastState.type) {
+                    color = when (it.type) {
                         ToastType.SUCCESS -> Green120
                         ToastType.INFO -> Yellow120
                         ToastType.WARNING -> Yellow120
@@ -80,7 +74,7 @@ fun CustomToast(toastState: CustomToastModel?, onDismiss: () -> Unit) {
                         .clip(RoundedCornerShape(20.dp))
                         .requiredWidthIn(max = LocalConfiguration.current.screenWidthDp.dp - 100.dp)
                         .background(
-                            when (toastState.type) {
+                            when (it.type) {
                                 ToastType.SUCCESS -> Green20
                                 ToastType.INFO -> Yellow20
                                 ToastType.WARNING -> Yellow20
@@ -92,6 +86,4 @@ fun CustomToast(toastState: CustomToastModel?, onDismiss: () -> Unit) {
             }
         }
     }
-
-
 }

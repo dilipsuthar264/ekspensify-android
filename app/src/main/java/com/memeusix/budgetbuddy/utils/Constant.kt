@@ -1,11 +1,10 @@
 package com.memeusix.budgetbuddy.utils
 
-
 enum class AccountType {
-    WALLET,
-    BANK;
+    BANK,
+    WALLET;
 
-    fun getVal(): String {
+    fun getDisplayName(): String {
         return when (this) {
             WALLET -> "Wallet"
             BANK -> "Bank"
@@ -28,7 +27,7 @@ enum class BottomSheetType {
     CATEGORY,
     ACCOUNT;
 
-    fun getVal() = when (this) {
+    fun getDisplayName() = when (this) {
         CATEGORY -> "Category"
         ACCOUNT -> "Account"
     }

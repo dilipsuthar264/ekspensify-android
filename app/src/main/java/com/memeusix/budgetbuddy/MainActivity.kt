@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
                 android.graphics.Color.TRANSPARENT,
             )
         )
-
         setContent {
             val navController = rememberNavController()
             BudgetBuddyTheme() {

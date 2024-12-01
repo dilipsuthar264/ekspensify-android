@@ -7,8 +7,8 @@ enum class CategoryType {
 
     fun getValue(): String? {
         return when (this) {
-            INCOME -> "DEBIT"
-            EXPENSE -> "CREDIT"
+            EXPENSE -> "DEBIT"
+            INCOME -> "CREDIT"
             BOTH -> null
         }
     }

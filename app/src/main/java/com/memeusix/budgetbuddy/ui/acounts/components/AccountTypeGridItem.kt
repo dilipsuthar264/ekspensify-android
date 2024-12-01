@@ -26,7 +26,6 @@ fun AccountTypeGridItem(
     item: BankModel,
     onClick: () -> Unit,
     modifier: Modifier,
-    isText: Boolean = false,
 ) {
     val (borderColor, backgroundColor) = if (item.isSelected) {
         MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.secondary
@@ -37,29 +36,22 @@ fun AccountTypeGridItem(
         modifier = modifier
             .height(40.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(color = backgroundColor, RoundedCornerShape(8.dp))
+            .background(color = backgroundColor)
             .border(width = 1.dp, color = borderColor, RoundedCornerShape(8.dp))
             .clickable(
                 enabled = item.isEnable,
                 interactionSource = null,
                 indication = null,
                 onClick = onClick
-            ).alpha(if (item.isEnable) 1f else 0.2f),
+            )
+            .alpha(if (item.isEnable) 1f else 0.2f),
         contentAlignment = Alignment.Center
     ) {
-        if (isText) {
-            Text(
-                text = item.name,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-        } else {
-            Image(
-                painterResource(item.icon!!),
-                contentDescription = null,
-                contentScale = ContentScale.Fit
-            )
-        }
+        Image(
+            painterResource(item.icon!!),
+            contentDescription = null,
+            contentScale = ContentScale.Fit
+        )
     }
 }
 

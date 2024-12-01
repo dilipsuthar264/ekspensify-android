@@ -22,7 +22,7 @@ android {
     compileSdk = 34
 
     val properties = Properties()
-
+    properties.load(project.rootProject.file("local.properties").inputStream())
     defaultConfig {
         applicationId = "com.memeusix.budgetbuddy"
         minSdk = 24
@@ -34,7 +34,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        properties.load(project.rootProject.file("local.properties").inputStream())
+
         buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
     }
 
@@ -42,7 +42,7 @@ android {
     buildTypes {
         debug {
             isDebuggable = true
-            buildConfigField("String", "BASE_URL", project.property("HOST_API").toString())
+            buildConfigField("String", "BASE_URL", properties.getProperty("HOST_API"))
         }
         release {
             isMinifyEnabled = false
@@ -50,7 +50,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", project.property("HOST_API").toString())
+            buildConfigField("String", "BASE_URL", properties.getProperty("HOST_API"))
             signingConfig = signingConfigs.getByName("debug")
         }
 //
@@ -198,9 +198,9 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.7.0")
 
 
-    implementation ("androidx.compose.animation:animation:1.7.5")
+    implementation("androidx.compose.animation:animation:1.7.5")
 
-    implementation ("com.google.accompanist:accompanist-permissions:0.34.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
 
 
 }

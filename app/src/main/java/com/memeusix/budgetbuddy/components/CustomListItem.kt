@@ -1,6 +1,5 @@
 package com.memeusix.budgetbuddy.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,16 +21,15 @@ import com.memeusix.budgetbuddy.ui.theme.interFontFamily
 fun CustomListItem(
     title: String,
     subtitle: String = "",
-    @DrawableRes icon: Int? = null,
     enable: Boolean = true,
     modifier: Modifier = Modifier,
     leadingContent: @Composable () -> Unit = {},
-    trailingContent: @Composable () -> Unit,
+    trailingContent: @Composable () -> Unit = {},
     titleStyle: TextStyle = MaterialTheme.typography.bodyMedium.copy(
         fontWeight = FontWeight.Medium,
         color = MaterialTheme.colorScheme.onBackground
     ),
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
 ) {
 
     Row(
@@ -42,11 +40,7 @@ fun CustomListItem(
             .clickable(enabled = enable, onClick = onClick)
             .then(modifier)
     ) {
-        if (icon != null) {
-            ListIcon(icon)
-        } else {
-            leadingContent()
-        }
+        leadingContent()
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)

@@ -5,11 +5,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,25 +19,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.HorizontalSpace
 
 @Composable
 fun GoogleAuthBtn(
     text: String,
     onClick: () -> Unit
 ) {
-    Row(horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.surfaceContainerLow,
-                RoundedCornerShape(16.dp)
-            )
+            .border(1.dp, MaterialTheme.colorScheme.surfaceContainerLow, RoundedCornerShape(16.dp))
             .clip(RoundedCornerShape(16.dp))
-            .clickable {
-                onClick()
-            }) {
+            .clickable { onClick() },
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Image(
             painterResource(R.drawable.ic_google),
             null,
@@ -47,7 +42,7 @@ fun GoogleAuthBtn(
                 .padding(vertical = 8.dp)
                 .size(28.dp)
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        HorizontalSpace(8.dp)
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge,

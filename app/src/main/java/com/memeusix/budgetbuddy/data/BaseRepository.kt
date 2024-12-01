@@ -19,7 +19,6 @@ interface BaseRepository {
     suspend fun <T> handleResponse(call: suspend () -> Response<T>): ApiResponse<T> {
         try {
             val response = call.invoke()
-            Log.e(TAG, "handleResponse: $response", )
             return when {
                 response.isSuccessful -> {
                     ApiResponse.Success(response = response.body())
@@ -30,11 +29,9 @@ interface BaseRepository {
                 }
             }
         }catch (e :EOFException){
-            Log.e(TAG, "handleResponse: Empty response body (EOFException)")
             return ApiResponse.Success(response = null)
         }
         catch (e: Exception) {
-            Log.e(TAG, "handleResponse: $e")
             return handleException(e)
         }
     }

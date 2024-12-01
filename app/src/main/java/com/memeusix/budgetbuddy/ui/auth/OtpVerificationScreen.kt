@@ -35,13 +35,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.data.ApiResponse
-import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
-import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.components.OtpInputField
-import com.memeusix.budgetbuddy.ui.loader.ShowLoader
+import com.memeusix.budgetbuddy.data.ApiResponse
+import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
+import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
 import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
@@ -78,10 +78,8 @@ fun OtpVerificationScreen(
     /**
      * Setting up Toast
      */
-    var toastState by remember { mutableStateOf<CustomToastModel?>(null) }
-    CustomToast(toastState) {
-        toastState = null
-    }
+    val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
+    CustomToast(toastState)
 
 
     LaunchedEffect(key1 = timeRemaining) {
@@ -115,7 +113,7 @@ fun OtpVerificationScreen(
 
             is ApiResponse.Failure -> {
                 loginResponse.errorResponse?.apply {
-                    toastState = CustomToastModel(
+                    toastState.value = CustomToastModel(
                         message = this.message,
                         isVisible = true,
                         type = ToastType.ERROR
@@ -134,7 +132,7 @@ fun OtpVerificationScreen(
                 timeRemaining = 30
                 isResendEnable = false
 
-                toastState = CustomToastModel(
+                toastState.value = CustomToastModel(
                     message = context.getString(R.string.otp_sent_successfully),
                     isVisible = true,
                     type = ToastType.SUCCESS
@@ -144,7 +142,7 @@ fun OtpVerificationScreen(
 
             is ApiResponse.Failure -> {
                 sendOtpResponse.errorResponse?.apply {
-                    toastState = CustomToastModel(
+                    toastState.value = CustomToastModel(
                         message = this.message,
                         isVisible = true,
                         type = ToastType.ERROR

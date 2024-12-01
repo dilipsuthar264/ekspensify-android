@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.icu.text.NumberFormat
 import android.net.Uri
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -117,4 +121,13 @@ fun Context.openImage(imageUri: Uri) {
         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
     }
     startActivity(intent)
+}
+
+fun Modifier.dynamicPadding(paddingValues: PaddingValues): Modifier {
+    return this.then(
+        Modifier
+            .padding(top = paddingValues.calculateTopPadding())
+            .navigationBarsPadding()
+            .imePadding()
+    )
 }

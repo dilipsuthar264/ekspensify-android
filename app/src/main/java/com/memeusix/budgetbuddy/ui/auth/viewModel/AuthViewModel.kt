@@ -20,7 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
 import java.util.UUID
@@ -30,6 +30,7 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
+
     companion object {
         val TAG = AuthViewModel::class.java.name
     }
@@ -40,7 +41,7 @@ class AuthViewModel @Inject constructor(
      */
     private val _signInWithGoogle =
         MutableStateFlow<ApiResponse<AuthResponseModel>>(ApiResponse.Idle)
-    val signInWithGoogle: StateFlow<ApiResponse<AuthResponseModel>> get() = _signInWithGoogle
+    val signInWithGoogle = _signInWithGoogle.asStateFlow()
     fun signInWithGoogle(idToken: String) {
         viewModelScope.launch {
             _signInWithGoogle.value = ApiResponse.Loading()
@@ -55,7 +56,7 @@ class AuthViewModel @Inject constructor(
      */
     private val _signUpWithGoogle =
         MutableStateFlow<ApiResponse<AuthResponseModel>>(ApiResponse.Idle)
-    val signUpWithGoogle: StateFlow<ApiResponse<AuthResponseModel>> get() = _signUpWithGoogle
+    val signUpWithGoogle = _signUpWithGoogle.asStateFlow()
     fun signUpWithGoogle(idToken: String) {
         viewModelScope.launch {
             _signUpWithGoogle.value = ApiResponse.Loading()
@@ -69,12 +70,11 @@ class AuthViewModel @Inject constructor(
      *  Login Api Calling
      */
     private val _login = MutableStateFlow<ApiResponse<AuthResponseModel>>(ApiResponse.Idle)
-    val login: StateFlow<ApiResponse<AuthResponseModel>> get() = _login
+    val login = _login.asStateFlow()
     fun login(authRequestModel: AuthRequestModel) {
         viewModelScope.launch {
             _login.value = ApiResponse.Loading()
             _login.value = authRepository.login(authRequestModel)
-
             delay(500)
             _login.value = ApiResponse.Idle
         }
@@ -85,13 +85,11 @@ class AuthViewModel @Inject constructor(
      *  Register Api calling
      */
     private val _register = MutableStateFlow<ApiResponse<UserResponseModel>>(ApiResponse.Idle)
-    val register: StateFlow<ApiResponse<UserResponseModel>> get() = _register
-
+    val register = _register.asStateFlow()
     fun register(authRequestModel: AuthRequestModel) {
         viewModelScope.launch {
             _register.value = ApiResponse.Loading()
             _register.value = authRepository.register(authRequestModel)
-
             delay(500)
             _register.value = ApiResponse.Idle
         }
@@ -101,7 +99,7 @@ class AuthViewModel @Inject constructor(
      * Send Otp Api calling
      */
     private val _sendOtp = MutableStateFlow<ApiResponse<Any>>(ApiResponse.Idle)
-    val sendOtp: StateFlow<ApiResponse<Any>> get() = _sendOtp
+    val sendOtp = _sendOtp.asStateFlow()
     fun sendOtp(authRequestModel: AuthRequestModel) {
         viewModelScope.launch {
             _sendOtp.value = ApiResponse.Loading()
@@ -140,11 +138,8 @@ class AuthViewModel @Inject constructor(
                 val credential = result.credential
                 val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
                 val googleIdToken = googleIdTokenCredential.idToken
-
                 // calling a call back for result
-                Log.e(TAG, "signInWithGoogle: $googleIdToken")
                 onResult(googleIdToken)
-
             } catch (e: GetCredentialException) {
                 Log.e(TAG, "signInWithGoogle: $e")
             } catch (e: GoogleIdTokenParsingException) {

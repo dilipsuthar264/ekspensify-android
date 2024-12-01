@@ -9,39 +9,15 @@ data class CustomIconModel(
     @Expose
     var id: Int? = null,
 
-    @SerializedName("name")
+    @SerializedName("is_active")
     @Expose
-    var name: String? = null,
+    var name: Boolean? = null,
+
+    @SerializedName("icon_id")
+    @Expose
+    var iconId: Int? = null,
 
     @SerializedName("path")
     @Expose
-    var path: String? = null,
-
-    @SerializedName("mime")
-    @Expose
-    var mime: String? = null,
-
-    @SerializedName("type")
-    @Expose
-    var type: String? = null,
-
-    @SerializedName("size")
-    @Expose
-    var size: Int? = null,
-
-    @SerializedName("collection")
-    @Expose
-    var collection: String? = null,
-
-    @SerializedName("created_at")
-    @Expose
-    var createdAt: String? = null,
-
-    @SerializedName("updated_at")
-    @Expose
-    var updatedAt: String? = null,
-
-    @SerializedName("deleted_at")
-    @Expose
-    var deletedAt: String? = null
+    var path: String? = null
 ) : Serializable

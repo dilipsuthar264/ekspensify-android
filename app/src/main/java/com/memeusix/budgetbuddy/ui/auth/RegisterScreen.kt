@@ -37,7 +37,6 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
-import com.memeusix.budgetbuddy.navigation.BottomNavRoute
 import com.memeusix.budgetbuddy.navigation.LoginScreenRoute
 import com.memeusix.budgetbuddy.navigation.OtpVerificationScreenRoute
 import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
@@ -47,7 +46,7 @@ import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.components.FilledButton
-import com.memeusix.budgetbuddy.ui.loader.ShowLoader
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
 import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
@@ -91,10 +90,8 @@ fun RegisterScreen(
     /**
      * Setting Up Toast
      */
-    var toastState by remember { mutableStateOf<CustomToastModel?>(null) }
-    CustomToast(toastState) {
-        toastState = null
-    }
+    val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
+    CustomToast(toastState)
 
 
     LaunchedEffect(registerResponse) {
@@ -110,7 +107,7 @@ fun RegisterScreen(
 
             is ApiResponse.Failure -> {
                 registerResponse.errorResponse?.apply {
-                    toastState = CustomToastModel(
+                    toastState.value = CustomToastModel(
                         message = this.message,
                         isVisible = true,
                         type = ToastType.ERROR
@@ -138,7 +135,7 @@ fun RegisterScreen(
 
             is ApiResponse.Failure -> {
                 signUpWithGoogleResponse.errorResponse?.apply {
-                    toastState = CustomToastModel(
+                    toastState.value = CustomToastModel(
                         message = this.message,
                         isVisible = true,
                         type = ToastType.ERROR
@@ -209,7 +206,7 @@ fun RegisterScreen(
                         }
 
                         !isCheckBoxCheck -> {
-                            toastState = CustomToastModel(
+                            toastState.value = CustomToastModel(
                                 message = context.getString(R.string.please_check_terms_and_conditions),
                                 isVisible = true,
                                 type = ToastType.ERROR

@@ -14,13 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,11 +34,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.CustomListItem
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
-import com.memeusix.budgetbuddy.ui.acounts.components.AccountListItem
+import com.memeusix.budgetbuddy.ui.acounts.components.AccountBalance
+import com.memeusix.budgetbuddy.ui.acounts.components.AccountIcon
 import com.memeusix.budgetbuddy.ui.theme.Light60
 import com.memeusix.budgetbuddy.utils.BottomSheetType
+import com.memeusix.budgetbuddy.utils.SetWindowDim
+import com.memeusix.budgetbuddy.utils.formatRupees
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -55,13 +62,14 @@ fun CategoryAndAccountBottomSheet(
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(top = 50.dp)
     ) {
         Column(
             modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Text(
-                "Select ${type.getVal()}",
+                "Select ${type.getDisplayName()}",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyLarge
@@ -89,6 +97,7 @@ private fun CategoryList(
     FlowRow(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         categories.forEach { category ->
             val isSelected = selectedCategory.value.id == category.id
@@ -143,9 +152,15 @@ private fun AccountList(
                     )
                     .padding(horizontal = 6.dp)
             ) {
-                AccountListItem(
-                    isListItem = true,
-                    account = account,
+                CustomListItem(
+                    leadingContent = {
+                        AccountIcon(account)
+                    },
+                    title = account.name.orEmpty(),
+                    modifier = Modifier.padding(10.dp),
+                    trailingContent = {
+                        AccountBalance(true, account.balance?.formatRupees() ?: "0")
+                    },
                     onClick = {
                         selectedAccount.value = account
                         onDismiss()

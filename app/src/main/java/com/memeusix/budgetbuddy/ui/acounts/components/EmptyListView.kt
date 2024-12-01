@@ -2,13 +2,20 @@ package com.memeusix.budgetbuddy.ui.acounts.components
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -22,33 +29,40 @@ import com.memeusix.budgetbuddy.ui.theme.interFontFamily
 
 // Empty List View
 @Composable
- fun EmptyListView(
+fun EmptyListView(
+    modifier: Modifier,
     onClick: () -> Unit
 ) {
-    Image(
-        painter = painterResource(R.drawable.ic_no_account),
-        contentDescription = null,
-        modifier = Modifier.padding(horizontal = 27.dp),
-        contentScale = ContentScale.Fit
-    )
-    Text(
-        text = stringResource(R.string.no_account_message),
-        fontFamily = interFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 12.sp,
-        textAlign = TextAlign.Center,
-        lineHeight = 22.sp,
-        modifier = Modifier.padding(horizontal = 27.dp, vertical = 10.dp)
-    )
-    FilledButton(
-        text = "Add",
-        modifier = Modifier.padding(horizontal = 50.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.primary
-        ),
-        textModifier = Modifier.padding(vertical = 17.dp),
-        shape = RoundedCornerShape(16.dp),
-        onClick = onClick
-    )
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_no_account),
+            contentDescription = null,
+            modifier = Modifier.padding(horizontal = 27.dp),
+            contentScale = ContentScale.Fit
+        )
+        Text(
+            text = stringResource(R.string.no_account_message),
+            fontFamily = interFontFamily,
+            fontWeight = FontWeight.Medium,
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center,
+            lineHeight = 22.sp,
+            modifier = Modifier.padding(horizontal = 27.dp, vertical = 10.dp)
+        )
+        FilledButton(
+            text = "Add",
+            modifier = Modifier.padding(horizontal = 50.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.primary
+            ),
+            textModifier = Modifier.padding(vertical = 17.dp),
+            shape = RoundedCornerShape(16.dp),
+            onClick = onClick
+        )
+    }
 }

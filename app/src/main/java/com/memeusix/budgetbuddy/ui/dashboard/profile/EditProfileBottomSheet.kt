@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imeNestedScroll
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -47,16 +45,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
-import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
+import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import com.memeusix.budgetbuddy.ui.dashboard.profile.model.AvatarOptions
 import com.memeusix.budgetbuddy.ui.theme.Light20
 import com.memeusix.budgetbuddy.ui.theme.Violet20
 import com.memeusix.budgetbuddy.utils.getInitials
-import com.memeusix.budgetbuddy.utils.keyboardAsState
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -84,6 +80,7 @@ fun EditProfileBottomSheet(
     ModalBottomSheet(
         onDismissRequest = { onDismiss(null) },
         sheetState = bottomSheetState,
+        containerColor = MaterialTheme.colorScheme.background,
         modifier = Modifier,
         properties = ModalBottomSheetProperties(
             shouldDismissOnBackPress = true,

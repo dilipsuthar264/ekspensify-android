@@ -19,10 +19,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.CustomListItem
+import com.memeusix.budgetbuddy.components.ListIcon
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
-import com.memeusix.budgetbuddy.ui.categories.data.CategoryIcons
 import com.memeusix.budgetbuddy.ui.theme.Dark10
 import com.memeusix.budgetbuddy.ui.theme.Light20
 
@@ -37,8 +37,7 @@ fun SelectionOptions(
     val iconAndTitle = remember(selectedCategory, selectedAccount) {
         if (isCategory) {
             selectedCategory?.let { category ->
-                CategoryIcons.getCategoryIcons()
-                    .find { it.iconSlug == category.icon }?.icon to category.name
+                category.icon to category.name
             }
         } else {
             selectedAccount?.let { account ->
@@ -69,8 +68,10 @@ fun SelectionOptions(
             )
         }
         CustomListItem(
-            icon = icon,
             leadingContent = {
+                if (icon != null) {
+                    ListIcon(icon)
+                }
             },
             title = title ?: if (isCategory) "Selected Category" else "Selected Account",
             titleStyle = titleStyle,

@@ -21,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,6 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.AppBar
+import com.memeusix.budgetbuddy.components.CustomOutlineTextField
+import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
@@ -42,10 +44,7 @@ import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
 import com.memeusix.budgetbuddy.ui.auth.components.DontHaveAccountText
 import com.memeusix.budgetbuddy.ui.auth.components.GoogleAuthBtn
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
-import com.memeusix.budgetbuddy.components.AppBar
-import com.memeusix.budgetbuddy.components.CustomOutlineTextField
-import com.memeusix.budgetbuddy.components.FilledButton
-import com.memeusix.budgetbuddy.ui.loader.ShowLoader
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
 import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
@@ -61,11 +60,9 @@ fun LoginScreen(
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
 
-    // For toast state
-    var toastState by remember { mutableStateOf<CustomToastModel?>(null) }
-    CustomToast(toastState) {
-        toastState = null
-    }
+    // Custom Toast
+    val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
+    CustomToast(toastState)
 
     // email and password states
     val email: MutableState<TextFieldStateModel> =
@@ -102,7 +99,7 @@ fun LoginScreen(
                     if (!this.details.isNullOrEmpty()) {
                         email.value = email.value.copy(error = this.message)
                     } else {
-                        toastState = CustomToastModel(
+                        toastState.value = CustomToastModel(
                             message = this.message,
                             isVisible = true,
                             type = ToastType.ERROR
@@ -132,7 +129,7 @@ fun LoginScreen(
 
             is ApiResponse.Failure -> {
                 loginWithGoogleResponse.errorResponse?.apply {
-                    toastState = CustomToastModel(
+                    toastState.value = CustomToastModel(
                         message = this.message,
                         isVisible = true,
                         type = ToastType.ERROR

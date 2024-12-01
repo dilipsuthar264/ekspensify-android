@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,18 +17,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
@@ -42,6 +44,7 @@ import com.memeusix.budgetbuddy.ui.theme.Blue100
 import com.memeusix.budgetbuddy.ui.theme.Green100
 import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.utils.TransactionType
+import com.memeusix.budgetbuddy.utils.dynamicPadding
 import com.memeusix.budgetbuddy.utils.formatRupees
 
 @Composable
@@ -52,17 +55,17 @@ fun CreateTransactionScreen(
 ) {
     val systemUiController = rememberSystemUiController()
     DisposableEffect(Unit) {
-        systemUiController.setSystemBarsColor(
-            color = Color.Transparent, darkIcons = false
-        )
+        systemUiController.apply {
+            setStatusBarColor(Color.Transparent, darkIcons = false)
+        }
         onDispose {
-            systemUiController.setSystemBarsColor(
-                color = Color.Transparent, darkIcons = true
-            )
+            systemUiController.apply {
+                setStatusBarColor(Color.Transparent, darkIcons = true)
+            }
         }
     }
 
-    val transactionType = args.transactionType
+    val transactionType = remember { args.transactionType }
     val bgColor = when (transactionType) {
         TransactionType.DEBIT -> Green100
         TransactionType.CREDIT -> Red100
@@ -75,7 +78,8 @@ fun CreateTransactionScreen(
     val selectedAccount = remember { mutableStateOf(AccountResponseModel()) }
     val selectedAttachment = remember { mutableStateOf<Uri?>(null) }
 
-    Scaffold(containerColor = bgColor,
+    Scaffold(
+        containerColor = bgColor,
         contentColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             AppBar(
@@ -89,8 +93,7 @@ fun CreateTransactionScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .imePadding()
+                .dynamicPadding(paddingValues)
         ) {
             Column(
                 modifier = Modifier
@@ -100,22 +103,7 @@ fun CreateTransactionScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Spacer(Modifier.weight(1f))
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp, vertical = 20.dp)
-                        .fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Text(
-                        "How much?", style = MaterialTheme.typography.titleSmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
-                        )
-                    )
-                    Text(
-                        "₹${amountState.value.text.ifEmpty { "0" }.toInt().formatRupees()}",
-                        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 50.sp)
-                    )
-                }
+                AmountDisplayView(amountState)
                 CreateTransactionFromOptions(
                     amountState = amountState,
                     noteState = noteState,
@@ -130,12 +118,36 @@ fun CreateTransactionScreen(
                 )
             }
             FilledButton(
-                text = "Add", textModifier = Modifier.padding(vertical = 17.dp), onClick = {
-
-                }, modifier = Modifier
+                text = stringResource(R.string.add),
+                textModifier = Modifier.padding(vertical = 17.dp),
+                enabled = amountState.value.text.trim()
+                    .isNotEmpty() && selectedAccount.value.id != null && selectedCategory.value.id != null,
+                onClick = {},
+                modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(20.dp)
             )
         }
+    }
+}
+
+@Composable
+private fun AmountDisplayView(amountState: MutableState<TextFieldStateModel>) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 20.dp, vertical = 20.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Text(
+            stringResource(R.string.how_much), style = MaterialTheme.typography.titleSmall.copy(
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+            )
+        )
+        Text(
+            "₹${amountState.value.text.ifEmpty { "0" }.toInt().formatRupees()}",
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 50.sp)
+        )
     }
 }

@@ -85,12 +85,10 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
         }
 
         composable<CreateCategoryScreenRoute> {
-            val args = it.toRoute<CreateCategoryScreenRoute>()
             val parentEntry = navController.getBackStackEntry(CategoriesScreenRoute)
             val viewModel: CategoryViewModel = hiltViewModel(parentEntry)
             CreateCategoryScreen(
                 navController = navController,
-                args = args,
                 viewModel = viewModel
             )
         }

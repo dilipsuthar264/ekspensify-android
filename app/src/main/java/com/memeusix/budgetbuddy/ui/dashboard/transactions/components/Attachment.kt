@@ -64,7 +64,6 @@ fun AttachmentView(
     ) {
         if (hasAttachment) {
             CustomListItem(
-                icon = null,
                 leadingContent = {
                     AsyncImage(
                         model = selectedAttachment.value,
@@ -84,7 +83,7 @@ fun AttachmentView(
                         modifier = Modifier.clickable { onDelete() }
                     )
                 },
-                onClick = { onClick(hasAttachment) }
+                onClick = { onClick(true) }
             )
         } else {
             Row(
@@ -95,7 +94,7 @@ fun AttachmentView(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onClick(hasAttachment) }
+                    .clickable { onClick(false) }
             ) {
                 Icon(
                     painterResource(R.drawable.ic_attechment),

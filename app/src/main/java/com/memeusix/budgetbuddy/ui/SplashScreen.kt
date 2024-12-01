@@ -26,7 +26,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(navController: NavHostController, spUtils: SpUtils) {
     LaunchedEffect(Unit) {
-        delay(200)
+        delay(500)
         if (spUtils.isLoggedIn && spUtils.accessToken.isNotEmpty()) {
             if (spUtils.user?.accounts == 0) {
                 navController.navigate(AccountScreenRoute()) {

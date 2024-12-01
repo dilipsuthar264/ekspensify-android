@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -14,7 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -30,8 +31,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.memeusix.budgetbuddy.components.AppBar
-import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.navigation.CreateTransactionScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
@@ -44,7 +45,6 @@ import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileScreen
 import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
 import com.memeusix.budgetbuddy.ui.theme.Violet5
-import com.memeusix.budgetbuddy.utils.SpUtils
 
 
 @Composable
@@ -68,6 +68,7 @@ fun BottomNav(
     }
 
     Scaffold(
+        modifier = Modifier.navigationBarsPadding(),
         topBar = {
             key(currentIndex) {
                 AppBar(

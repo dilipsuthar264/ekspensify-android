@@ -47,8 +47,7 @@ class AccountViewModel @Inject constructor(
     fun getAllAccounts() {
         viewModelScope.launch {
             _getAllAccounts.value = ApiResponse.Loading(
-                currentData = getAllAccounts.value.data,
-                currentError = getAllAccounts.value.errorResponse
+                currentData = getAllAccounts.value.data
             )
             val response = handleData(_getAllAccounts.value) { accountRepository.getAllAccounts() }
             if (response is ApiResponse.Success) {

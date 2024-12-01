@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-@kotlinx.serialization.Serializable
 data class AccountResponseModel(
     @SerializedName("id")
     @Expose
@@ -43,7 +42,6 @@ data class AccountResponseModel(
     var deletedAt: String? = null
 ) : Serializable
 
-@kotlinx.serialization.Serializable
 data class AccountListModel(
     val accounts: List<AccountResponseModel>
 ) : Serializable

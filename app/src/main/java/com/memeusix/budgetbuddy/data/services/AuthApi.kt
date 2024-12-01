@@ -10,13 +10,11 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
 interface AuthApi {
-
     @FormUrlEncoded
     @POST("auth/google-signup")
     suspend fun signUpWithGoogle(
         @Field("id_token") idToken: String
     ): Response<AuthResponseModel>
-
 
     @FormUrlEncoded
     @POST("auth/google-signin")

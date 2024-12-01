@@ -23,14 +23,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
-
-    @Provides
-    @Singleton
-    fun provideSpUtils(application: Application): SpUtils {
-        return SpUtils(application.applicationContext)
-    }
-
-
     companion object {
         fun getRetrofit(spUtils: SpUtils): Retrofit {
             val httpClient = OkHttpClient.Builder()
@@ -65,6 +57,13 @@ class AppModule {
             }
         }
 
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideSpUtils(application: Application): SpUtils {
+        return SpUtils(application.applicationContext)
     }
 
 
