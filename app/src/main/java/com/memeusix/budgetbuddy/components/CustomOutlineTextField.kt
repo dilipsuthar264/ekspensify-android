@@ -39,7 +39,6 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.ui.theme.Dark10
 import com.memeusix.budgetbuddy.ui.theme.Light20
-import com.memeusix.budgetbuddy.ui.theme.Light40
 import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.ui.theme.Typography
 
@@ -49,6 +48,7 @@ fun CustomOutlineTextField(
     placeholder: String,
     modifier: Modifier = Modifier,
     isPassword: Boolean = false,
+    disable: Boolean = false,
     radius: Dp = 16.dp,
     color: TextFieldColors = OutlinedTextFieldDefaults.colors(
         unfocusedBorderColor = Color.Transparent,
@@ -68,6 +68,7 @@ fun CustomOutlineTextField(
         OutlinedTextField(
             value = state.value.text,
             singleLine = !isExpendable,
+            enabled = !disable,
             onValueChange = {
                 if (it.length <= maxLength) {
                     when (type) {
@@ -84,10 +85,12 @@ fun CustomOutlineTextField(
                 }
             },
             placeholder = {
-                Text(placeholder, color = Light20, style = MaterialTheme.typography.bodyLarge.copy(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal
-                ))
+                Text(
+                    placeholder, color = Light20, style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal
+                    )
+                )
             },
             colors = color,
             suffix = {

@@ -1,19 +1,29 @@
 package com.memeusix.budgetbuddy.ui.categories.components
 
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -31,27 +41,40 @@ import com.memeusix.budgetbuddy.ui.theme.Dark15
 import com.memeusix.budgetbuddy.ui.theme.Red75
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoryList(
-    scrollState: LazyListState,
     categoryList: List<CategoryResponseModel>,
     onDeleteClick: (Int) -> Unit
 ) {
+
+    val lazyListState = rememberLazyListState()
+    var previousListSize by remember { mutableIntStateOf(categoryList.size) }
+    LaunchedEffect(categoryList) {
+        if (categoryList.size > previousListSize) {
+            lazyListState.animateScrollToItem(0)
+        }
+        previousListSize = categoryList.size
+    }
+
+
     LazyColumn(
-        state = scrollState,
+        state = lazyListState,
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
+        userScrollEnabled = true,
+        flingBehavior = ScrollableDefaults.flingBehavior(),
     ) {
         items(
             categoryList,
-            key = { it.id!! }
+            key = { it.id!! },
         ) { category ->
-            val subtitle = category.type.getCategoryType()
+            val subtitle = remember(category.type) { category.type.getCategoryType() }
             CustomListItem(
                 title = category.name.orEmpty(),
                 subtitle = subtitle,
                 leadingContent = {
-                    CategoryIcon(category)
+                    CategoryIcon(category.icon)
                 },
                 modifier = Modifier.padding(vertical = 14.dp, horizontal = 20.dp),
                 enable = false,
@@ -67,18 +90,6 @@ fun CategoryList(
     }
 }
 
-@Composable
-private fun CategoryIcon(category: CategoryResponseModel) {
-    AsyncImage(
-        model = category.icon,
-        contentDescription = null,
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(Dark15)
-            .size(38.dp)
-            .padding(7.dp)
-    )
-}
 
 @Composable
 private fun DeleteIconBtn(

@@ -30,16 +30,17 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.CustomListItem
+import com.memeusix.budgetbuddy.data.model.responseModel.AttachmentResponseModel
 import com.memeusix.budgetbuddy.ui.theme.Dark10
 import com.memeusix.budgetbuddy.ui.theme.Light20
 
 @Composable
 fun AttachmentView(
-    selectedAttachment: MutableState<Uri?>,
+    selectedAttachment: MutableState<AttachmentResponseModel>,
     onClick: (Boolean) -> Unit,
     onDelete: () -> Unit
 ) {
-    val hasAttachment = selectedAttachment.value != null
+    val hasAttachment = selectedAttachment.value.path != null
     val borderModifier = if (hasAttachment) {
         Modifier.border(1.dp, Dark10, RoundedCornerShape(16.dp))
     } else {
@@ -66,7 +67,7 @@ fun AttachmentView(
             CustomListItem(
                 leadingContent = {
                     AsyncImage(
-                        model = selectedAttachment.value,
+                        model = selectedAttachment.value?.path,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

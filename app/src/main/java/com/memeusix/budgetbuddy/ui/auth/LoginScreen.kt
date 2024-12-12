@@ -35,6 +35,7 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
@@ -44,9 +45,7 @@ import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
 import com.memeusix.budgetbuddy.ui.auth.components.DontHaveAccountText
 import com.memeusix.budgetbuddy.ui.auth.components.GoogleAuthBtn
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
-import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
-import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
 import com.memeusix.budgetbuddy.utils.isValidEmail
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
@@ -56,7 +55,6 @@ import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
 @Composable
 fun LoginScreen(
     navController: NavController,
-    spUtils: SpUtils,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
 
@@ -96,15 +94,13 @@ fun LoginScreen(
 
             is ApiResponse.Failure -> {
                 sendOtpResponse.errorResponse?.apply {
-                    if (!this.details.isNullOrEmpty()) {
-                        email.value = email.value.copy(error = this.message)
-                    } else {
-                        toastState.value = CustomToastModel(
-                            message = this.message,
-                            isVisible = true,
-                            type = ToastType.ERROR
-                        )
-                    }
+
+                    toastState.value = CustomToastModel(
+                        message = this.message,
+                        isVisible = true,
+                        type = ToastType.ERROR
+                    )
+
                 }
             }
 
@@ -117,10 +113,10 @@ fun LoginScreen(
             is ApiResponse.Success -> {
                 loginWithGoogleResponse.data?.apply {
                     if (user != null && !token.isNullOrEmpty()) {
-                        spUtils.user = user
-                        spUtils.accessToken = token!!
-                        spUtils.isLoggedIn = true
-
+                        authViewModel.spUtils.pref.all.clear()
+                        authViewModel.spUtils.user = user
+                        authViewModel.spUtils.accessToken = token!!
+                        authViewModel.spUtils.isLoggedIn = true
                         goToNextScreenAfterLogin(navController)
                     }
 
@@ -181,7 +177,7 @@ fun LoginScreen(
                                 email.value.copy(error = context.getString(R.string.please_enter_your_email))
                         }
 
-                        !email.value.text.trim().isValidEmail() -> {
+                        !email.value.text.isValidEmail() -> {
                             email.value =
                                 email.value.copy(error = context.getString(R.string.please_enter_a_valid_email))
                         }
@@ -189,7 +185,7 @@ fun LoginScreen(
                         else -> {
                             authViewModel.sendOtp(
                                 AuthRequestModel(
-                                    email = email.value.text.trim()
+                                    email = email.value.text.trim { it == ' ' }
                                 )
                             )
                         }

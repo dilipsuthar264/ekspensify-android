@@ -2,7 +2,6 @@ package com.memeusix.budgetbuddy.ui.categories
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -12,7 +11,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,11 +21,11 @@ import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.navigation.CreateCategoryScreenRoute
 import com.memeusix.budgetbuddy.ui.categories.components.CategoryList
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
-import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.dynamicPadding
 import com.memeusix.budgetbuddy.utils.handleApiResponse
@@ -47,33 +45,31 @@ fun CategoriesScreen(
         }
     }
 
-    val scrollState = rememberLazyListState()
 
     //Custom Toast
     val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
     CustomToast(toastState)
 
-    var scroll by remember { mutableStateOf(false) }
+
     val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
-    LaunchedEffect(savedStateHandle, getCategories) {
+    LaunchedEffect(savedStateHandle) {
         savedStateHandle?.getLiveData<Boolean>(NavigationRequestKeys.CREATE_CATEGORY)
             ?.observeForever { result ->
-                if (result) {
-                    scroll = true
+                if (result == true) {
                     categoryViewModel.getCategories()
+                    savedStateHandle.remove<Boolean>(NavigationRequestKeys.CREATE_CATEGORY)
                 }
             }
     }
+
     LaunchedEffect(deleteCategories, getCategories) {
-        if (getCategories is ApiResponse.Success && scroll) {
-            scrollState.animateScrollToItem(0)
-            scroll = false
-        }
+
         handleApiResponse(response = deleteCategories,
             toastState = toastState,
             onSuccess = { data ->
                 data?.let {
                     categoryViewModel.getCategories()
+                    categoryViewModel.setToIdle()
                 }
             })
     }
@@ -95,7 +91,7 @@ fun CategoriesScreen(
                 .fillMaxSize()
                 .dynamicPadding(paddingValues)
         ) {
-            CategoryList(scrollState,
+            CategoryList(
                 getCategories.data.orEmpty(),
                 onDeleteClick = { categoryViewModel.deleteCategory(it) })
             FilledButton(

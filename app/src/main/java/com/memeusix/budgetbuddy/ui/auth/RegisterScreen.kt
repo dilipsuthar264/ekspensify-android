@@ -34,6 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.AppBar
+import com.memeusix.budgetbuddy.components.CustomOutlineTextField
+import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
@@ -43,12 +47,7 @@ import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
 import com.memeusix.budgetbuddy.ui.auth.components.DontHaveAccountText
 import com.memeusix.budgetbuddy.ui.auth.components.GoogleAuthBtn
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
-import com.memeusix.budgetbuddy.components.AppBar
-import com.memeusix.budgetbuddy.components.CustomOutlineTextField
-import com.memeusix.budgetbuddy.components.FilledButton
-import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
-import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
 import com.memeusix.budgetbuddy.utils.isValidEmail
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
@@ -58,7 +57,6 @@ import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    spUtils: SpUtils,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val nameState = remember { mutableStateOf(TextFieldStateModel()) }
@@ -124,9 +122,10 @@ fun RegisterScreen(
             is ApiResponse.Success -> {
                 signUpWithGoogleResponse.data?.apply {
                     if (user != null && !token.isNullOrEmpty()) {
-                        spUtils.user = user
-                        spUtils.accessToken = token!!
-                        spUtils.isLoggedIn = true
+                        authViewModel.spUtils.pref.all.clear()
+                        authViewModel.spUtils.user = user
+                        authViewModel.spUtils.accessToken = token!!
+                        authViewModel.spUtils.isLoggedIn = true
                         goToNextScreenAfterLogin(navController)
                     }
 

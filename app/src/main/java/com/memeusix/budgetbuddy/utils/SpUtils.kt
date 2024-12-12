@@ -8,8 +8,10 @@ import com.memeusix.budgetbuddy.data.model.responseModel.AccountListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class SpUtils @Inject constructor(context: Context) {
+@Singleton
+class SpUtils @Inject constructor(val context: Context) {
     val pref: SharedPreferences =
         context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
 
@@ -69,6 +71,7 @@ class SpUtils @Inject constructor(context: Context) {
         pref.edit().putString(key, value).apply()
     }
 
+    // During logout
     fun logout() {
         pref.edit().clear().apply()
     }

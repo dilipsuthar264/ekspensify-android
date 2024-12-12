@@ -31,7 +31,6 @@ fun CustomListItem(
     ),
     onClick: () -> Unit = {},
 ) {
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -43,7 +42,7 @@ fun CustomListItem(
         leadingContent()
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.spacedBy(5.dp)
         ) {
             Text(
                 text = title,
@@ -65,4 +64,5 @@ fun CustomListItem(
         }
         trailingContent()
     }
+
 }

@@ -37,6 +37,7 @@ import com.memeusix.budgetbuddy.ui.theme.Green100
 import com.memeusix.budgetbuddy.ui.theme.Light100
 import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.utils.TransactionType
+import com.memeusix.budgetbuddy.utils.singleClick
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -63,13 +64,13 @@ fun ExpandableFab(
             modifier = Modifier.padding(bottom = 10.dp)
         ) {
             ActionBtnItem(
-                bgColor = Green100,
-                icon = R.drawable.ic_income,
-                onClick = { onClick(TransactionType.DEBIT) })
-            ActionBtnItem(
                 bgColor = Red100,
                 icon = R.drawable.ic_expense,
-                onClick = { onClick(TransactionType.CREDIT) })
+                onClick = singleClick{ onClick(TransactionType.DEBIT) })
+            ActionBtnItem(
+                bgColor = Green100,
+                icon = R.drawable.ic_income,
+                onClick = singleClick { onClick(TransactionType.CREDIT) })
         }
     }
 }

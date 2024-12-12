@@ -1,10 +1,13 @@
 package com.memeusix.budgetbuddy.ui.theme
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val AppColorPalette = lightColorScheme(
@@ -21,6 +24,7 @@ private val AppColorPalette = lightColorScheme(
     surfaceContainerHigh = Dark25
 )
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BudgetBuddyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit
@@ -34,8 +38,13 @@ fun BudgetBuddyTheme(
 //        systemUiController.setNavigationBarColor(Light100, darkIcons = true)
 //    }
     MaterialTheme(
-        colorScheme = AppColorPalette,
-        typography = Typography,
-        content = content,
-    )
+    colorScheme = AppColorPalette,
+    typography = Typography,
+    content = {
+        CompositionLocalProvider(
+            LocalOverscrollConfiguration provides null,
+            content = content
+        )
+    }
+)
 }

@@ -1,5 +1,6 @@
 package com.memeusix.budgetbuddy.ui.auth
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,12 +39,11 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.components.OtpInputField
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
-import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.ui.theme.Typography
-import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
@@ -54,7 +54,6 @@ import kotlinx.coroutines.delay
 fun OtpVerificationScreen(
     navController: NavController,
     navArgs: AuthRequestModel,
-    spUtils: SpUtils,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     // getting Context
@@ -101,10 +100,10 @@ fun OtpVerificationScreen(
             is ApiResponse.Success -> {
                 loginResponse.data?.apply {
                     if (user != null && !token.isNullOrEmpty()) {
-                        spUtils.user = user
-                        spUtils.accessToken = token!!
-                        spUtils.isLoggedIn = true
-
+                        authViewModel.spUtils.user = user
+                        authViewModel.spUtils.accessToken = token!!
+                        authViewModel.spUtils.isLoggedIn = true
+                        Log.e("", "OtpVerificationScreen: ${authViewModel.spUtils.pref.all}")
                         goToNextScreenAfterLogin(navController)
                     }
 

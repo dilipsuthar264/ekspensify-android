@@ -15,7 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -30,8 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.navigation.CreateTransactionScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
@@ -44,18 +43,39 @@ import com.memeusix.budgetbuddy.ui.dashboard.home.HomeScreen
 import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileScreen
 import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
+import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
 import com.memeusix.budgetbuddy.ui.theme.Violet5
+import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 
 
 @Composable
 fun BottomNav(
-    navController: NavController,
+    navController: NavHostController,
     profileViewModel: ProfileViewModel = hiltViewModel(),
     categoryViewModel: CategoryViewModel = hiltViewModel(),
-    accountViewModel: AccountViewModel = hiltViewModel()
+    accountViewModel: AccountViewModel = hiltViewModel(),
+    transactionViewModel: TransactionViewModel
 ) {
     var currentIndex by rememberSaveable { mutableIntStateOf(0) }
     var isFabExpanded by rememberSaveable { mutableStateOf(false) }
+
+    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
+    LaunchedEffect(savedStateHandle) {
+        savedStateHandle?.getLiveData<Boolean>(NavigationRequestKeys.REFRESH_TRANSACTION)
+            ?.observeForever { result ->
+                if (result == true) {
+                    transactionViewModel.updateFilter(
+                        transactionViewModel.filterState.value.copy(
+                            updateList = !(transactionViewModel.filterState.value.updateList)
+                        )
+                    )
+                    transactionViewModel.closeDialog()
+                    accountViewModel.getAllAccounts()
+                    savedStateHandle.remove<Boolean>(NavigationRequestKeys.REFRESH_TRANSACTION)
+                }
+            }
+    }
+
 
     val items = remember {
         listOf(
@@ -113,7 +133,7 @@ fun BottomNav(
             onFabChange = { isFabExpanded = it },
             currentItem = items[currentIndex],
             navController = navController,
-            profileViewModel = profileViewModel
+            transactionViewModel = transactionViewModel
         )
     }
 }
@@ -156,8 +176,8 @@ private fun ContentView(
     isFabExpended: Boolean,
     onFabChange: (Boolean) -> Unit,
     currentItem: BottomNavItem,
-    navController: NavController,
-    profileViewModel: ProfileViewModel
+    navController: NavHostController,
+    transactionViewModel: TransactionViewModel
 ) {
     Surface(
         color = Color.Transparent,
@@ -184,9 +204,9 @@ private fun ContentView(
     ) {
         when (currentItem) {
             is BottomNavItem.Home -> HomeScreen(navController)
-            is BottomNavItem.Transaction -> TransactionScreen(navController)
+            is BottomNavItem.Transaction -> TransactionScreen(navController, transactionViewModel)
             is BottomNavItem.Budget -> BudgetScreen(navController)
-            is BottomNavItem.Profile -> ProfileScreen(navController, profileViewModel)
+            is BottomNavItem.Profile -> ProfileScreen(navController)
             is BottomNavItem.Action -> Unit
         }
     }

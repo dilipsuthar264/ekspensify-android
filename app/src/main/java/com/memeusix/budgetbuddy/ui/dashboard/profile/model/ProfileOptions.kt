@@ -22,6 +22,7 @@ enum class ProfileOptions(
     LOGOUT("Logout", R.drawable.ic_logout, Red20);
 }
 
+
 object ProfileOptionProvider {
     fun getGeneralOptions(): List<ProfileOptions> {
         return listOf(

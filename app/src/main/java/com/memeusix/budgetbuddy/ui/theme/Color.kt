@@ -33,7 +33,7 @@ val Light100 = Color(0xFFFFFFFF)
 
 
 // Violet Colors
-val Violet5 = Color(0xFFF5F1FA)
+val Violet5 = Color(0xFFFAF8FA)
 val Violet10 = Color(0xFFF6F1FF)
 val Violet20 = Color(0xFFEEE5FF)
 val Violet40 = Color(0xFFD3BDFF)

@@ -247,10 +247,10 @@ private fun handleProfileOptionClick(
         }
 
         ProfileOptions.LOGOUT -> {
-            viewmodel.logout()
             navController.navigate(IntroScreenRoute) {
                 popUpTo(0) { inclusive = true }
             }
+            viewmodel.spUtils.logout()
         }
     }
 }

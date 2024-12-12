@@ -1,6 +1,6 @@
 package com.memeusix.budgetbuddy.ui.categories.data
 
-enum class CategoryType {
+enum class CategoryType() {
     INCOME,
     EXPENSE,
     BOTH;
@@ -24,8 +24,8 @@ enum class CategoryType {
 
 fun String?.getCategoryType(): String {
     return when (this) {
-        "DEBIT" -> "Income"
-        "CREDIT" -> "Expense"
+        "DEBIT" -> "Expense"
+        "CREDIT" -> "Income"
         else -> "Both"
     }
 }

@@ -25,6 +25,7 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
@@ -35,10 +36,11 @@ import com.memeusix.budgetbuddy.ui.categories.components.SelectAnyIconText
 import com.memeusix.budgetbuddy.ui.categories.components.ShowIconLoader
 import com.memeusix.budgetbuddy.ui.categories.data.CategoryType
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
-import com.memeusix.budgetbuddy.components.ShowLoader
+import com.memeusix.budgetbuddy.utils.ErrorReason
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.dynamicPadding
 import com.memeusix.budgetbuddy.utils.handleApiResponse
+import com.memeusix.budgetbuddy.utils.handleApiResponseWithError
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 
@@ -52,7 +54,7 @@ fun CreateCategoryScreen(
     CustomToast(toastState)
 
 
-    var selectedCategoryType = remember { mutableStateOf(CategoryType.INCOME) }
+    val selectedCategoryType = remember { mutableStateOf(CategoryType.INCOME) }
     val nameState = remember { mutableStateOf(TextFieldStateModel()) }
     val selectedIcon = remember { mutableStateOf(CustomIconModel()) }
 
@@ -68,15 +70,22 @@ fun CreateCategoryScreen(
 
     LaunchedEffect(createCategory, customIconsState) {
         // handle Create Category Response
-        handleApiResponse(
+        handleApiResponseWithError(
             response = createCategory,
-            toastState = toastState,
+            onFailure = { error ->
+                error?.let {
+                    if (it.reason == ErrorReason.CUSTOM_CATEGORY_ICON_NOT_FOUND) {
+                        viewModel.getCustomIcons()
+                    }
+                }
+            },
             onSuccess = { data ->
                 data?.let {
                     navController.previousBackStackEntry?.savedStateHandle?.set(
                         NavigationRequestKeys.CREATE_CATEGORY, true
                     )
                     navController.popBackStack()
+                    viewModel.resetCreateCategory()
                 }
             }
         )

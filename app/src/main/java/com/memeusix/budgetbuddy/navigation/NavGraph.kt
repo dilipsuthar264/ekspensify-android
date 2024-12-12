@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.memeusix.budgetbuddy.components.ImageWebView
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
 import com.memeusix.budgetbuddy.ui.SplashScreen
 import com.memeusix.budgetbuddy.ui.acounts.AccountsScreen
@@ -22,11 +23,12 @@ import com.memeusix.budgetbuddy.ui.categories.CreateCategoryScreen
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.BottomNav
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.CreateTransactionScreen
-import com.memeusix.budgetbuddy.utils.SpUtils
+import com.memeusix.budgetbuddy.ui.dashboard.transactions.FilterScreen
+import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
 
 
 @Composable
-fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
+fun NavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = SplashScreenRoute,
@@ -34,16 +36,16 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
         exitTransition = { fadeOut(animationSpec = tween(300)) }
     ) {
         composable<SplashScreenRoute> {
-            SplashScreen(navController, spUtils)
+            SplashScreen(navController)
         }
         composable<IntroScreenRoute> {
             IntroScreen(navController)
         }
         composable<LoginScreenRoute> {
-            LoginScreen(navController = navController, spUtils = spUtils)
+            LoginScreen(navController = navController)
         }
         composable<RegisterScreenRoute> {
-            RegisterScreen(navController = navController, spUtils = spUtils)
+            RegisterScreen(navController = navController)
         }
         composable<OtpVerificationScreenRoute> {
             val args = it.toRoute<OtpVerificationScreenRoute>()
@@ -54,14 +56,15 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
             OtpVerificationScreen(
                 navController = navController,
                 navArgs = authRequestModel,
-                spUtils = spUtils
             )
         }
 
 
         // Bottom Nav Screen
         composable<BottomNavRoute> {
-            BottomNav(navController)
+            val viewmodel: TransactionViewModel =
+                hiltViewModel(navController.getViewModelStoreOwner(navController.graph.id))
+            BottomNav(navController = navController, transactionViewModel = viewmodel)
         }
 
 
@@ -97,6 +100,17 @@ fun NavGraph(navController: NavHostController, spUtils: SpUtils) {
         composable<CreateTransactionScreenRoute> {
             val args = it.toRoute<CreateTransactionScreenRoute>()
             CreateTransactionScreen(navController, args)
+        }
+
+        composable<FilterScreenRoute> {
+            val viewmodel: TransactionViewModel =
+                hiltViewModel(navController.getViewModelStoreOwner(navController.graph.id))
+            FilterScreen(navController, viewmodel)
+        }
+
+        composable<ImageWebViewRoute> {
+            val args = it.toRoute<ImageWebViewRoute>()
+            ImageWebView(image = args.imageUrl)
         }
     }
 }

@@ -38,11 +38,22 @@ android {
         buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
     }
 
+    flavorDimensions += "base_url"
+
+    productFlavors {
+        create("server") {
+            dimension = "base_url"
+            buildConfigField("String", "BASE_URL", properties.getProperty("SERVER_HOST_API"))
+        }
+        create("local") {
+            dimension = "base_url"
+            buildConfigField("String", "BASE_URL", properties.getProperty("LOCAL_HOST_API"))
+        }
+    }
 
     buildTypes {
         debug {
             isDebuggable = true
-            buildConfigField("String", "BASE_URL", properties.getProperty("HOST_API"))
         }
         release {
             isMinifyEnabled = false
@@ -50,19 +61,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", properties.getProperty("HOST_API"))
             signingConfig = signingConfigs.getByName("debug")
         }
-//
-//        create("staging") {
-//            initWith(getByName("release"))
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimize.txt"),
-//                "proguard-rules.pro"
-//            )
-//            buildConfigField("String", "BASE_URL", project.property("HOST_API_IP").toString())
-//            signingConfig = signingConfigs.getByName("debug")
-//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -203,4 +203,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.34.0")
 
 
+    implementation("androidx.paging:paging-runtime-ktx:3.3.4")
+    implementation("androidx.paging:paging-runtime:3.3.4")
+    implementation("androidx.paging:paging-compose:3.3.4")
+
+    implementation ("com.github.commandiron:WheelPickerCompose:1.1.11")
 }

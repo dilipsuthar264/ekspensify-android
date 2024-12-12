@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
@@ -123,6 +126,16 @@ fun Context.openImage(imageUri: Uri) {
     startActivity(intent)
 }
 
+fun Context.openImageExternally(imageUri: String?) {
+    if (imageUri.orEmpty().isNotEmpty()) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(imageUri)
+        }
+        startActivity(intent)
+    }
+}
+
+
 fun Modifier.dynamicPadding(paddingValues: PaddingValues): Modifier {
     return this.then(
         Modifier
@@ -131,3 +144,39 @@ fun Modifier.dynamicPadding(paddingValues: PaddingValues): Modifier {
             .imePadding()
     )
 }
+
+
+fun String.getTransactionType(): String {
+    return when (this) {
+        "DEBIT" -> "Expense"
+        "CREDIT" -> "Income"
+        else -> ""
+    }
+}
+
+fun Modifier.disable(isDisable: Boolean): Modifier {
+    return if (isDisable) {
+        this
+            .alpha(0.5f)
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        awaitPointerEvent()
+                    }
+                }
+            }
+    } else {
+        this
+    }
+}
+
+
+fun <T> MutableList<T>.toggle(item: T) {
+    if (contains(item)) {
+        remove(item)
+    } else {
+        add(item)
+    }
+}
+
+

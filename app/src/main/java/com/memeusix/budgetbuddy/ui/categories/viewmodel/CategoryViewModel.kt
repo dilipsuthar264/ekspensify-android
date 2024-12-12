@@ -90,9 +90,10 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             _createCategory.value = ApiResponse.Loading()
             _createCategory.value = categoryRepository.createCategory(categoryResponseModel)
-            delay(500)
-            _createCategory.value = ApiResponse.Idle
         }
+    }
+    fun resetCreateCategory(){
+        _createCategory.value = ApiResponse.Idle
     }
 
     /**
@@ -105,9 +106,10 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             _deleteCategory.value = ApiResponse.Loading()
             _deleteCategory.value = categoryRepository.deleteCategory(categoryId)
-            delay(500)
-            _deleteCategory.value = ApiResponse.Idle
         }
+    }
+    fun setToIdle(){
+        _deleteCategory.value = ApiResponse.Idle
     }
 
     fun removeDeletedFromList(categoryResponseModel: CategoryResponseModel) {

@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.memeusix.budgetbuddy.ui.theme.Dark10
@@ -25,6 +26,9 @@ fun FilledButton(
     colors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
+    ),
+    textStyle :TextStyle = MaterialTheme.typography.titleSmall.copy(
+        fontWeight = FontWeight.SemiBold
     ),
     textModifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(16.dp),
@@ -43,8 +47,7 @@ fun FilledButton(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = FontWeight.SemiBold,
+            style =textStyle,
             modifier = textModifier
         )
     }

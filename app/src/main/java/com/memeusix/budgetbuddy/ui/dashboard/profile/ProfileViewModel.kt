@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val profileRepository: ProfileRepository, private val spUtils: SpUtils
+    private val profileRepository: ProfileRepository, val spUtils: SpUtils
 ) : ViewModel(), BaseViewModel {
 
     /**
@@ -59,10 +59,6 @@ class ProfileViewModel @Inject constructor(
             }
             _getMe.value = response
         }
-    }
-
-    fun logout() {
-        spUtils.logout()
     }
 
 }

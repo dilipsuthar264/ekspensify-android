@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
@@ -21,14 +23,20 @@ import com.memeusix.budgetbuddy.ui.theme.Light100
 import com.memeusix.budgetbuddy.ui.theme.Typography
 import com.memeusix.budgetbuddy.ui.theme.Violet100
 import com.memeusix.budgetbuddy.utils.SpUtils
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
 @Composable
-fun SplashScreen(navController: NavHostController, spUtils: SpUtils) {
+fun SplashScreen(
+    navController: NavHostController,
+    splashViewModel: SplashViewModel = hiltViewModel()
+) {
+
     LaunchedEffect(Unit) {
         delay(500)
-        if (spUtils.isLoggedIn && spUtils.accessToken.isNotEmpty()) {
-            if (spUtils.user?.accounts == 0) {
+        if (splashViewModel.spUtils.isLoggedIn && splashViewModel.spUtils.accessToken.isNotEmpty()) {
+            if (splashViewModel.spUtils.user?.accounts == 0) {
                 navController.navigate(AccountScreenRoute()) {
                     popUpTo(0) { inclusive = true }
                 }
@@ -60,3 +68,8 @@ fun SplashScreen(navController: NavHostController, spUtils: SpUtils) {
     }
 }
 
+
+@HiltViewModel
+class SplashViewModel @Inject constructor(
+    val spUtils: SpUtils
+) : ViewModel()

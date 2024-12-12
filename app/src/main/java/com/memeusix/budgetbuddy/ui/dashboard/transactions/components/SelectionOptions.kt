@@ -29,6 +29,7 @@ import com.memeusix.budgetbuddy.ui.theme.Light20
 
 @Composable
 fun SelectionOptions(
+    disable: Boolean = false,
     isCategory: Boolean,
     selectedCategory: CategoryResponseModel?,
     selectedAccount: AccountResponseModel?,
@@ -73,6 +74,7 @@ fun SelectionOptions(
                     ListIcon(icon)
                 }
             },
+            enable = !disable,
             title = title ?: if (isCategory) "Selected Category" else "Selected Account",
             titleStyle = titleStyle,
             trailingContent = {

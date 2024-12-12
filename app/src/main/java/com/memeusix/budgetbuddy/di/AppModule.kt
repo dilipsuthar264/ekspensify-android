@@ -1,11 +1,13 @@
 package com.memeusix.budgetbuddy.di
 
 import android.app.Application
+import android.util.Log
 import com.memeusix.budgetbuddy.BuildConfig
 import com.memeusix.budgetbuddy.data.services.AccountApi
 import com.memeusix.budgetbuddy.data.services.AuthApi
 import com.memeusix.budgetbuddy.data.services.CategoryApi
 import com.memeusix.budgetbuddy.data.services.ProfileApi
+import com.memeusix.budgetbuddy.data.services.TransactionApi
 import com.memeusix.budgetbuddy.utils.SpUtils
 import dagger.Module
 import dagger.Provides
@@ -23,28 +25,35 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
+
     companion object {
-        fun getRetrofit(spUtils: SpUtils): Retrofit {
+        fun getRetrofit(app: Application): Retrofit {
+            val spUtils = SpUtils(app.applicationContext)
             val httpClient = OkHttpClient.Builder()
-                .readTimeout(30, TimeUnit.SECONDS)
-                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
                 .addInterceptor(getLoggingInterceptor())
-                .addInterceptor(getAuthenticationInterceptor(spUtils.accessToken))
+                .addInterceptor(getAuthenticationInterceptor(spUtils))
+                .build()
             return Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
+                .client(httpClient)
                 .build()
         }
 
         private fun getLoggingInterceptor(): HttpLoggingInterceptor {
-            val httpLoggingInterceptor = HttpLoggingInterceptor()
+            val httpLoggingInterceptor = HttpLoggingInterceptor() { message ->
+                HttpLoggingInterceptor.Logger.DEFAULT.log(filterLogs(message))
+            }
             httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             return httpLoggingInterceptor
         }
 
-        private fun getAuthenticationInterceptor(token: String): Interceptor {
+        private fun getAuthenticationInterceptor(spUtils: SpUtils): Interceptor {
             return Interceptor { chain ->
+                val token = spUtils.accessToken
+                Log.d("AuthenticationInterceptor", "Using token: $token")
                 var request = chain.request()
                 request = if (token.isNotEmpty()) {
                     request.newBuilder()
@@ -57,8 +66,18 @@ class AppModule {
             }
         }
 
-    }
+        private fun filterLogs(message: String): String {
+            return when {
+                message.contains("Content-Type:") && (message.contains("image/") || message.contains(
+                    "application/octet-stream"
+                )) -> {
+                    "Body: [Binary data omitted]"
+                }
 
+                else -> message
+            }
+        }
+    }
 
     @Provides
     @Singleton
@@ -66,29 +85,33 @@ class AppModule {
         return SpUtils(application.applicationContext)
     }
 
-
     @Provides
     @Singleton
-    fun provideAuthApi(spUtils: SpUtils): AuthApi {
-        return getRetrofit(spUtils).create(AuthApi::class.java)
+    fun provideAuthApi(app: Application): AuthApi {
+        return getRetrofit(app).create(AuthApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideAccountApi(spUtils: SpUtils): AccountApi {
-        return getRetrofit(spUtils).create(AccountApi::class.java)
+    fun provideAccountApi(app: Application): AccountApi {
+        return getRetrofit(app).create(AccountApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideProfileApi(spUtils: SpUtils): ProfileApi {
-        return getRetrofit(spUtils).create(ProfileApi::class.java)
+    fun provideProfileApi(app: Application): ProfileApi {
+        return getRetrofit(app).create(ProfileApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideCategoryApi(spUtils: SpUtils): CategoryApi {
-        return getRetrofit(spUtils).create(CategoryApi::class.java)
+    fun provideCategoryApi(app: Application): CategoryApi {
+        return getRetrofit(app).create(CategoryApi::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideTransactionApi(app: Application): TransactionApi {
+        return getRetrofit(app).create(TransactionApi::class.java)
+    }
 }
