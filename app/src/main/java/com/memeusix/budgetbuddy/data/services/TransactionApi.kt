@@ -53,6 +53,7 @@ interface TransactionApi {
         @Query("amount[lte]") maxAmount: Int? = null,
         @Query("created_at[gte]") startDate: String? = null,
         @Query("created_at[lte]") endDate: String? = null,
+        @Query("sort") sort: String? = null,
         @Query("q") q: String? = null,
     ): Response<PaginationModel<TransactionResponseModel>>
 }

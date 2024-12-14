@@ -21,7 +21,7 @@ fun CustomToggleButton(
     fontStyle: TextStyle = MaterialTheme.typography.bodyLarge,
 ) {
     val (textColor, background) = if (isSelected) {
-        MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.secondary
+        MaterialTheme.colorScheme.onSecondary to MaterialTheme.colorScheme.secondary
     } else {
         MaterialTheme.colorScheme.onBackground to Color.Transparent
     }

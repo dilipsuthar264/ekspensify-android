@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
@@ -46,7 +46,7 @@ import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 
 @Composable
 fun CreateCategoryScreen(
-    navController: NavController, viewModel: CategoryViewModel
+    navController: NavHostController, viewModel: CategoryViewModel
 ) {
 
     // Custom Toast

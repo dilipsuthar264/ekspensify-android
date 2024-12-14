@@ -50,12 +50,10 @@ import com.memeusix.budgetbuddy.data.model.responseModel.TransactionResponseMode
 import com.memeusix.budgetbuddy.navigation.CreateTransactionScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.components.AmountText
 import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Dark40
 import com.memeusix.budgetbuddy.ui.theme.Green100
 import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.ui.theme.Red75
-import com.memeusix.budgetbuddy.ui.theme.Violet100
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.DateFormat
 import com.memeusix.budgetbuddy.utils.TransactionType
 import com.memeusix.budgetbuddy.utils.formatDateTime
@@ -80,21 +78,24 @@ fun TransactionDetailsDialog(
     ) {
         Column(modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.background)
             .padding(bottom = 16.dp)
             .onSizeChanged { deleteHeight.value = it }
-            .alpha(if (showDeleteConfirm.value) 0.1f else 1f)) {
+            .alpha(if (showDeleteConfirm.value) 0.05f else 1f))
+        {
             TransactionDetailsHeader(transaction)
             AccountAndCategory(transaction)
             HorizontalDashedLine(width = 5f)
             if (!transaction?.note.isNullOrEmpty()) {
+                VerticalSpace(20.dp)
                 Text(
                     transaction?.note.orEmpty(),
-                    modifier = Modifier.padding(20.dp),
+                    modifier = Modifier.padding(horizontal = 20.dp),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
             if (transaction?.attachment != null) {
+                VerticalSpace(20.dp)
                 AttachmentPreview(transaction.attachment)
             }
             VerticalSpace(20.dp)
@@ -184,7 +185,7 @@ private fun AccountAndCategory(
             .fillMaxWidth()
             .padding(20.dp)
             .height(IntrinsicSize.Max)
-            .border(1.dp, Dark10, RoundedCornerShape(15.dp))
+            .border(1.dp, MaterialTheme.extendedColors.primaryBorder, RoundedCornerShape(15.dp))
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -228,7 +229,7 @@ private fun AttachmentPreview(attachment: String?) {
     CustomListItem(
         modifier = Modifier
             .padding(horizontal = 20.dp)
-            .border(1.dp, Dark10, RoundedCornerShape(15.dp))
+            .border(1.dp, MaterialTheme.extendedColors.primaryBorder, RoundedCornerShape(15.dp))
             .clip(RoundedCornerShape(15.dp))
             .clickable { context.openImageExternally(attachment) }
             .padding(horizontal = 16.dp, vertical = 12.dp),
@@ -246,7 +247,7 @@ private fun AttachmentPreview(attachment: String?) {
         trailingContent = {
             Text(
                 "View", style = MaterialTheme.typography.labelLarge.copy(
-                    color = Violet100
+                    color = MaterialTheme.colorScheme.primary
                 )
             )
         },
@@ -266,8 +267,12 @@ private fun ActionsBtnGroup(
             .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally)
     ) {
-        val iconColor = remember { Dark40 }
-        val border = Modifier.border(1.dp, Dark10, RoundedCornerShape(15.dp))
+        val iconColor = MaterialTheme.extendedColors.iconColor
+        val border = Modifier.border(
+            1.dp,
+            MaterialTheme.extendedColors.primaryBorder,
+            RoundedCornerShape(15.dp)
+        )
         EditDeleteBtn(
             border, iconColor, onEditClick = onEditClick, onDeleteClick = onDeleteClick
         )
@@ -292,7 +297,7 @@ private fun EditDeleteBtn(
             modifier = iconModifier.clickable { onEditClick() })
         VerticalDivider(
             Modifier.fillMaxHeight(0.8f),
-            color = Dark10,
+            color = MaterialTheme.extendedColors.primaryBorder,
         )
         Icon(painterResource(R.drawable.ic_delete),
             contentDescription = "",
@@ -307,6 +312,7 @@ private fun CloseBtn(
 ) {
     Row(
         modifier = border
+            .clip(RoundedCornerShape(15.dp))
             .fillMaxHeight()
             .fillMaxWidth()
             .clickable {

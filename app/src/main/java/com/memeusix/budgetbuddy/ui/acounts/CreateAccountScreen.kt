@@ -19,7 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,10 +45,13 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.AlertDialog
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.components.TextFieldType
 import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.ApiResponse
@@ -61,11 +64,9 @@ import com.memeusix.budgetbuddy.ui.acounts.components.AccountTypeGridItem
 import com.memeusix.budgetbuddy.ui.acounts.components.AccountsCardView
 import com.memeusix.budgetbuddy.ui.acounts.components.AmountText
 import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
-import com.memeusix.budgetbuddy.ui.acounts.dialog.DeleteAccountDialog
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.CreateAccountState
-import com.memeusix.budgetbuddy.components.ShowLoader
-import com.memeusix.budgetbuddy.ui.theme.Light20
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.AccountType
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.dynamicPadding
@@ -77,7 +78,7 @@ import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 
 @Composable
 fun CreateAccountScreen(
-    navController: NavController,
+    navController: NavHostController,
     args: CreateAccountScreenRoute?,
     viewModel: AccountViewModel = hiltViewModel(),
     createAccountState: CreateAccountState = hiltViewModel(),
@@ -170,12 +171,18 @@ fun CreateAccountScreen(
 
     // DeleteDialog
     if (deleteDialogState && argsAccountDetails?.id != null) {
-        DeleteAccountDialog(argsAccountDetails, onDismiss = { delete ->
-            if (delete) {
+        AlertDialog(
+            title = "Are you sure?",
+            message = "you want delete this Account",
+            btnText = "Delete",
+            onDismiss = {
+                deleteDialogState = false
+            },
+            onConfirm = {
                 viewModel.deleteAccount(argsAccountDetails.id!!)
+                deleteDialogState = false
             }
-            deleteDialogState = false
-        })
+        )
     }
 
     // Main Ui
@@ -235,7 +242,7 @@ fun CreateAccountScreen(
                 Text(
                     stringResource(R.string.no_account_message),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Light20
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(vertical = 20.dp),
@@ -303,8 +310,9 @@ fun BalanceView(
         )
         Spacer(modifier = Modifier.weight(1f))
         if (showDelete) {
-            Image(
+            Icon(
                 painterResource(R.drawable.ic_delete),
+                tint = MaterialTheme.extendedColors.iconColor,
                 contentDescription = null,
                 modifier = Modifier.clickable { onDeleteClick() })
         }

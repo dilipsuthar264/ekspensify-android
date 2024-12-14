@@ -1,6 +1,5 @@
 package com.memeusix.budgetbuddy.ui.dashboard.transactions.components
 
-import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,8 +30,7 @@ import coil.compose.AsyncImage
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.CustomListItem
 import com.memeusix.budgetbuddy.data.model.responseModel.AttachmentResponseModel
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Light20
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 @Composable
 fun AttachmentView(
@@ -41,12 +39,13 @@ fun AttachmentView(
     onDelete: () -> Unit
 ) {
     val hasAttachment = selectedAttachment.value.path != null
+    val borderColor = MaterialTheme.extendedColors.primaryBorder
     val borderModifier = if (hasAttachment) {
-        Modifier.border(1.dp, Dark10, RoundedCornerShape(16.dp))
+        Modifier.border(1.dp, borderColor, RoundedCornerShape(16.dp))
     } else {
         Modifier.drawBehind {
             drawRoundRect(
-                color = Dark10,
+                color = borderColor,
                 style = Stroke(
                     width = 3f,
                     pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f), 0f)
@@ -57,9 +56,11 @@ fun AttachmentView(
     }
     Box(
         modifier = Modifier
+            .clip( RoundedCornerShape(16.dp))
             .fillMaxWidth()
             .requiredHeight(56.dp)
             .then(borderModifier)
+            .clickable { onClick(hasAttachment) }
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -80,7 +81,7 @@ fun AttachmentView(
                     Icon(
                         painterResource(R.drawable.ic_cancel_circle_half_dot),
                         contentDescription = null,
-                        tint = Light20,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.clickable { onDelete() }
                     )
                 },
@@ -95,18 +96,17 @@ fun AttachmentView(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { onClick(false) }
             ) {
                 Icon(
                     painterResource(R.drawable.ic_attechment),
-                    tint = Light20,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     contentDescription = null
                 )
                 Text(
                     "Attachment",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontSize = 16.sp,
-                        color = Light20
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }

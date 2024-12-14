@@ -14,15 +14,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,9 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import coil.compose.rememberAsyncImagePainter
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.ui.theme.Blue100
 import com.memeusix.budgetbuddy.ui.theme.Green100
-import com.memeusix.budgetbuddy.ui.theme.Light100
 import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.utils.TransactionType
 import com.memeusix.budgetbuddy.utils.singleClick
@@ -66,7 +63,7 @@ fun ExpandableFab(
             ActionBtnItem(
                 bgColor = Red100,
                 icon = R.drawable.ic_expense,
-                onClick = singleClick{ onClick(TransactionType.DEBIT) })
+                onClick = singleClick { onClick(TransactionType.DEBIT) })
             ActionBtnItem(
                 bgColor = Green100,
                 icon = R.drawable.ic_income,
@@ -90,7 +87,7 @@ fun ActionBtnItem(bgColor: Color, @DrawableRes icon: Int, onClick: () -> Unit) {
         Icon(
             rememberAsyncImagePainter(icon),
             contentDescription = null,
-            tint = Light100,
+            tint = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingSize)

@@ -11,16 +11,18 @@ import androidx.compose.ui.unit.sp
 fun Float.toAdaptiveDp(
     smallThreshold: Int = AdaptiveDefaults.SMALL_THRESHOLD,
     mediumThreshold: Int = AdaptiveDefaults.MEDIUM_THRESHOLD,
+    largeThreshold: Int = AdaptiveDefaults.LARGE_THRESHOLD,
     smallFactor: Float = AdaptiveDefaults.DP_SMALL_FACTOR,
     mediumFactor: Float = AdaptiveDefaults.DP_MEDIUM_FACTOR,
-    largeFactor: Float = AdaptiveDefaults.DP_LARGE_FACTOR
+    largeFactor: Float = AdaptiveDefaults.DP_LARGE_FACTOR,
+    xLargeFactor: Float = AdaptiveDefaults.DP_XLARGE_FACTOR
 ): Dp {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val adjustedValue = when {
         screenWidthDp < smallThreshold -> this + smallFactor
         screenWidthDp in smallThreshold until mediumThreshold -> this + mediumFactor
-        screenWidthDp >= mediumThreshold -> this + largeFactor
-        else -> this
+        screenWidthDp in mediumThreshold until largeThreshold -> this + largeFactor
+        else -> this + xLargeFactor
     }
     return adjustedValue.dp
 }
@@ -61,14 +63,15 @@ fun Int.adSp(): TextUnit = this.toFloat().toAdaptiveSp()
 object AdaptiveDefaults {
 
     // Define screen width thresholds in dp
-    const val SMALL_THRESHOLD = 400   // Small screens (e.g., phones under 400dp)
-    const val MEDIUM_THRESHOLD = 700  // Medium screens (e.g., phones and small tablets)
-    const val LARGE_THRESHOLD = 1000  // Large screens (e.g., large tablets, landscape phones)
+    const val SMALL_THRESHOLD = 300
+    const val MEDIUM_THRESHOLD = 500
+    const val LARGE_THRESHOLD = 1000
 
     // Scaling factors for `dp` based on screen size
-    const val DP_SMALL_FACTOR = -8f   // Decrease dp size on small screens
+    const val DP_SMALL_FACTOR = -2f   // Decrease dp size on small screens
     const val DP_MEDIUM_FACTOR = 0f   // Keep dp size as default on medium screens
-    const val DP_LARGE_FACTOR = 8f    // Increase dp size on large screens
+    const val DP_LARGE_FACTOR = 2f    // Increase dp size on large screens
+    const val DP_XLARGE_FACTOR = 5f  // Increase dp size on extra large screens
 
     // Scaling factors for `sp` based on screen size
     const val SP_SMALL_FACTOR = -2f   // Decrease text size on small screens

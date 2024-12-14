@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -25,9 +26,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.responseModel.CustomIconModel
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Light60
-import com.memeusix.budgetbuddy.ui.theme.Violet80
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -45,7 +44,7 @@ fun IconSelectionCard(
         .clip(RoundedCornerShape(16.dp))
         .fillMaxWidth()
         .onSizeChanged { size.value = it }
-        .border(1.dp, Dark10, RoundedCornerShape(16.dp))
+        .border(1.dp, MaterialTheme.extendedColors.primaryBorder, RoundedCornerShape(16.dp))
         .padding(vertical = 15.dp, horizontal = 10.dp)
         .animateContentSize()
 
@@ -58,14 +57,14 @@ fun IconSelectionCard(
         val iconModifierBase = Modifier
             .padding(5.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Light60)
+            .background(MaterialTheme.extendedColors.imageBg)
             .size(38.dp)
 
 
         icons.forEach { icon ->
             val isSelected = selectedIcon.value.id == icon.id
             val selectedModifier = if (isSelected) Modifier.border(
-                1.dp, Violet80, RoundedCornerShape(8.dp)
+                1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp)
             ) else Modifier
 
             AsyncImage(

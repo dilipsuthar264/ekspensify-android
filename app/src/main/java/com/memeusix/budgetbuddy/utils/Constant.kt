@@ -18,7 +18,7 @@ object NavigationRequestKeys {
     const val REFRESH_TRANSACTION = "REFRESH_TRANSACTION"
 }
 
-enum class TransactionType(val displayName : String) {
+enum class TransactionType(val displayName: String) {
     DEBIT("Expense"),
     CREDIT("Income");
 

@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.FilterOptions
-import com.memeusix.budgetbuddy.ui.theme.Violet100
 import java.io.Serializable
 
 
@@ -23,7 +22,7 @@ import java.io.Serializable
 fun FilterTitleItem(filter: FilterOptions<out Serializable>, onClick: () -> Unit) {
     val textColor =
         if (filter.isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-    val lineColor = if (filter.isApplied) Violet100 else Color.Unspecified
+    val lineColor = if (filter.isApplied) MaterialTheme.colorScheme.primary else Color.Unspecified
 
     Text(
         text = filter.title,
@@ -41,7 +40,7 @@ fun FilterTitleItem(filter: FilterOptions<out Serializable>, onClick: () -> Unit
                         color = lineColor,
                         start = Offset(0f, size.height),
                         end = Offset(0f, 0f),
-                        strokeWidth = 5.dp.toPx()
+                        strokeWidth = 8.dp.toPx()
                     )
                 }
             }

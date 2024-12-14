@@ -30,5 +30,5 @@ fun String?.formatDateTime(format: String = DateFormat.dd_MMM_yyyy_hh_mm_a): Str
 
 object DateFormat {
     const val INPUT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-    const val dd_MMM_yyyy_hh_mm_a = "dd-MMM-yyyy | hh:mm a"
+    const val dd_MMM_yyyy_hh_mm_a = "dd-MMM-yyyy hh:mm a"
 }

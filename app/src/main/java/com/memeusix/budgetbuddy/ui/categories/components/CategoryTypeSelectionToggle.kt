@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.ui.acounts.components.CustomToggleButton
 import com.memeusix.budgetbuddy.ui.categories.data.CategoryType
-import com.memeusix.budgetbuddy.ui.theme.Light40
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 @Composable
 fun CategoryTypeSelectionToggle(
@@ -40,7 +40,7 @@ fun CategoryTypeSelectionToggle(
                     .weight(1f)
                     .border(
                         1.dp,
-                        if (selectedCategoryType.value == categoryType) MaterialTheme.colorScheme.secondary else Light40,
+                        if (selectedCategoryType.value == categoryType) MaterialTheme.colorScheme.secondary else MaterialTheme.extendedColors.primaryBorder,
                         RoundedCornerShape(24.dp)
                     )
                     .padding(vertical = 12.dp)

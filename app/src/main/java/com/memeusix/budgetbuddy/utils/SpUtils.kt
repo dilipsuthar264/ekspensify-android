@@ -7,6 +7,7 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
+import com.memeusix.budgetbuddy.ui.theme.Theme
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,6 +23,10 @@ class SpUtils @Inject constructor(val context: Context) {
     var isLoggedIn: Boolean
         get() = pref.contains(IS_LOGGED_IN) && pref.getBoolean(IS_LOGGED_IN, true)
         set(isLoggedIn) = pref.edit().putBoolean(IS_LOGGED_IN, isLoggedIn).apply()
+
+    var themePreference: String
+        get() = getDataByKey(THEME_PREFERENCE, Theme.SYSTEM.name)
+        set(value) = storeDataByKey(THEME_PREFERENCE, value)
 
     var user: UserResponseModel?
         get() {
@@ -59,11 +64,11 @@ class SpUtils @Inject constructor(val context: Context) {
             pref.edit().putString(CATEGORIES, json).apply()
         }
 
-    private fun getDataByKey(key: String): String {
+    private fun getDataByKey(key: String, default: String = ""): String {
         return if (pref.contains(key)) {
-            pref.getString(key, "").toString()
+            pref.getString(key, default).toString()
         } else {
-            ""
+            default
         }
     }
 
@@ -83,5 +88,6 @@ class SpUtils @Inject constructor(val context: Context) {
         private const val USER_MODEL = "USER_MODEL"
         private const val ACCOUNTS = "ACCOUNTS"
         private const val CATEGORIES = "CATEGORIES"
+        private const val THEME_PREFERENCE = "THEME_PREFERENCE"
     }
 }

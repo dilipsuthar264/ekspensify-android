@@ -1,50 +1,83 @@
 package com.memeusix.budgetbuddy.ui.theme
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-private val AppColorPalette = lightColorScheme(
+
+private val LightColorPalette = lightColorScheme(
     primary = Violet100,
     onPrimary = Light80,
+    primaryContainer = Violet100,
     secondary = Violet20,
     onSecondary = Violet100,
     background = Light100,
-    onSurfaceVariant = Light20,
     onBackground = Dark100,
     surface = Light100,
     onSurface = Dark100,
-    surfaceContainerLow = Light40,
-    surfaceContainerHigh = Dark25
+    onSurfaceVariant = Light20,
+    surfaceContainerLow = Dark15,
+    surfaceContainerHigh = Dark15
 )
+
+
+private val DarkColorPalette = darkColorScheme(
+    primary = Violet100_MUTED,
+    onPrimary = Light100,
+    primaryContainer = Violet80,
+    secondary = VioletSecondary,
+    onSecondary = Violet100,
+    background = Dark80,
+    onBackground = Light100,
+    surface = Dark80,
+    onSurface = Light100,
+    onSurfaceVariant = Dark15,
+    surfaceContainerLow = Dark50,
+    surfaceContainerHigh = Dark20
+)
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BudgetBuddyTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit
+    themeViewModel: ThemeViewModel = hiltViewModel(),
+    content: @Composable () -> Unit
 ) {
+    val themePreference by themeViewModel.themePreferences.collectAsState()
+    val isDarkTheme = when (themePreference) {
+        Theme.LIGHT.name -> false
+        Theme.DARK.name -> true
+        else -> isSystemInDarkTheme()
+    }
     val systemUiController = rememberSystemUiController()
-    systemUiController.setNavigationBarColor(Light100, darkIcons = true)
+    systemUiController.setSystemBarsColor(
+        color = Color.Transparent,
+        darkIcons = !isDarkTheme
+    )
 
-//    if (darkTheme) {
-//        systemUiController.setNavigationBarColor(Dark100, darkIcons = false)
-//    } else {
-//        systemUiController.setNavigationBarColor(Light100, darkIcons = true)
-//    }
-    MaterialTheme(
-    colorScheme = AppColorPalette,
-    typography = Typography,
-    content = {
-        CompositionLocalProvider(
-            LocalOverscrollConfiguration provides null,
-            content = content
+    val colors = if (isDarkTheme) DarkColorPalette else LightColorPalette
+    val extendedColors = if (isDarkTheme) DarkExtendedColors else LightExtendedColors
+
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+        MaterialTheme(
+            colorScheme = colors,
+            typography = Typography,
+            content = {
+                CompositionLocalProvider(
+                    LocalOverscrollConfiguration provides null,
+                    content = content
+                )
+            }
         )
     }
-)
 }

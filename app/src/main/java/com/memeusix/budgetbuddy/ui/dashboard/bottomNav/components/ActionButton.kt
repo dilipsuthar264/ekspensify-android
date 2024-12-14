@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -16,8 +17,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.ui.theme.Light100
-import com.memeusix.budgetbuddy.ui.theme.Violet100
 
 @Composable
 fun ActionButton(isFabExpended: Boolean, modifier: Modifier, onFabClicked: () -> Unit) {
@@ -29,12 +28,12 @@ fun ActionButton(isFabExpended: Boolean, modifier: Modifier, onFabClicked: () ->
         modifier = modifier
             .size(54.dp)
             .clip(CircleShape)
-            .background(Violet100)
+            .background(MaterialTheme.colorScheme.primary)
     ) {
         Icon(
             painterResource(R.drawable.ic_close),
             contentDescription = null,
-            tint = Light100,
+            tint = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
                 .wrapContentSize()
                 .padding(10.dp)

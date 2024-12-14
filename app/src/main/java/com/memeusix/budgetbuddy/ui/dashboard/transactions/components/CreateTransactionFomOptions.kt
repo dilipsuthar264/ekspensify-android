@@ -53,7 +53,9 @@ fun CreateTransactionFromOptions(
     val showImagePicker = remember { mutableStateOf(false) }
     val bottomSheetState = remember { mutableStateOf(false to BottomSheetType.CATEGORY) }
     val categories = remember {
-        transactionViewModel.spUtils.categoriesData?.categories?.filter { it.type != type.getInvertedType().toString() }
+        transactionViewModel.spUtils.categoriesData?.categories?.filter {
+            it.type != type.getInvertedType().toString()
+        }
             .orEmpty()
     }
     val accounts = remember { transactionViewModel.spUtils.accountData?.accounts.orEmpty() }

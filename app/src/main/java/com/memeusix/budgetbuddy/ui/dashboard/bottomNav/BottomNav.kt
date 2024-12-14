@@ -44,7 +44,7 @@ import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileScreen
 import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
-import com.memeusix.budgetbuddy.ui.theme.Violet5
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 
 
@@ -95,6 +95,7 @@ fun BottomNav(
                     heading = items[currentIndex].label,
                     navController = navController,
                     elevation = false,
+                    isToggleVisible = items.lastIndex == currentIndex,
                     isBackNavigation = false
                 )
             }
@@ -150,7 +151,7 @@ fun BottomBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(Violet5)
+            .background(MaterialTheme.extendedColors.bottomNavBg)
             .wrapContentHeight(),
     ) {
         BottomBarContent(
@@ -190,7 +191,7 @@ private fun ContentView(
                         MaterialTheme.colorScheme.background,
                         MaterialTheme.colorScheme.background,
                         MaterialTheme.colorScheme.background,
-                        Violet5
+                        MaterialTheme.extendedColors.bottomNavBg
                     ),
                 )
             )

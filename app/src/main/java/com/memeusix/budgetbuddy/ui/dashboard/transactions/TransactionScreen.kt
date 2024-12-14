@@ -37,9 +37,11 @@ import com.memeusix.budgetbuddy.ui.categories.components.ShowIconLoader
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.SelectedFilterModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.filterComponets.SearchBar
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
-import com.memeusix.budgetbuddy.ui.theme.Dark10
 import com.memeusix.budgetbuddy.ui.theme.Green100
+import com.memeusix.budgetbuddy.ui.theme.Green80
 import com.memeusix.budgetbuddy.ui.theme.Red100
+import com.memeusix.budgetbuddy.ui.theme.Red80
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.TransactionType
 import com.memeusix.budgetbuddy.utils.formatDateTime
 import com.memeusix.budgetbuddy.utils.formatRupees
@@ -117,12 +119,14 @@ fun TransactionScreen(
         ) {
             items(transactions.itemCount, key = transactions.itemKey { it.id!! }) { index ->
                 val transaction = transactions[index]
-                CustomListItem(modifier = Modifier.padding(
-                    vertical = 15.dp,
-                    horizontal = 20.dp
-                ),
+                CustomListItem(
+                    modifier = Modifier.padding(
+                        vertical = 15.dp,
+                        horizontal = 20.dp
+                    ),
                     title = transaction?.category?.name.orEmpty(),
                     subtitle = transaction?.account?.name.orEmpty(),
+                    desc = transaction?.note.orEmpty(),
                     leadingContent = {
                         CategoryIcon(transaction?.category?.icon)
                     },
@@ -130,9 +134,10 @@ fun TransactionScreen(
                         TransactionTrailingContent(transaction)
                     }, onClick = {
                         transactionViewModel.openDialog(transaction)
-                    })
+                    }
+                )
                 HorizontalDivider(
-                    color = Dark10
+                    color = MaterialTheme.extendedColors.primaryBorder
                 )
             }
             transactions.apply {
@@ -195,7 +200,7 @@ fun TransactionTrailingContent(transaction: TransactionResponseModel?) {
             dataTime, style = MaterialTheme.typography.labelSmall.copy(
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Light,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         )
     }

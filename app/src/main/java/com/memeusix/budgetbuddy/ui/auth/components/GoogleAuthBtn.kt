@@ -39,7 +39,7 @@ fun GoogleAuthBtn(
             painterResource(R.drawable.ic_google),
             null,
             modifier = Modifier
-                .padding(vertical = 8.dp)
+                .padding(vertical = 12.dp)
                 .size(28.dp)
         )
         HorizontalSpace(8.dp)
@@ -47,7 +47,7 @@ fun GoogleAuthBtn(
             text = text,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.surfaceContainerHigh
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

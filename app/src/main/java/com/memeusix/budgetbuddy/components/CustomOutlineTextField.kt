@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -37,10 +38,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Light20
 import com.memeusix.budgetbuddy.ui.theme.Red100
-import com.memeusix.budgetbuddy.ui.theme.Typography
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 @Composable
 fun CustomOutlineTextField(
@@ -63,7 +62,9 @@ fun CustomOutlineTextField(
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     Column(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth().let {
+            if (disable) it.alpha(0.5f) else it
+        }
     ) {
         OutlinedTextField(
             value = state.value.text,
@@ -86,7 +87,9 @@ fun CustomOutlineTextField(
             },
             placeholder = {
                 Text(
-                    placeholder, color = Light20, style = MaterialTheme.typography.bodyLarge.copy(
+                    placeholder,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodyLarge.copy(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal
                     )
@@ -111,7 +114,7 @@ fun CustomOutlineTextField(
             modifier = Modifier
                 .border(
                     width = 1.dp,
-                    color = if (state.value.isValid()) Dark10 else Red100,
+                    color = if (state.value.isValid()) MaterialTheme.extendedColors.primaryBorder else Red100,
                     RoundedCornerShape(radius)
                 )
                 .focusRequester(focusRequester)
@@ -122,7 +125,7 @@ fun CustomOutlineTextField(
             Text(
                 text = it,
                 color = Red100,
-                style = Typography.labelSmall,
+                style = MaterialTheme.typography.labelSmall,
                 textAlign = TextAlign.End,
                 modifier = Modifier
                     .fillMaxWidth()

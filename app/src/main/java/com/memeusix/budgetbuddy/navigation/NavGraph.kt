@@ -1,15 +1,18 @@
 package com.memeusix.budgetbuddy.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.memeusix.budgetbuddy.components.ImageWebView
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
 import com.memeusix.budgetbuddy.ui.SplashScreen
 import com.memeusix.budgetbuddy.ui.acounts.AccountsScreen
@@ -30,10 +33,19 @@ import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionV
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(
+        modifier = Modifier.fillMaxSize(),
         navController = navController,
         startDestination = SplashScreenRoute,
-        enterTransition = { fadeIn(animationSpec = tween(300)) },
-        exitTransition = { fadeOut(animationSpec = tween(300)) }
+        enterTransition = {
+            fadeIn(animationSpec = tween(300))
+        },
+        popExitTransition = {
+            fadeOut(
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = { ExitTransition.KeepUntilTransitionsFinished },
+        popEnterTransition = { EnterTransition.None },
     ) {
         composable<SplashScreenRoute> {
             SplashScreen(navController)
@@ -106,11 +118,6 @@ fun NavGraph(navController: NavHostController) {
             val viewmodel: TransactionViewModel =
                 hiltViewModel(navController.getViewModelStoreOwner(navController.graph.id))
             FilterScreen(navController, viewmodel)
-        }
-
-        composable<ImageWebViewRoute> {
-            val args = it.toRoute<ImageWebViewRoute>()
-            ImageWebView(image = args.imageUrl)
         }
     }
 }

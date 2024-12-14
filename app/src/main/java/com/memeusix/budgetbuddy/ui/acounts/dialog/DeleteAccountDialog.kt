@@ -1,6 +1,5 @@
 package com.memeusix.budgetbuddy.ui.acounts.dialog
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,7 +15,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -37,9 +37,9 @@ import androidx.compose.ui.window.Dialog
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.ui.theme.Light100
-import com.memeusix.budgetbuddy.ui.theme.Light20
 import com.memeusix.budgetbuddy.ui.theme.Red20
 import com.memeusix.budgetbuddy.ui.theme.Red80
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.drawTopAndBottomBorders
 
 @Composable
@@ -53,7 +53,7 @@ fun DeleteAccountDialog(
     Dialog(
         onDismissRequest = { onDismiss(false) }
     ) {
-        Box(
+        Surface(
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.background)
@@ -73,12 +73,10 @@ fun DeleteAccountDialog(
                             fontWeight = FontWeight.SemiBold
                         ),
                     )
-                    Image(
+                    Icon(
                         painterResource(R.drawable.ic_close),
                         contentDescription = "",
-                        colorFilter = ColorFilter.tint(
-                            Light20
-                        ),
+                        tint = MaterialTheme.extendedColors.iconColor,
                         modifier = Modifier
                             .size(16.dp)
                             .clickable { onDismiss(false) }
@@ -117,7 +115,9 @@ fun DeleteAccountDialog(
                         if (it.length <= textToDelete.length)
                             textState = it
                     },
-                    textStyle = MaterialTheme.typography.bodyMedium,
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onBackground
+                    ),
                     decorationBox = { innerBox ->
                         Box(
                             modifier = Modifier
@@ -131,7 +131,7 @@ fun DeleteAccountDialog(
                             if (textState.isEmpty()) {
                                 Text(
                                     textToDelete,
-                                    color = Light20,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             }

@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,9 +24,7 @@ import com.memeusix.budgetbuddy.components.ListIcon
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Light20
-
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 @Composable
 fun SelectionOptions(
@@ -54,13 +53,20 @@ fun SelectionOptions(
         modifier = Modifier
             .fillMaxWidth()
             .requiredHeight(56.dp)
-            .border(1.dp, Dark10, RoundedCornerShape(16.dp))
+            .border(
+                1.dp,
+                MaterialTheme.extendedColors.primaryBorder.copy(alpha = if (disable) 0.6f else 1f),
+                RoundedCornerShape(16.dp)
+            )
+            .alpha(if (disable) 0.6f else 1f)
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         val titleStyle = if (title == null) {
             MaterialTheme.typography.bodyLarge.copy(
-                fontSize = 16.sp, fontWeight = FontWeight.Normal, color = Light20
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         } else {
             MaterialTheme.typography.bodyMedium.copy(
@@ -81,7 +87,7 @@ fun SelectionOptions(
                 Icon(
                     rememberAsyncImagePainter(R.drawable.ic_arrow_down),
                     contentDescription = null,
-                    tint = Light20,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(30.dp)
                 )
             },

@@ -23,9 +23,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Violet20
 import com.memeusix.budgetbuddy.ui.theme.Violet40
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import kotlinx.coroutines.delay
 
 @Composable
@@ -121,10 +120,12 @@ internal fun CharacterContainer(
             .then(modifier)
     ) {
         if (character.isEmpty()) {
+            val color =
+                if (isFocused && cursorVisible.value) Violet40 else MaterialTheme.extendedColors.primaryBorder
             Canvas(
                 modifier = Modifier.fillMaxSize(0.4f),
                 onDraw = {
-                    drawCircle(color = if (isFocused && cursorVisible.value) Violet40 else Dark10)
+                    drawCircle(color = color)
                 },
             )
         } else {

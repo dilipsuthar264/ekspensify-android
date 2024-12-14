@@ -27,24 +27,25 @@ import androidx.compose.ui.util.fastSumBy
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.ui.acounts.components.AccountCardFooter
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomListItem
 import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
 import com.memeusix.budgetbuddy.navigation.CreateAccountScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.components.AccountBalance
+import com.memeusix.budgetbuddy.ui.acounts.components.AccountCardFooter
 import com.memeusix.budgetbuddy.ui.acounts.components.AccountIcon
 import com.memeusix.budgetbuddy.ui.acounts.components.AccountsCardView
 import com.memeusix.budgetbuddy.ui.acounts.components.AmountText
 import com.memeusix.budgetbuddy.ui.acounts.components.EmptyListView
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
-import com.memeusix.budgetbuddy.components.ShowLoader
-import com.memeusix.budgetbuddy.ui.theme.Dark10
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.AccountType
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.dynamicPadding
@@ -55,7 +56,7 @@ import com.memeusix.budgetbuddy.utils.toJson
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountsScreen(
-    navController: NavController,
+    navController: NavHostController,
     args: AccountScreenRoute,
     viewModel: AccountViewModel = hiltViewModel()
 ) {
@@ -164,7 +165,11 @@ private fun AccountCard(
             selectedAccountType.value = it
         }
     ) {
-        AccountList(accountList, selectedAccountType.value) { item ->
+        AccountList(
+            accountList,
+            selectedAccountType.value,
+            modifier = Modifier.weight(1f, false)
+        ) { item ->
             navController.navigate(
                 CreateAccountScreenRoute(
                     accountResponseArgs = item.toJson(),
@@ -181,12 +186,15 @@ private fun AccountCard(
 private fun AccountList(
     accountList: List<AccountResponseModel>,
     selectedAccountType: AccountType,
-    onClick: (AccountResponseModel) -> Unit
+    modifier: Modifier = Modifier,
+    onClick: (AccountResponseModel) -> Unit,
 ) {
     val filteredList = remember(accountList, selectedAccountType) {
         accountList.filter { it.type == selectedAccountType.toString() }
     }
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier,
+    ) {
         items(
             filteredList,
             key = { it.id!! }
@@ -202,7 +210,7 @@ private fun AccountList(
                 },
                 onClick = singleClick { onClick(account) }
             )
-            HorizontalDivider(color = Dark10)
+            HorizontalDivider(color = MaterialTheme.extendedColors.primaryBorder)
         }
     }
 }

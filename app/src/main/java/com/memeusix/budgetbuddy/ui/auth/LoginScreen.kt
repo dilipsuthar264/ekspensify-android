@@ -30,7 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
@@ -54,7 +54,7 @@ import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
 
 @Composable
 fun LoginScreen(
-    navController: NavController,
+    navController: NavHostController,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
 
@@ -225,11 +225,13 @@ fun LoginScreen(
 
 
 @Composable
-private fun LoginImage() {
+fun LoginImage() {
     Image(
-        painter = painterResource(R.drawable.ic_login_bg),
+        painter = painterResource(R.drawable.ic_onboarding_3),
         contentDescription = null,
         contentScale = ContentScale.Fit,
+        modifier = Modifier
+            .padding(20.dp)
     )
 }
 

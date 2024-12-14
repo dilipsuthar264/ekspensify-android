@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
-import com.memeusix.budgetbuddy.ui.theme.Light40
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 @Composable
 fun AccountTypeGridItem(
@@ -30,7 +29,7 @@ fun AccountTypeGridItem(
     val (borderColor, backgroundColor) = if (item.isSelected) {
         MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.secondary
     } else {
-        Color.Transparent to Light40
+        Color.Transparent to MaterialTheme.extendedColors.imageBg
     }
     Box(
         modifier = modifier
@@ -44,7 +43,7 @@ fun AccountTypeGridItem(
                 indication = null,
                 onClick = onClick
             )
-            .alpha(if (item.isEnable) 1f else 0.2f),
+            .alpha(if (item.isEnable) 1f else 0.1f),
         contentAlignment = Alignment.Center
     ) {
         Image(

@@ -6,14 +6,19 @@ import com.memeusix.budgetbuddy.navigation.HomeScreenRoute
 import com.memeusix.budgetbuddy.navigation.ProfileScreenRoute
 import com.memeusix.budgetbuddy.navigation.TransactionsScreenRoute
 
-sealed class BottomNavItem(val icon: Int, val selectedIcon: Int, val label: String,val  route: Any?) {
+sealed class BottomNavItem(
+    val icon: Int,
+    val selectedIcon: Int,
+    val label: String,
+    val route: Any?
+) {
     data object Home :
         BottomNavItem(R.drawable.ic_home_new, R.drawable.ic_home_new_fill, "Home", HomeScreenRoute)
 
     data object Transaction : BottomNavItem(
         R.drawable.ic_transaction_new,
         R.drawable.ic_transaction_new_fill,
-        "Transaction",
+        "Transactions",
         TransactionsScreenRoute
     )
 

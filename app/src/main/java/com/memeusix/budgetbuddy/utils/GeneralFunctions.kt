@@ -2,19 +2,12 @@ package com.memeusix.budgetbuddy.utils
 
 import android.content.Context
 import android.net.Uri
-import androidx.compose.animation.core.AnimationVector
-import androidx.compose.animation.core.DecayAnimationSpec
-import androidx.compose.animation.core.TwoWayConverter
-import androidx.compose.animation.core.VectorizedDecayAnimationSpec
-import androidx.compose.foundation.gestures.FlingBehavior
-import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.ime
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -134,6 +127,7 @@ fun getFileFromUri(context: Context, uri: Uri): File? {
         null
     }
 }
+
 fun spacedByWithFooter(space: Dp) = object : Arrangement.Vertical {
 
     override val spacing = space
@@ -162,3 +156,5 @@ fun spacedByWithFooter(space: Dp) = object : Arrangement.Vertical {
         occupied -= lastSpace
     }
 }
+
+

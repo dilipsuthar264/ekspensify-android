@@ -1,7 +1,6 @@
 package com.memeusix.budgetbuddy.ui.dashboard.transactions
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -55,10 +54,8 @@ import com.memeusix.budgetbuddy.ui.dashboard.transactions.filterComponets.Custom
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.filterComponets.FilterTitleItem
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.filterComponets.FilterValuesList
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Dark50
-import com.memeusix.budgetbuddy.ui.theme.Light40
 import com.memeusix.budgetbuddy.ui.theme.Red100
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.TransactionType
 import com.memeusix.budgetbuddy.utils.dynamicPadding
@@ -120,7 +117,7 @@ fun FilterScreen(
 
     Scaffold(topBar = {
         AppBar(
-            heading = "Filter - Sort",
+            heading = "Filters",
             elevation = false,
             navController = navController,
             isBackNavigation = true
@@ -136,7 +133,11 @@ fun FilterScreen(
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(16.dp))
-                    .border(1.dp, Dark10, RoundedCornerShape(16.dp))
+                    .border(
+                        1.dp,
+                        MaterialTheme.extendedColors.primaryBorder,
+                        RoundedCornerShape(16.dp)
+                    )
             ) {
                 FilterTitleListView(
                     filterOptions,
@@ -155,7 +156,7 @@ fun FilterScreen(
                         startDateState.value = null
                         endDateState.value = null
                     })
-                VerticalDivider()
+                VerticalDivider(color = MaterialTheme.extendedColors.primaryBorder)
                 FilterValueListView(
                     selectedFilter,
                     selectedFilterState,
@@ -179,7 +180,8 @@ fun FilterScreen(
                     modifier = Modifier.weight(1f),
                     textModifier = Modifier.padding(vertical = 17.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Light40, contentColor = Dark50
+                        containerColor = MaterialTheme.extendedColors.imageBg,
+                        contentColor = MaterialTheme.extendedColors.iconColor
                     )
                 )
                 FilledButton(
@@ -209,8 +211,9 @@ fun FilterScreen(
                                         59,
                                         59
                                     )?.toString() else end
-                                }
-                        )
+                                },
+                            sort = selectedFilterState.value.sortBy?.sortBy
+                            )
                         transactionViewModel.updateSelectedFilter(selectedFilterState.value)
                         transactionViewModel.updateFilter(requestModel)
                         navController.popBackStack()
@@ -255,7 +258,10 @@ fun FilterTitleListView(
                 }
             )
             FilterTitleItem(filter, onClick = { onClick(item) })
-            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+            HorizontalDivider(
+                color = MaterialTheme.extendedColors.primaryBorder,
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
         }
         item {
             Text(

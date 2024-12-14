@@ -10,7 +10,6 @@ import com.memeusix.budgetbuddy.ui.theme.Green100
 import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.ui.theme.Violet100
 import com.memeusix.budgetbuddy.ui.theme.Yellow100
-import com.memeusix.budgetbuddy.ui.theme.Yellow20
 import com.memeusix.budgetbuddy.utils.generateIconSlug
 
 @Stable

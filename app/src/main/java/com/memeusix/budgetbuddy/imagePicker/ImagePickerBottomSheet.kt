@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.ui.theme.Dark10
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -87,7 +87,7 @@ fun ImagePickerBottomSheet(
                 contentDescription = "Camera",
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Dark10)
+                    .background(MaterialTheme.extendedColors.imageBg)
                     .clickable {
                         if (checkForPermission) {
                             val photoUri = createImageUri(context)
@@ -106,7 +106,7 @@ fun ImagePickerBottomSheet(
                 contentDescription = "Gallery",
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Dark10)
+                    .background(MaterialTheme.extendedColors.imageBg)
                     .clickable {
                         if (checkForPermission) {
                             imagePickerLauncher.launch("image/*")

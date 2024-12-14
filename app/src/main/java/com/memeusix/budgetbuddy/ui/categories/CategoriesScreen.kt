@@ -17,8 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.AlertDialog
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.components.ShowLoader
@@ -35,7 +36,7 @@ import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreen(
-    navController: NavController, categoryViewModel: CategoryViewModel = hiltViewModel()
+    navController: NavHostController, categoryViewModel: CategoryViewModel = hiltViewModel()
 ) {
     val getCategories by categoryViewModel.getCategories.collectAsStateWithLifecycle()
     val deleteCategories by categoryViewModel.deleteCategory.collectAsStateWithLifecycle()
@@ -49,6 +50,26 @@ fun CategoriesScreen(
     //Custom Toast
     val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
     CustomToast(toastState)
+
+    // delete dialog
+    val isDeleteDialogOpen = remember { mutableStateOf<Pair<Boolean, Int?>>(false to null) }
+
+    if (isDeleteDialogOpen.value.first) {
+        AlertDialog(
+            title = "Are you sure?",
+            message = "you want delete this category",
+            btnText = "Delete",
+            onDismiss = {
+                isDeleteDialogOpen.value =
+                    isDeleteDialogOpen.value.copy(false, null)
+            },
+            onConfirm = {
+                isDeleteDialogOpen.value.second?.let { categoryViewModel.deleteCategory(it) }
+                isDeleteDialogOpen.value =
+                    isDeleteDialogOpen.value.copy(false, null)
+            }
+        )
+    }
 
 
     val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
@@ -93,7 +114,9 @@ fun CategoriesScreen(
         ) {
             CategoryList(
                 getCategories.data.orEmpty(),
-                onDeleteClick = { categoryViewModel.deleteCategory(it) })
+                onDeleteClick = {
+                    isDeleteDialogOpen.value = isDeleteDialogOpen.value.copy(true, it)
+                })
             FilledButton(
                 text = stringResource(R.string.add),
                 onClick = {

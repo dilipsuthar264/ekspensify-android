@@ -11,10 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Light20
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 
 @Composable
@@ -28,7 +28,7 @@ fun CustomFilterTextField(
         value = state,
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, Dark10, RoundedCornerShape(10.dp))
+            .border(1.dp, MaterialTheme.extendedColors.primaryBorder, RoundedCornerShape(10.dp))
             .let { if (!isEnable) it.clickable(onClick = { onChange("") }) else it }
             .padding(12.dp),
         onValueChange = { if (it.length <= 10) onChange(it) },
@@ -37,11 +37,14 @@ fun CustomFilterTextField(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number
         ),
-        textStyle = MaterialTheme.typography.bodyMedium,
+        textStyle = MaterialTheme.typography.bodyMedium.copy(
+            color = MaterialTheme.colorScheme.onBackground,
+        ),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.onBackground),
         decorationBox = { innerBox ->
             if (state.isEmpty()) Text(
                 placeHolder,
-                color = Light20,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium
             )
             innerBox()

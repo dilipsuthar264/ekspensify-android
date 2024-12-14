@@ -23,7 +23,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,9 +38,8 @@ import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.ui.acounts.components.AccountBalance
 import com.memeusix.budgetbuddy.ui.acounts.components.AccountIcon
-import com.memeusix.budgetbuddy.ui.theme.Light60
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.BottomSheetType
-import com.memeusix.budgetbuddy.utils.SetWindowDim
 import com.memeusix.budgetbuddy.utils.formatRupees
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -104,7 +102,7 @@ private fun CategoryList(
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
-                    .background(Light60)
+                    .background(MaterialTheme.extendedColors.imageBg)
                     .clickable {
                         selectedCategory.value = category
                         onDismiss()

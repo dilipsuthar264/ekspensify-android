@@ -8,6 +8,7 @@ import com.memeusix.budgetbuddy.data.services.AuthApi
 import com.memeusix.budgetbuddy.data.services.CategoryApi
 import com.memeusix.budgetbuddy.data.services.ProfileApi
 import com.memeusix.budgetbuddy.data.services.TransactionApi
+import com.memeusix.budgetbuddy.ui.theme.ThemeManager
 import com.memeusix.budgetbuddy.utils.SpUtils
 import dagger.Module
 import dagger.Provides
@@ -83,6 +84,12 @@ class AppModule {
     @Singleton
     fun provideSpUtils(application: Application): SpUtils {
         return SpUtils(application.applicationContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideThemeManager(spUtils: SpUtils): ThemeManager {
+        return ThemeManager(spUtils)
     }
 
     @Provides

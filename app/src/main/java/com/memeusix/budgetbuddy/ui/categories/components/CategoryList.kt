@@ -2,43 +2,37 @@ package com.memeusix.budgetbuddy.ui.categories.components
 
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.OverscrollEffect
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.CustomListItem
 import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.ui.categories.data.getCategoryType
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Dark15
 import com.memeusix.budgetbuddy.ui.theme.Red75
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -82,7 +76,7 @@ fun CategoryList(
                     DeleteIconBtn(category, onDeleteClick)
                 },
             )
-            HorizontalDivider(color = Dark10)
+            HorizontalDivider(color = MaterialTheme.extendedColors.primaryBorder)
         }
         item {
             VerticalSpace(76.dp)
@@ -103,9 +97,10 @@ private fun DeleteIconBtn(
         contentDescription = stringResource(R.string.delete),
         tint = Red75,
         modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
             .clickable(enabled = isEnabled, onClick = { onDeleteClick(category.id!!) })
             .alpha(alpha)
-            .border(1.dp, Dark10, RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.extendedColors.primaryBorder, RoundedCornerShape(12.dp))
             .padding(vertical = 7.dp, horizontal = 10.dp)
     )
 }

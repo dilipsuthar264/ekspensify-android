@@ -43,7 +43,7 @@ fun CustomDatePicker(
             dismissOnClickOutside = true
         )
     ) {
-        SetWindowDim(0.1F)
+        SetWindowDim(0.5F)
         Column(
             modifier = Modifier
                 .background(
@@ -75,8 +75,8 @@ fun CustomDatePicker(
                     modifier = Modifier.weight(1f),
                     textStyle = MaterialTheme.typography.bodyMedium,
                     colors = ButtonDefaults.buttonColors(
-                        contentColor = MaterialTheme.colorScheme.primary,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        contentColor = MaterialTheme.colorScheme.onSecondary
                     ),
                     onClick = {
                         datePickerState.value = datePickerState.value.copy(
@@ -85,7 +85,7 @@ fun CustomDatePicker(
                     }
                 )
                 FilledButton(
-                    text = "Set",
+                    text = "Set Date",
                     textStyle = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f),
                     onClick = {

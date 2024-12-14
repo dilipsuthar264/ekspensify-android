@@ -10,8 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -27,6 +26,7 @@ fun AppBar(
     elevation: Boolean = false,
     isBackNavigation: Boolean = true,
     isLightColor: Boolean = false,
+    isToggleVisible: Boolean = false,
     bgColor: Color = MaterialTheme.colorScheme.background
 ) {
     val titleTextStyle = Typography.titleSmall.copy(
@@ -51,11 +51,16 @@ fun AppBar(
                         onClick = singleClick(onClick = navController::popBackStack),
                     ) {
                         Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_left),
+                            painter = painterResource(R.drawable.ic_arrow_left),
                             contentDescription = "Back",
                             tint = navigationIconTint
                         )
                     }
+                }
+            },
+            actions = {
+                if (isToggleVisible) {
+                    ThemeToggle()
                 }
             },
             expandedHeight = 60.dp,

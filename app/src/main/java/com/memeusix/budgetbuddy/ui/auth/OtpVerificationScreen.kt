@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.FilledButton
@@ -52,7 +52,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun OtpVerificationScreen(
-    navController: NavController,
+    navController: NavHostController,
     navArgs: AuthRequestModel,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
@@ -196,7 +196,7 @@ fun OtpVerificationScreen(
                     timeRemaining
                 ),
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.primaryContainer,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .clickable(enabled = isResendEnable) {
@@ -209,7 +209,7 @@ fun OtpVerificationScreen(
                 buildAnnotatedString {
                     append(stringResource(R.string.we_send_verification_code_to_your_email))
                     withStyle(
-                        style = SpanStyle(color = MaterialTheme.colorScheme.primary)
+                        style = SpanStyle(color = MaterialTheme.colorScheme.primaryContainer)
                     ) {
                         append(navArgs.email)
                     }

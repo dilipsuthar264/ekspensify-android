@@ -13,10 +13,9 @@ data class TransactionPaginationRequestModel(
     val maxAmount: Int? = null,
     val startDate: String? = null,
     val endDate: String? = null,
-
     val accountId: Int? = null,
+    val sort: String? = null,
+    val q: String? = null,
 
     val updateList: Boolean = false,
-
-    val q : String? = null
 ) : Serializable

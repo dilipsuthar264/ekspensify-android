@@ -37,6 +37,7 @@ class TransactionPagingSource(
                     maxAmount = transactionPaginationRequestModel.maxAmount,
                     startDate = transactionPaginationRequestModel.startDate,
                     endDate = transactionPaginationRequestModel.endDate,
+                    sort = transactionPaginationRequestModel.sort,
                     q = transactionPaginationRequestModel.q
                 )
             }

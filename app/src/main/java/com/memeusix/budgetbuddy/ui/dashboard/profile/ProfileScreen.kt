@@ -2,7 +2,6 @@ package com.memeusix.budgetbuddy.ui.dashboard.profile
 
 import android.util.Log
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,11 +16,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.AlertDialog
 import com.memeusix.budgetbuddy.components.CustomListItem
 import com.memeusix.budgetbuddy.components.ListIcon
 import com.memeusix.budgetbuddy.data.ApiResponse
@@ -48,8 +50,7 @@ import com.memeusix.budgetbuddy.navigation.IntroScreenRoute
 import com.memeusix.budgetbuddy.ui.dashboard.profile.componets.ProfileAvatar
 import com.memeusix.budgetbuddy.ui.dashboard.profile.model.ProfileOptionProvider
 import com.memeusix.budgetbuddy.ui.dashboard.profile.model.ProfileOptions
-import com.memeusix.budgetbuddy.ui.theme.Dark10
-import com.memeusix.budgetbuddy.ui.theme.Light20
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.singleClick
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
@@ -68,13 +69,33 @@ fun ProfileScreen(
 
     val isLoading = getMeState is ApiResponse.Loading || updateMeState is ApiResponse.Loading
 
+    val isLogoutDialogOpen = remember { mutableStateOf(false) }
+
+    if (isLogoutDialogOpen.value) {
+        AlertDialog(
+            title = "Are you sure?",
+            message = "you want to Logout",
+            btnText = "Logout",
+            onDismiss = { isLogoutDialogOpen.value = false },
+            onConfirm = {
+                isLogoutDialogOpen.value = false
+                navController.navigate(IntroScreenRoute) {
+                    popUpTo(0) { inclusive = true }
+                }
+                viewmodel.spUtils.logout()
+            }
+        )
+    }
+
 
     val modifier = Modifier
         .clip(RoundedCornerShape(16.dp))
         .background(MaterialTheme.colorScheme.background)
         .fillMaxWidth()
         .border(
-            width = 1.dp, color = Dark10, RoundedCornerShape(16.dp)
+            width = 1.dp,
+            color = MaterialTheme.extendedColors.primaryBorder,
+            RoundedCornerShape(16.dp)
         )
         .padding(vertical = 15.dp)
         .animateContentSize()
@@ -160,7 +181,7 @@ fun ProfileScreen(
                 Text(
                     details.email ?: "",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Light20
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 )
             }
@@ -178,10 +199,15 @@ fun ProfileScreen(
                     ProfileListItem(
                         profileOptions = profileOptions,
                         onClick = singleClick {
-                            handleProfileOptionClick(profileOptions, navController, viewmodel)
+                            handleProfileOptionClick(
+                                isLogoutDialogOpen,
+                                profileOptions,
+                                navController,
+                                viewmodel
+                            )
                         }
                     )
-                    HorizontalDivider(color = Dark10)
+                    HorizontalDivider(color = MaterialTheme.extendedColors.primaryBorder)
                 }
                 Text(
                     stringResource(R.string.danger),
@@ -192,7 +218,12 @@ fun ProfileScreen(
                     ProfileListItem(
                         profileOptions = profileOptions,
                         onClick = singleClick {
-                            handleProfileOptionClick(profileOptions, navController, viewmodel)
+                            handleProfileOptionClick(
+                                isLogoutDialogOpen,
+                                profileOptions,
+                                navController,
+                                viewmodel
+                            )
                         }
                     )
                 }
@@ -210,8 +241,9 @@ private fun ProfileListItem(profileOptions: ProfileOptions, onClick: () -> Unit)
         },
         modifier = Modifier.padding(horizontal = 15.dp, vertical = 9.dp),
         trailingContent = {
-            Image(
+            Icon(
                 painter = painterResource(R.drawable.ic_arrow_right),
+                tint = MaterialTheme.extendedColors.iconColor,
                 contentDescription = null,
             )
         },
@@ -221,6 +253,7 @@ private fun ProfileListItem(profileOptions: ProfileOptions, onClick: () -> Unit)
 
 
 private fun handleProfileOptionClick(
+    isLogoutDialogOpen: MutableState<Boolean>,
     profileOptions: ProfileOptions,
     navController: NavController,
     viewmodel: ProfileViewModel
@@ -247,10 +280,7 @@ private fun handleProfileOptionClick(
         }
 
         ProfileOptions.LOGOUT -> {
-            navController.navigate(IntroScreenRoute) {
-                popUpTo(0) { inclusive = true }
-            }
-            viewmodel.spUtils.logout()
+            isLogoutDialogOpen.value = true
         }
     }
 }

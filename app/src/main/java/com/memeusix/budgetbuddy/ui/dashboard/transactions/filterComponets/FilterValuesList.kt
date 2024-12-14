@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -14,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.CustomListItem
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
@@ -22,7 +24,7 @@ import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.AmountRange
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.DateRange
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.SortBy
-import com.memeusix.budgetbuddy.ui.theme.Light40
+import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.TransactionType
 import java.io.Serializable
 
@@ -58,12 +60,18 @@ fun FilterValuesList(item: Serializable, isSelected: Boolean, onClick: () -> Uni
         },
         trailingContent = {
             if (isSelected) {
-                FilterListIcon(R.drawable.ic_success)
+                Icon(
+                    painter = rememberAsyncImagePainter(R.drawable.ic_success),
+                    tint = MaterialTheme.extendedColors.filterSelectionIcon,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(18.dp)
+                )
             }
         },
         modifier = Modifier
             .clip(RoundedCornerShape(10.dp))
-            .let { if (isSelected) it.background(Light40) else it }
+            .let { if (isSelected) it.background(MaterialTheme.extendedColors.imageBg) else it }
             .clickable(
                 interactionSource = null,
                 indication = null,

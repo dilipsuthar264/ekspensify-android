@@ -71,12 +71,13 @@ fun CreateTransactionScreen(
     val isUpdate = rememberUpdatedState(transactionArgs != null)
 
     DisposableEffect(Unit) {
+        val defaultDarkIcons = systemUiController.systemBarsDarkContentEnabled
         systemUiController.apply {
             setStatusBarColor(Color.Transparent, darkIcons = false)
         }
         onDispose {
             systemUiController.apply {
-                setStatusBarColor(Color.Transparent, darkIcons = true)
+                setStatusBarColor(color = Color.Transparent, darkIcons = defaultDarkIcons)
             }
         }
     }
@@ -146,7 +147,7 @@ fun CreateTransactionScreen(
         contentColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             AppBar(
-                heading = "Create Transaction",
+                heading = "Add Transaction",
                 navController = navController,
                 isLightColor = true,
                 bgColor = bgColor

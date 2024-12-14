@@ -50,8 +50,6 @@ import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import com.memeusix.budgetbuddy.ui.dashboard.profile.model.AvatarOptions
-import com.memeusix.budgetbuddy.ui.theme.Light20
-import com.memeusix.budgetbuddy.ui.theme.Violet20
 import com.memeusix.budgetbuddy.utils.getInitials
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -129,7 +127,8 @@ fun EditProfileBottomSheet(
                 buildAnnotatedString {
                     withStyle(
                         style = SpanStyle(
-                            color = Light20, fontWeight = FontWeight.SemiBold
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            fontWeight = FontWeight.SemiBold
                         )
                     ) {
                         append("Email : ")
@@ -165,7 +164,7 @@ fun AvatarOptionsItem(
     val baseModifier = Modifier
         .size(80.dp)
         .clip(CircleShape)
-        .background(color = Violet20, shape = CircleShape)
+        .background(color = MaterialTheme.colorScheme.secondary, shape = CircleShape)
         .clickable(
             indication = null,
             interactionSource = null,
@@ -175,7 +174,7 @@ fun AvatarOptionsItem(
     val selectedModifier = if (isSelected) {
         Modifier
             .shadow(elevation = 2.dp, shape = CircleShape)
-            .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
+            .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
             .then(
                 baseModifier
             )
@@ -190,7 +189,7 @@ fun AvatarOptionsItem(
             style = MaterialTheme.typography.titleSmall.copy(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 28.sp,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.onSecondary
             ),
             modifier = selectedModifier
                 .wrapContentHeight(Alignment.CenterVertically)

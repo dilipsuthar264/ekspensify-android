@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.components.VerticalSpace
@@ -42,7 +41,7 @@ import com.memeusix.budgetbuddy.navigation.RegisterScreenRoute
 import com.memeusix.budgetbuddy.utils.singleClick
 
 @Composable
-fun IntroScreen(navController: NavController) {
+fun IntroScreen(navController: NavHostController) {
     val introPages = remember { IntroPages.getPages() }
     val pagerState = rememberPagerState(
         pageCount = { introPages.size },
@@ -128,7 +127,6 @@ fun PageView(introPages: IntroPages, modifier: Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp)
-                .aspectRatio(1f)
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(

@@ -2,15 +2,6 @@ package com.memeusix.budgetbuddy.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-
 /**
  * APP UI COLORS
  */
@@ -18,10 +9,16 @@ val Pink40 = Color(0xFF7D5260)
 // Dark Colors
 val Dark10 = Color(0xFFE0E2E9)
 val Dark15 = Color(0xFFF1F1FA)
+val Dark20 = Color(0xFF666C70)
 val Dark25 = Color(0xFF464A4D)
 val Dark40 = Color(0xFF526670)
 val Dark50 = Color(0xFF464A4D)
 val Dark75 = Color(0xFF161719)
+
+//val Dark80 = Color(0xFF1D1D1F)
+//val Dark80 = Color(0xFF161621)
+val Dark80 = Color(0xFF292934)
+val Dark90 = Color(0xff31313f)
 val Dark100 = Color(0xFF0D0E0F)
 
 // Light Colors
@@ -33,13 +30,17 @@ val Light100 = Color(0xFFFFFFFF)
 
 
 // Violet Colors
-val Violet5 = Color(0xFFFAF8FA)
+val Violet5 = Color(0xFFFAF8fA)
 val Violet10 = Color(0xFFF6F1FF)
 val Violet20 = Color(0xFFEEE5FF)
 val Violet40 = Color(0xFFD3BDFF)
 val Violet60 = Color(0xFFB18AFF)
 val Violet80 = Color(0xFF8F57FF)
 val Violet100 = Color(0xFF7F3DFF)
+val Violet100_MUTED = Color(0xFF6543C5)
+val Violet120 = Color(0xFF2e2b3f)
+val VioletSecondary = Color(0xffd2c8ee)
+
 
 // Red Colors
 val Red20 = Color(0xFFFDD5D7)
@@ -49,7 +50,7 @@ val Red75 = Color(0xFFFF636F)
 val Red80 = Color(0xFFFD5662)
 val Red100 = Color(0xFFFD3C4A)
 val Red120 = Color(0xFFFF0010)
-val Red130 = Color(0xFFE62D2D)
+val Red130 = Color(0xFF2A0909)
 
 // Green Colors
 val Green20 = Color(0xFFCFFAEA)

@@ -16,6 +16,6 @@ fun AccountIcon(account: AccountResponseModel, size: Dp = 36.dp) {
         BankModel.getWallet().find { it.iconSlug == account.icon }?.icon
     }
     iconResource?.let { icon ->
-        ListIcon(icon,size)
+        ListIcon(icon, size)
     }
 }
