@@ -58,7 +58,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="https" />
-                <data android:host="144m568g-3000.inc1.devtunnels.ms" />
+                <data android:host="api.esquaregames.in" />
             </intent-filter>
         </activity>
 
