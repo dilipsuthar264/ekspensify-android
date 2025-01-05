@@ -2,22 +2,23 @@ package com.memeusix.budgetbuddy.utils
 
 import android.content.Context
 import android.net.Uri
+import android.view.Gravity
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.ime
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.navigation.NavController
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.ErrorResponseModel
+import com.memeusix.budgetbuddy.navigation.IntroScreenRoute
+import com.memeusix.budgetbuddy.utils.spUtils.SpUtils
+import com.memeusix.budgetbuddy.utils.spUtils.SpUtilsManager
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
 import kotlinx.coroutines.CoroutineScope
@@ -57,16 +58,10 @@ inline fun <reified T> String?.fromJson(): T? {
 }
 
 
-@Composable
-fun keyboardAsState(): State<Boolean> {
-    val isImeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
-    return rememberUpdatedState(isImeVisible)
-}
-
-
 fun <T> handleApiResponse(
     response: ApiResponse<T>,
     toastState: MutableState<CustomToastModel?>,
+    navController: NavController? = null,
     onSuccess: (T?) -> Unit,
 ) {
     when (response) {
@@ -76,6 +71,13 @@ fun <T> handleApiResponse(
 
         is ApiResponse.Failure -> {
             val errorMessage = response.errorResponse?.message ?: "An error occurred"
+            if (response.errorResponse?.code == 401) {
+                navController?.let { nav ->
+                    goToLogin(nav, errorMessage)
+                    return
+                }
+            }
+
             toastState.value = CustomToastModel(
                 message = errorMessage,
                 isVisible = true,
@@ -87,8 +89,11 @@ fun <T> handleApiResponse(
     }
 }
 
+
 fun <T> handleApiResponseWithError(
     response: ApiResponse<T>,
+    toastState: MutableState<CustomToastModel?>? = null,
+    navController: NavController? = null,
     onFailure: (ErrorResponseModel?) -> Unit,
     onSuccess: (T?) -> Unit
 ) {
@@ -98,12 +103,47 @@ fun <T> handleApiResponseWithError(
         }
 
         is ApiResponse.Failure -> {
+            val errorMessage = response.errorResponse?.message ?: "An error occurred"
+
+            if (response.errorResponse?.code == 401) {
+                navController?.let { nav ->
+                    goToLogin(nav, errorMessage)
+                    return
+                }
+            }
+
             onFailure(response.errorResponse)
+            toastState?.let {
+                toastState.value = CustomToastModel(
+                    message = errorMessage,
+                    isVisible = true,
+                    type = ToastType.ERROR
+                )
+            }
         }
 
         else -> Unit
     }
 }
+private fun goToLogin(
+    navController: NavController,
+    errorMessage: String
+) {
+    // Navigate to IntroScreen and clear back stack
+    navController.navigate(IntroScreenRoute) {
+        popUpTo(0) { inclusive = false }
+    }
+
+    // Perform logout using a helper function or manager
+    SpUtilsManager(SpUtils(navController.context)).logout()
+
+    // Display the error message as a toast
+    Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).apply {
+        setGravity(Gravity.TOP, 0, 0)
+        show()
+    }
+}
+
 
 @Composable
 fun SetWindowDim(value: Float = 0f) {
@@ -156,5 +196,3 @@ fun spacedByWithFooter(space: Dp) = object : Arrangement.Vertical {
         occupied -= lastSpace
     }
 }
-
-

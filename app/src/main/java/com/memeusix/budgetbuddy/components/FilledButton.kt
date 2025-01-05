@@ -12,8 +12,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -41,6 +44,10 @@ fun FilledButton(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background, shape)
+            .onGloballyPositioned { coordinates ->
+                // Store the button's height in the singleton object
+                ButtonHeightHolder.buttonHeightPx = coordinates.size.height
+            }
     ) {
         Text(
             text = text,
@@ -48,4 +55,16 @@ fun FilledButton(
             modifier = textModifier
         )
     }
+}
+
+
+@Composable
+fun getBtnHeight(): Dp {
+    return with(LocalDensity.current) {
+        ButtonHeightHolder.buttonHeightPx.toDp()
+    }
+}
+
+object ButtonHeightHolder {
+    var buttonHeightPx: Int = 0
 }

@@ -12,6 +12,10 @@ plugins {
     id("com.google.dagger.hilt.android")
 
     id("com.google.gms.google-services")
+
+    id("com.google.firebase.firebase-perf")
+
+    id("com.google.firebase.crashlytics")
 }
 
 
@@ -36,6 +40,7 @@ android {
         }
 
         buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
+        buildConfigField("String", "ONESIGNAL_APP_ID", properties.getProperty("ONESIGNAL_APP_ID"))
     }
 
     flavorDimensions += "base_url"
@@ -65,6 +70,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -173,6 +179,9 @@ dependencies {
      */
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.perf)
+    implementation(libs.firebase.crashlytics)
+
 
     /**
      * Google sign in
@@ -207,5 +216,26 @@ dependencies {
     implementation("androidx.paging:paging-runtime:3.3.4")
     implementation("androidx.paging:paging-compose:3.3.4")
 
-    implementation ("com.github.commandiron:WheelPickerCompose:1.1.11")
+    implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
+
+    // for LocalDateTime time api uses for below 26 sdk
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
+
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
+
+
+    /**
+     * Memory Leak
+     */
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
+
+
+    /**
+     * one signal
+     */
+    implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+
+
+    // Photo View with gesture
+    implementation ("io.github.fornewid:photo-compose:1.0.1")
 }

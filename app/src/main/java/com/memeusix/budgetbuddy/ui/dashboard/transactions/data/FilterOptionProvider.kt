@@ -2,8 +2,8 @@ package com.memeusix.budgetbuddy.ui.dashboard.transactions.data
 
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
-import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.TransactionType
+import com.memeusix.budgetbuddy.utils.spUtils.SpUtilsManager
 
 
 object FilterOptionProvider {
@@ -11,9 +11,9 @@ object FilterOptionProvider {
     private var categories: List<CategoryResponseModel>? = null
     private var accounts: List<AccountResponseModel>? = null
 
-    fun initialize(spUtils: SpUtils) {
-        categories = spUtils.categoriesData?.categories
-        accounts = spUtils.accountData?.accounts
+    fun initialize(spUtils: SpUtilsManager) {
+        categories = spUtils.categoriesData.value?.categories
+        accounts = spUtils.accountData.value?.accounts
     }
 
     fun getFilterOptions() = listOf(

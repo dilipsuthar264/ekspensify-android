@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -40,7 +41,8 @@ fun FilterTitleItem(filter: FilterOptions<out Serializable>, onClick: () -> Unit
                         color = lineColor,
                         start = Offset(0f, size.height),
                         end = Offset(0f, 0f),
-                        strokeWidth = 8.dp.toPx()
+                        strokeWidth = 8.dp.toPx(),
+                        cap = StrokeCap.Round
                     )
                 }
             }

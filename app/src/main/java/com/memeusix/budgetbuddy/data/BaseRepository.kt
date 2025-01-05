@@ -1,6 +1,5 @@
 package com.memeusix.budgetbuddy.data
 
-import android.util.Log
 import android.util.MalformedJsonException
 import com.google.gson.Gson
 import okio.EOFException
@@ -21,17 +20,18 @@ interface BaseRepository {
             val response = call.invoke()
             return when {
                 response.isSuccessful -> {
-                    ApiResponse.Success(response = response.body())
+//                    ApiResponse.Success(response = response.body())
+                    ApiResponse.success(response.body())
                 }
 
                 else -> {
                     handleFailureResponse(response)
                 }
             }
-        }catch (e :EOFException){
-            return ApiResponse.Success(response = null)
-        }
-        catch (e: Exception) {
+        } catch (e: EOFException) {
+//            return ApiResponse.Success(response = null)
+            return ApiResponse.success(null)
+        } catch (e: Exception) {
             return handleException(e)
         }
     }
@@ -48,9 +48,11 @@ interface BaseRepository {
             } else {
                 ErrorResponseModel()
             }
-            return ApiResponse.Failure(error = error)
+//            return ApiResponse.Failure(error = error)
+            return ApiResponse.failure(error)
         }
-        return ApiResponse.Failure(ErrorResponseModel(message = "Something went wrong"))
+//        return ApiResponse.Failure(ErrorResponseModel(message = "Something went wrong"))
+        return ApiResponse.failure(ErrorResponseModel(message = "Something went wrong"))
     }
 
     /**
@@ -60,19 +62,23 @@ interface BaseRepository {
         e?.let {
             return when (it) {
                 is ConnectException -> {
-                    ApiResponse.Failure(ErrorResponseModel(message = "No internet connection"))
+//                    ApiResponse.Failure(ErrorResponseModel(message = "No internet connection"))
+                    ApiResponse.failure(ErrorResponseModel(message = "No internet connection"))
                 }
 
                 is MalformedJsonException -> {
-                    ApiResponse.Failure(ErrorResponseModel(message = "Bad response"))
+//                    ApiResponse.Failure(ErrorResponseModel(message = "Bad response"))
+                    ApiResponse.failure(ErrorResponseModel(message = "Bad response"))
                 }
 
                 else -> {
-                    ApiResponse.Failure(ErrorResponseModel(message = "Unknown error"))
+//                    ApiResponse.Failure(ErrorResponseModel(message = "Unknown error"))
+                    ApiResponse.failure(ErrorResponseModel(message = "Unknown error"))
                 }
             }
         }
-        return ApiResponse.Failure(ErrorResponseModel(message = "Something went wrong"))
+//        return ApiResponse.Failure(ErrorResponseModel(message = "Something went wrong"))
+        return ApiResponse.failure(ErrorResponseModel(message = "Something went wrong"))
     }
 
 

@@ -84,7 +84,7 @@ fun FilterValuesList(item: Serializable, isSelected: Boolean, onClick: () -> Uni
 
 
 @Composable
-private fun FilterListIcon(item: Any?) {
+ fun FilterListIcon(item: Any?) {
     AsyncImage(
         model = item,
         contentDescription = null,

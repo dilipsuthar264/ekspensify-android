@@ -2,7 +2,6 @@ package com.memeusix.budgetbuddy.ui.dashboard.transactions.data
 
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
-import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.TransactionType
 import java.time.LocalDate
 

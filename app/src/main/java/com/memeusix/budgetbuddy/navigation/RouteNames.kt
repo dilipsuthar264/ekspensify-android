@@ -89,3 +89,25 @@ object FilterScreenRoute
 data class ImageWebViewRoute(
     val imageUrl: String
 )
+
+
+// Budget Screens
+@Serializable
+object CreateBudgetScreenRoute
+
+@Serializable
+data class BudgetDetailsScreenRoute(
+    val budgetId: Int,
+)
+
+@Serializable
+data class BudgetTransactionScreenRoute(
+    val budgetId: Int,
+    val budgetReportId: Int
+)
+
+// Image preview page
+@Serializable
+data class PicturePreviewScreenRoute(
+   val image: String
+)

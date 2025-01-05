@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,11 +45,13 @@ import com.memeusix.budgetbuddy.ui.auth.components.DontHaveAccountText
 import com.memeusix.budgetbuddy.ui.auth.components.GoogleAuthBtn
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
 import com.memeusix.budgetbuddy.ui.theme.Typography
+import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
+import com.memeusix.budgetbuddy.utils.handleApiResponse
 import com.memeusix.budgetbuddy.utils.isValidEmail
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
-import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
+import com.onesignal.OneSignal
 
 @Composable
 fun LoginScreen(
@@ -76,94 +77,62 @@ fun LoginScreen(
     val loginWithGoogleResponse by authViewModel.signInWithGoogle.collectAsState()
 
 
+    val isGoogleSignInLoading = remember { mutableStateOf(false) }
+
     val isLoading =
         sendOtpResponse is ApiResponse.Loading || loginWithGoogleResponse is ApiResponse.Loading
 
-
-    val scrollState = rememberScrollState()
-
-    LaunchedEffect(sendOtpResponse) {
-        when (sendOtpResponse) {
-            is ApiResponse.Success -> {
+    LaunchedEffect(sendOtpResponse, loginWithGoogleResponse) {
+        handleApiResponse(
+            response = sendOtpResponse,
+            toastState = toastState,
+            navController = navController,
+            onSuccess = { data ->
                 navController.navigate(
                     OtpVerificationScreenRoute(
                         email = email.value.text, name = null
                     )
                 )
             }
-
-            is ApiResponse.Failure -> {
-                sendOtpResponse.errorResponse?.apply {
-
-                    toastState.value = CustomToastModel(
-                        message = this.message,
-                        isVisible = true,
-                        type = ToastType.ERROR
-                    )
-
-                }
-            }
-
-            else -> {}
-        }
-    }
-
-    LaunchedEffect(loginWithGoogleResponse) {
-        when (loginWithGoogleResponse) {
-            is ApiResponse.Success -> {
-                loginWithGoogleResponse.data?.apply {
+        )
+        handleApiResponse(
+            response = loginWithGoogleResponse,
+            toastState = toastState,
+            navController = navController,
+            onSuccess = { data ->
+                data?.apply {
                     if (user != null && !token.isNullOrEmpty()) {
-                        authViewModel.spUtils.pref.all.clear()
-                        authViewModel.spUtils.user = user
-                        authViewModel.spUtils.accessToken = token!!
-                        authViewModel.spUtils.isLoggedIn = true
+                        authViewModel.spUtilsManager.logout()
+                        authViewModel.spUtilsManager.updateUser(user)
+                        authViewModel.spUtilsManager.updateAccessToken(token!!)
+                        authViewModel.spUtilsManager.updateLoginStatus(true)
+                        OneSignal.login(user?.id.toString())
                         goToNextScreenAfterLogin(navController)
                     }
-
                 }
             }
-
-            is ApiResponse.Failure -> {
-                loginWithGoogleResponse.errorResponse?.apply {
-                    toastState.value = CustomToastModel(
-                        message = this.message,
-                        isVisible = true,
-                        type = ToastType.ERROR
-                    )
-                }
-            }
-
-            else -> {}
-        }
+        )
     }
 
-    // Shows The Loader for Api Requests
-
-    ShowLoader(isLoading)
-
-    // Main Ui For Login Screen
-
+    // Main Ui
     Scaffold(
         topBar = {
-            AppBar(stringResource(R.string.login), navController, false)
+            AppBar(stringResource(R.string.login), navController)
         },
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .imePadding()
-                .padding(
-                    start = 20.dp, end = 20.dp, top = paddingValues.calculateTopPadding()
-                )
                 .fillMaxSize()
-                .verticalScroll(scrollState),
+                .dynamicImePadding(paddingValues)
+                .padding(20.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
             LoginImage()
             CustomOutlineTextField(
                 state = email,
                 placeholder = stringResource(R.string.email),
                 modifier = Modifier,
-                isExpendable = false,
                 maxLength = 40
             )
             Spacer(Modifier.height(24.dp))
@@ -194,7 +163,7 @@ fun LoginScreen(
 
             Spacer(Modifier.height(15.dp))
             Text(
-                text = "Or",
+                text = stringResource(R.string.or),
                 style = Typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
@@ -202,8 +171,13 @@ fun LoginScreen(
             Spacer(Modifier.height(15.dp))
             GoogleAuthBtn(
                 text = stringResource(R.string.login_with_google),
+                isLoading = isGoogleSignInLoading.value,
                 onClick = {
-                    authViewModel.launchGoogleAuth(context, coroutines) { tokenId ->
+                    authViewModel.launchGoogleAuth(
+                        context,
+                        coroutines,
+                        isGoogleSignInLoading
+                    ) { tokenId ->
                         authViewModel.signInWithGoogle(tokenId)
                     }
                 }
@@ -219,6 +193,8 @@ fun LoginScreen(
             }
         }
 
+        // show loader
+        ShowLoader(isLoading)
     }
 
 }

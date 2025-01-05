@@ -1,13 +1,15 @@
-package com.memeusix.budgetbuddy.utils
+package com.memeusix.budgetbuddy.utils.spUtils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import com.memeusix.budgetbuddy.ui.theme.Theme
+import com.onesignal.OneSignal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,7 +27,7 @@ class SpUtils @Inject constructor(val context: Context) {
         set(isLoggedIn) = pref.edit().putBoolean(IS_LOGGED_IN, isLoggedIn).apply()
 
     var themePreference: String
-        get() = getDataByKey(THEME_PREFERENCE, Theme.SYSTEM.name)
+        get() = getDataByKey(THEME_PREFERENCE, Theme.LIGHT.name)
         set(value) = storeDataByKey(THEME_PREFERENCE, value)
 
     var user: UserResponseModel?

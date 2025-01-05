@@ -1,11 +1,10 @@
 package com.memeusix.budgetbuddy.ui.categories
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
@@ -19,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
@@ -34,11 +34,11 @@ import com.memeusix.budgetbuddy.ui.categories.components.CategoryTypeSelectionTo
 import com.memeusix.budgetbuddy.ui.categories.components.IconSelectionCard
 import com.memeusix.budgetbuddy.ui.categories.components.SelectAnyIconText
 import com.memeusix.budgetbuddy.ui.categories.components.ShowIconLoader
-import com.memeusix.budgetbuddy.ui.categories.data.CategoryType
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
+import com.memeusix.budgetbuddy.utils.CategoryType
 import com.memeusix.budgetbuddy.utils.ErrorReason
-import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
-import com.memeusix.budgetbuddy.utils.dynamicPadding
+import com.memeusix.budgetbuddy.utils.dynamicImePadding
+import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
 import com.memeusix.budgetbuddy.utils.handleApiResponse
 import com.memeusix.budgetbuddy.utils.handleApiResponseWithError
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
@@ -46,7 +46,8 @@ import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 
 @Composable
 fun CreateCategoryScreen(
-    navController: NavHostController, viewModel: CategoryViewModel
+    navController: NavHostController,
+    viewModel: CategoryViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
 
     // Custom Toast
@@ -54,7 +55,7 @@ fun CreateCategoryScreen(
     CustomToast(toastState)
 
 
-    val selectedCategoryType = remember { mutableStateOf(CategoryType.INCOME) }
+    val selectedCategoryType = remember { mutableStateOf(CategoryType.CREDIT) }
     val nameState = remember { mutableStateOf(TextFieldStateModel()) }
     val selectedIcon = remember { mutableStateOf(CustomIconModel()) }
 
@@ -65,27 +66,29 @@ fun CreateCategoryScreen(
     val isIconsLoading = remember { derivedStateOf { customIconsState is ApiResponse.Loading } }
     val icons = remember { derivedStateOf { customIconsState.data.orEmpty() } }
 
-    val isLoading = remember { derivedStateOf { createCategory is ApiResponse.Loading } }
+    val isLoading = createCategory is ApiResponse.Loading
 
 
     LaunchedEffect(createCategory, customIconsState) {
         // handle Create Category Response
         handleApiResponseWithError(
             response = createCategory,
+            navController = navController,
             onFailure = { error ->
                 error?.let {
-                    if (it.reason == ErrorReason.CUSTOM_CATEGORY_ICON_NOT_FOUND) {
+                    if (it.reason == ErrorReason.CUSTOM_CATEGORY_ICON_NOT_FOUND
+                        || it.reason == ErrorReason.ICON_NOT_FOUND
+                    ) {
                         viewModel.getCustomIcons()
+                        viewModel.resetCreateCategory()
                     }
                 }
             },
             onSuccess = { data ->
                 data?.let {
-                    navController.previousBackStackEntry?.savedStateHandle?.set(
-                        NavigationRequestKeys.CREATE_CATEGORY, true
-                    )
-                    navController.popBackStack()
                     viewModel.resetCreateCategory()
+                    viewModel.getCategories()
+                    navController.popBackStack()
                 }
             }
         )
@@ -93,6 +96,7 @@ fun CreateCategoryScreen(
         handleApiResponse(
             response = customIconsState,
             toastState = toastState,
+            navController = navController,
             onSuccess = { data ->
                 data?.let {
                     if (it.isNotEmpty()) {
@@ -112,20 +116,19 @@ fun CreateCategoryScreen(
             navController = navController
         )
     }) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .dynamicPadding(paddingValues)
+                .dynamicImePadding(paddingValues)
                 .padding(20.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .weight(1f)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 CategoryTypeSelectionToggle(selectedCategoryType)
-
                 CustomOutlineTextField(
                     state = nameState,
                     placeholder = stringResource(R.string.name),
@@ -134,7 +137,7 @@ fun CreateCategoryScreen(
                 )
 
                 if (isIconsLoading.value) {
-                    ShowIconLoader(Modifier.align(Alignment.CenterHorizontally))
+                    ShowIconLoader(Modifier.size(32.dp).align(Alignment.CenterHorizontally))
                 }
                 if (icons.value.isNotEmpty()) {
                     IconSelectionCard(
@@ -143,24 +146,24 @@ fun CreateCategoryScreen(
                     )
                 }
                 SelectAnyIconText(Modifier.align(Alignment.CenterHorizontally))
-                Spacer(Modifier.weight(1f))
-                FilledButton(
-                    text = stringResource(R.string.add),
-                    enabled = nameState.value.text.trim()
-                        .isNotEmpty() && selectedIcon.value.id != null,
-                    onClick = {
-                        val categoryResponse = CategoryResponseModel(
-                            name = nameState.value.text.trim(),
-                            type = selectedCategoryType.value.getValue(),
-                            iconId = selectedIcon.value.iconId
-                        )
-                        viewModel.createCategory(categoryResponse)
-                    }, textModifier = Modifier.padding(vertical = 17.dp)
-                )
             }
+            FilledButton(
+                text = stringResource(R.string.add),
+                enabled = nameState.value.text.trim()
+                    .isNotEmpty() && selectedIcon.value.id != null,
+                modifier = Modifier.padding(top = 10.dp),
+                onClick = {
+                    val categoryResponse = CategoryResponseModel(
+                        name = nameState.value.text.trim(),
+                        type = selectedCategoryType.value.getValue(),
+                        iconId = selectedIcon.value.iconId
+                    )
+                    viewModel.createCategory(categoryResponse)
+                }, textModifier = Modifier.padding(vertical = 17.dp)
+            )
         }
         //  Show Loader
-        ShowLoader(isLoading.value)
+        ShowLoader(isLoading)
     }
 }
 

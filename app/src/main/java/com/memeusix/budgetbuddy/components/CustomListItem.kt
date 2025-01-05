@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,11 +35,13 @@ fun CustomListItem(
         fontWeight = FontWeight.Medium,
         color = MaterialTheme.colorScheme.onBackground
     ),
+    shape: androidx.compose.ui.graphics.Shape? = null,
     onClick: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .let { if (shape != null) it.clip(shape) else it }
             .clickable(enabled = enable, onClick = onClick)
             .then(modifier),
         verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)

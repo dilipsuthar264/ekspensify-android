@@ -3,7 +3,6 @@ package com.memeusix.budgetbuddy.ui.acounts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -31,11 +30,11 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,7 +43,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AlertDialog
@@ -68,9 +66,9 @@ import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.CreateAccountState
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.AccountType
-import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
-import com.memeusix.budgetbuddy.utils.dynamicPadding
+import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.fromJson
+import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
 import com.memeusix.budgetbuddy.utils.handleApiResponse
 import com.memeusix.budgetbuddy.utils.singleClick
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
@@ -80,7 +78,7 @@ import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 fun CreateAccountScreen(
     navController: NavHostController,
     args: CreateAccountScreenRoute?,
-    viewModel: AccountViewModel = hiltViewModel(),
+    viewModel: AccountViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
     createAccountState: CreateAccountState = hiltViewModel(),
 ) {
 
@@ -88,16 +86,32 @@ fun CreateAccountScreen(
     val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
     CustomToast(toastState)
 
+    val context = LocalContext.current
+
 
     val balanceState = remember { mutableStateOf(TextFieldStateModel()) }
 
     var deleteDialogState by remember { mutableStateOf(false) }
-    val selectedAccountType = rememberSaveable { mutableStateOf(AccountType.BANK) }
+
+    val selectedAccountType = remember { mutableStateOf(AccountType.BANK) }
 
     val bankList = createAccountState.bankList.collectAsState()
     val walletList = createAccountState.walletList.collectAsState()
-    val selectedBank = remember { mutableStateOf<BankModel?>(null) }
-    val selectedWallet = remember { mutableStateOf<BankModel?>(null) }
+    val displayList = remember {
+        derivedStateOf {
+            if (selectedAccountType.value == AccountType.BANK) {
+                bankList.value
+            } else {
+                walletList.value
+            }
+        }
+    }
+
+//    val selectedBank = remember { mutableStateOf<BankModel?>(null) }
+//    val selectedWallet = remember { mutableStateOf<BankModel?>(null) }
+
+    val selectedBank = createAccountState.selectedBank.collectAsState()
+    val selectedWallet = createAccountState.selectedWallet.collectAsState()
 
     // navArgs
     val accountLists = remember { args?.accountList.fromJson<List<AccountResponseModel>>() }
@@ -107,21 +121,17 @@ fun CreateAccountScreen(
     val createAccountResponse by viewModel.createAccount.collectAsState()
     val updateAccountResponse by viewModel.updateAccount.collectAsState()
     val deleteAccountResponse by viewModel.deleteAccount.collectAsState()
-    val isLoading = remember {
-        derivedStateOf {
-            createAccountResponse is ApiResponse.Loading || updateAccountResponse is ApiResponse.Loading || deleteAccountResponse is ApiResponse.Loading
-        }
-    }
+    val isLoading =
+        createAccountResponse is ApiResponse.Loading
+                || updateAccountResponse is ApiResponse.Loading
+                || deleteAccountResponse is ApiResponse.Loading
 
 
     // Initial Data Set
     LaunchedEffect(Unit) {
-        val initializedData = createAccountState.initialize(
+        createAccountState.initialize(
             accountLists, argsAccountDetails
         )
-        selectedBank.value = initializedData.first
-        selectedWallet.value = initializedData.second
-
         argsAccountDetails?.let { details ->
             balanceState.value = balanceState.value.copy(
                 text = (details.balance ?: 0).toString()
@@ -130,15 +140,17 @@ fun CreateAccountScreen(
         }
     }
 
+
     // Api Response Handling
     LaunchedEffect(createAccountResponse, updateAccountResponse, deleteAccountResponse) {
         // Handle createAccount Result
         handleApiResponse(response = createAccountResponse,
             toastState = toastState,
+            navController = navController,
             onSuccess = { data ->
                 data?.let {
                     if (args?.isFromProfile == true) {
-                        gotBackToAccountList(navController)
+                        goBackToList(viewModel, navController)
                     } else {
                         navController.navigate(
                             BottomNavRoute
@@ -152,29 +164,32 @@ fun CreateAccountScreen(
         // Handle Update Account Response
         handleApiResponse(response = updateAccountResponse,
             toastState = toastState,
+            navController = navController,
             onSuccess = { data ->
                 data?.let {
-                    gotBackToAccountList(navController)
+                    goBackToList(viewModel, navController)
                 }
             })
 
         // Handle Delete Account Response
         handleApiResponse(response = deleteAccountResponse,
             toastState = toastState,
+            navController = navController,
             onSuccess = { data ->
                 toastState.value = CustomToastModel(
-                    message = "Account Deleted Successfully", isVisible = true
+                    message = context.getString(R.string.account_deleted_successfully),
+                    isVisible = true
                 )
-                gotBackToAccountList(navController)
+                goBackToList(viewModel, navController)
             })
     }
 
     // DeleteDialog
     if (deleteDialogState && argsAccountDetails?.id != null) {
         AlertDialog(
-            title = "Are you sure?",
-            message = "you want delete this Account",
-            btnText = "Delete",
+            title = stringResource(R.string.are_you_sure),
+            message = stringResource(R.string.you_want_delete_this_account),
+            btnText = context.getString(R.string.delete),
             onDismiss = {
                 deleteDialogState = false
             },
@@ -193,20 +208,22 @@ fun CreateAccountScreen(
                 navController = navController,
                 isBackNavigation = true,
             )
-        }) { paddingValues ->
-        Box(
+        }
+    ) { paddingValues ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .dynamicPadding(paddingValues)
+                .dynamicImePadding(paddingValues)
                 .padding(horizontal = 20.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .weight(1f)
                     .verticalScroll(rememberScrollState()),
             ) {
                 VerticalSpace(20.dp)
-                BalanceView(balanceState,
+                BalanceView(
+                    balanceState,
                     selectedAccount = when (selectedAccountType.value) {
                         AccountType.BANK -> {
                             selectedBank.value
@@ -219,8 +236,9 @@ fun CreateAccountScreen(
                     showDelete = argsAccountDetails != null && (accountLists?.size ?: 0) > 1,
                     onDeleteClick = {
                         deleteDialogState = !deleteDialogState
-                    })
-                Spacer(Modifier.weight(1f))
+                    }
+                )
+                VerticalSpace(20.dp)
                 CustomOutlineTextField(
                     state = balanceState,
                     placeholder = stringResource(R.string.balance),
@@ -234,10 +252,16 @@ fun CreateAccountScreen(
                 VerticalSpace(16.dp)
                 AccountTypeCard(
                     selectedAccountType,
-                    walletList.value,
-                    bankList.value,
-                    selectedWallet,
-                    selectedBank,
+                    displayList.value,
+                    selectedWallet.value,
+                    selectedBank.value,
+                    onItemSelected = { item ->
+                        if (selectedAccountType.value == AccountType.WALLET) {
+                            createAccountState.updateSelectedWallet(item)
+                        } else {
+                            createAccountState.updateSelectedBank(item)
+                        }
+                    }
                 )
                 Text(
                     stringResource(R.string.no_account_message),
@@ -251,10 +275,17 @@ fun CreateAccountScreen(
                 Spacer(Modifier.weight(4f))
             }
             SaveBtn(
-                text = if (argsAccountDetails == null) (if (args?.isFromProfile == true) "Add" else "Continue") else "Update",
+                text = if (argsAccountDetails == null) {
+                    if (args?.isFromProfile == true) {
+                        stringResource(R.string.add)
+                    } else {
+                        stringResource(R.string.continue_)
+                    }
+                } else {
+                    stringResource(R.string.update)
+                },
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(vertical = 10.dp),
+                    .padding(bottom = 20.dp),
                 isEnable = when (selectedAccountType.value) {
                     AccountType.WALLET -> selectedWallet.value != null
                     else -> selectedBank.value != null
@@ -277,10 +308,9 @@ fun CreateAccountScreen(
             )
         }
         // showLoader
-        ShowLoader(isLoading.value)
+        ShowLoader(isLoading)
     }
 }
-
 
 @Composable
 fun BalanceView(
@@ -303,7 +333,7 @@ fun BalanceView(
             )
         }
         Text(
-            selectedAccount?.name ?: "No Account Selected",
+            text = selectedAccount?.name ?: stringResource(R.string.no_account_selected),
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.SemiBold,
             ),
@@ -324,19 +354,12 @@ fun BalanceView(
 @Composable
 fun AccountTypeCard(
     selectedAccountType: MutableState<AccountType>,
-    walletList: List<BankModel>,
-    bankList: List<BankModel>,
-    selectedWallet: MutableState<BankModel?>,
-    selectedBank: MutableState<BankModel?>,
+    displayList: List<BankModel>,
+    selectedWallet: BankModel?,
+    selectedBank: BankModel?,
+    onItemSelected: (BankModel) -> Unit
 ) {
-    val displayedItems by remember(selectedAccountType, walletList, bankList) {
-        derivedStateOf {
-            when (selectedAccountType.value) {
-                AccountType.WALLET -> walletList
-                AccountType.BANK -> bankList
-            }
-        }
-    }
+
     AccountsCardView(
         selectedAccountType = selectedAccountType.value,
         onTypeChange = { selectedAccountType.value = it }
@@ -352,29 +375,25 @@ fun AccountTypeCard(
         ) {
 
             val itemsPerRow = if (size.value.width == 0) 1 else (size.value.width / (70 * 3))
-            val totalItems = displayedItems.size
+            val totalItems = displayList.size
             val remainder = totalItems % itemsPerRow
 
-            displayedItems.forEach { item ->
-                val accountItem =
-                    item.copy(isSelected = item.iconSlug == selectedBank.value?.iconSlug || item.iconSlug == selectedWallet.value?.iconSlug)
+
+            displayList.forEach { item ->
+                val isSelected =
+                    item.iconSlug == selectedWallet?.iconSlug || item.iconSlug == selectedBank?.iconSlug
+                item.isSelected = isSelected
                 AccountTypeGridItem(
-                    accountItem,
+                    item = item,
                     modifier = Modifier
                         .padding(horizontal = 5.dp)
                         .requiredWidthIn(min = 65.dp, max = 70.dp),
-                    onClick = {
-                        if (selectedAccountType.value == AccountType.WALLET) {
-                            selectedWallet.value = item
-                        } else {
-                            selectedBank.value = item
-                        }
-                    },
+                    onClick = { onItemSelected(item) },
                 )
             }
             // Add placeholders to align the last row
             if (remainder != 0) {
-                val placeholders = itemsPerRow - remainder
+                val placeholders = itemsPerRow.minus(remainder)
                 repeat(placeholders) {
                     Spacer(
                         modifier = Modifier
@@ -400,11 +419,11 @@ fun SaveBtn(text: String, modifier: Modifier, isEnable: Boolean, onClick: () -> 
     )
 }
 
-private fun gotBackToAccountList(navController: NavController) {
-    navController.previousBackStackEntry?.savedStateHandle?.set(
-        NavigationRequestKeys.DELETE_OR_UPDATE_ACCOUNT, true
-    )
+private fun goBackToList(
+    viewModel: AccountViewModel,
+    navController: NavHostController
+) {
+    viewModel.getAllAccounts()
     navController.popBackStack()
 }
-
 

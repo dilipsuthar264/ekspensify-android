@@ -19,8 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.ui.acounts.components.CustomToggleButton
-import com.memeusix.budgetbuddy.ui.categories.data.CategoryType
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
+import com.memeusix.budgetbuddy.utils.CategoryType
 
 @Composable
 fun CategoryTypeSelectionToggle(
@@ -33,7 +33,7 @@ fun CategoryTypeSelectionToggle(
     ) {
         categoryTypeEntries.forEach { categoryType ->
             CustomToggleButton(
-                text = categoryType.getDisplayName(),
+                text = categoryType.displayName,
                 isSelected = selectedCategoryType.value == categoryType,
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier

@@ -18,6 +18,10 @@ val interFontFamily = FontFamily(
     Font(R.font.inter_black, FontWeight.Black),
 )
 
+val fonartoFontFamily = FontFamily(
+    Font(R.font.fonarto_regular, FontWeight.Normal)
+)
+
 val Typography = Typography(
     headlineLarge = TextStyle(
         fontFamily = interFontFamily,

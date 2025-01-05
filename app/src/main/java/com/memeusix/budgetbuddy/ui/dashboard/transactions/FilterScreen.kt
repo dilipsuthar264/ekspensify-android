@@ -31,16 +31,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.text.isDigitsOnly
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomDatePicker
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.components.VerticalSpace
-import com.memeusix.budgetbuddy.data.model.requestModel.TransactionPaginationRequestModel
+import com.memeusix.budgetbuddy.data.model.requestModel.TransactionQueryModel
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.AmountRange
@@ -56,9 +58,10 @@ import com.memeusix.budgetbuddy.ui.dashboard.transactions.filterComponets.Filter
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
 import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
-import com.memeusix.budgetbuddy.utils.SpUtils
 import com.memeusix.budgetbuddy.utils.TransactionType
-import com.memeusix.budgetbuddy.utils.dynamicPadding
+import com.memeusix.budgetbuddy.utils.dynamicImePadding
+import com.memeusix.budgetbuddy.utils.formatLocalDate
+import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
 import com.memeusix.budgetbuddy.utils.singleClick
 import com.memeusix.budgetbuddy.utils.spacedByWithFooter
 import com.memeusix.budgetbuddy.utils.toggle
@@ -69,55 +72,66 @@ import java.time.LocalDate
 @SuppressLint("NewApi")
 @Composable
 fun FilterScreen(
-    navController: NavHostController, transactionViewModel: TransactionViewModel
+    navController: NavHostController,
+    transactionViewModel: TransactionViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
 
-    val filterOptions by transactionViewModel.getFilterOptions.collectAsStateWithLifecycle()
+    val filterOptions by transactionViewModel.availableFilterOptions.collectAsStateWithLifecycle()
 
     var selectedFilter by remember { mutableStateOf(filterOptions.first()) }
 
     val selectedFilterState = remember { mutableStateOf(SelectedFilterModel()) }
 
-    val showDateRangePicker = remember { mutableStateOf(false to true) }
+    val showDatePicker = remember { mutableStateOf(false) }
+    val isStartDate = remember { mutableStateOf(true) }
     val minAmtState = remember { mutableStateOf("") }
     val maxAmtState = remember { mutableStateOf("") }
     val startDateState = remember { mutableStateOf<LocalDate?>(null) }
     val endDateState = remember { mutableStateOf<LocalDate?>(null) }
 
-    val context = LocalContext.current
     LaunchedEffect(Unit) {
-        val spUtils = SpUtils(context)
-        transactionViewModel.initialize(spUtils)
+        transactionViewModel.initializeFilterOptions()
 
         selectedFilterState.value =
-            transactionViewModel.selectedFilterModel.value ?: SelectedFilterModel()
+            transactionViewModel.userSelectedFilters.value ?: SelectedFilterModel()
 
         if (selectedFilterState.value.amtRange == AmountRange.CUSTOM) {
             minAmtState.value =
-                transactionViewModel.filterState.value.minAmount?.toString().orEmpty()
+                transactionViewModel.transactionQueryParameters.value.minAmount?.toString().orEmpty()
             maxAmtState.value =
-                transactionViewModel.filterState.value.maxAmount?.toString().orEmpty()
+                transactionViewModel.transactionQueryParameters.value.maxAmount?.toString().orEmpty()
         }
         if (selectedFilterState.value.dateRange == DateRange.CUSTOM) {
-            startDateState.value = transactionViewModel.selectedFilterModel.value?.startDate
-            startDateState.value = transactionViewModel.selectedFilterModel.value?.startDate
+            startDateState.value = transactionViewModel.userSelectedFilters.value?.startDate
+            startDateState.value = transactionViewModel.userSelectedFilters.value?.startDate
         }
     }
 
-    if (showDateRangePicker.value.first) {
-        CustomDatePicker(datePickerState = showDateRangePicker,
-            initialDate = if (showDateRangePicker.value.second) startDateState.value else endDateState.value,
+    if (showDatePicker.value) {
+        CustomDatePicker(
+            initialDate = if (isStartDate.value) startDateState.value else endDateState.value,
+            maxDate = LocalDate.now(),
+            minDate = if (isStartDate.value) LocalDate.MIN else startDateState.value
+                ?: LocalDate.MIN,
             onDateSelected = { date ->
-                if (showDateRangePicker.value.second)
+                if (isStartDate.value) {
                     startDateState.value = date
-                else
+                    endDateState.value?.let {
+                        if (it.isBefore(startDateState.value)) endDateState.value = null
+                    }
+                } else {
                     endDateState.value = date
+                }
+                showDatePicker.value = false
+            },
+            onDismiss = {
+                showDatePicker.value = false
             })
     }
 
     Scaffold(topBar = {
         AppBar(
-            heading = "Filters",
+            heading = stringResource(R.string.filters),
             elevation = false,
             navController = navController,
             isBackNavigation = true
@@ -126,8 +140,9 @@ fun FilterScreen(
         Column(
             Modifier
                 .fillMaxSize()
-                .dynamicPadding(paddingValues)
-                .padding(20.dp), verticalArrangement = Arrangement.spacedBy(20.dp)
+                .dynamicImePadding(paddingValues)
+                .padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -161,7 +176,8 @@ fun FilterScreen(
                     selectedFilter,
                     selectedFilterState,
                     startDateState,
-                    showDateRangePicker,
+                    showDatePicker,
+                    isStartDate,
                     endDateState,
                     minAmtState,
                     maxAmtState,
@@ -187,7 +203,7 @@ fun FilterScreen(
                 FilledButton(
                     text = "Apply",
                     onClick = singleClick {
-                        val requestModel = TransactionPaginationRequestModel(
+                        val requestModel = TransactionQueryModel(
                             type = selectedFilterState.value.type?.toString(),
                             accountIds = selectedFilterState.value.accounts.mapNotNull { it.id }
                                 .takeIf { it.isNotEmpty() },
@@ -213,9 +229,9 @@ fun FilterScreen(
                                     )?.toString() else end
                                 },
                             sort = selectedFilterState.value.sortBy?.sortBy
-                            )
-                        transactionViewModel.updateSelectedFilter(selectedFilterState.value)
-                        transactionViewModel.updateFilter(requestModel)
+                        )
+                        transactionViewModel.updateUserSelectedFilters(selectedFilterState.value)
+                        transactionViewModel.updateTransactionQuery(requestModel)
                         navController.popBackStack()
                     },
                     textModifier = Modifier.padding(vertical = 17.dp),
@@ -280,7 +296,8 @@ private fun FilterValueListView(
     selectedFilter: FilterOptions<out Serializable>,
     selectedFilterState: MutableState<SelectedFilterModel>,
     startDateState: MutableState<LocalDate?>,
-    showDateRangePicker: MutableState<Pair<Boolean, Boolean>>,
+    showDatePicker: MutableState<Boolean>,
+    isStartDate: MutableState<Boolean>,
     endDateState: MutableState<LocalDate?>,
     minAmtState: MutableState<String>,
     maxAmtState: MutableState<String>,
@@ -311,26 +328,26 @@ private fun FilterValueListView(
             FilterType.DATE_RANGE -> if (isDateRangeCustom.value) {
                 item {
                     CustomFilterTextField(
-                        state = startDateState.value?.toString().orEmpty(),
+                        state = startDateState.value?.formatLocalDate().orEmpty(),
                         isEnable = false,
+                        placeHolder = "Start Date",
                         onChange = {
-                            showDateRangePicker.value = showDateRangePicker.value.copy(
-                                first = true, second = true
-                            )
-                        },
-                        placeHolder = "⏰ Start Date",
-
-                        )
+                            showDatePicker.value = true
+                            isStartDate.value = true
+                        }
+                    )
                 }
                 item {
-                    CustomFilterTextField(state = endDateState.value?.toString().orEmpty(),
+                    CustomFilterTextField(
+                        state = endDateState.value?.formatLocalDate().orEmpty(),
                         isEnable = false,
-                        placeHolder = "⏰ End Date",
+                        placeHolder = "End Date",
+                        isDisabled = startDateState.value == null,
                         onChange = {
-                            showDateRangePicker.value = showDateRangePicker.value.copy(
-                                first = true, second = false
-                            )
-                        })
+                            showDatePicker.value = true
+                            isStartDate.value = false
+                        }
+                    )
                 }
             }
 
@@ -339,7 +356,7 @@ private fun FilterValueListView(
                     CustomFilterTextField(
                         state = minAmtState.value,
                         isEnable = true,
-                        placeHolder = "₹ Min Amount",
+                        placeHolder = "Min Amount",
                         onChange = {
                             if (it.isDigitsOnly()) {
                                 minAmtState.value = it
@@ -350,7 +367,7 @@ private fun FilterValueListView(
                 item {
                     CustomFilterTextField(state = maxAmtState.value,
                         isEnable = true,
-                        placeHolder = "₹ Max Amount",
+                        placeHolder = "Max Amount",
                         onChange = {
                             if (it.isDigitsOnly()) {
                                 maxAmtState.value = it
@@ -360,6 +377,9 @@ private fun FilterValueListView(
             }
 
             else -> Unit
+        }
+        item {
+            VerticalSpace()
         }
     }
 }

@@ -19,15 +19,21 @@ class CreateAccountState @Inject constructor() : ViewModel() {
 
     private val _selectedBank = MutableStateFlow<BankModel?>(null)
     val selectedBank = _selectedBank.asStateFlow()
+    fun updateSelectedBank(bank: BankModel) {
+        _selectedBank.value = bank
+    }
 
     private val _selectedWallet = MutableStateFlow<BankModel?>(null)
     val selectedWallet = _selectedWallet.asStateFlow()
+    fun updateSelectedWallet(wallet: BankModel) {
+        _selectedWallet.value = wallet
+    }
 
 
     fun initialize(
         accountLists: List<AccountResponseModel>?,
         argsAccountDetails: AccountResponseModel?
-    ): Pair<BankModel?, BankModel?> {
+    ) {
         val accountIconSlugSet = accountLists?.map { it.icon }?.toSet() ?: emptySet()
 
         argsAccountDetails?.let { details ->
@@ -37,21 +43,22 @@ class CreateAccountState @Inject constructor() : ViewModel() {
             _selectedWallet.value = selectedWallet
         }
 
-        val updateList: (List<BankModel>) -> Unit = { list ->
-            list.forEach {
-                it.isEnable =
-                    it.iconSlug !in accountIconSlugSet || (it == _selectedBank.value) || (it == _selectedWallet.value)
-            }
-        }
-        updateList(_walletList.value)
-        updateList(_bankList.value)
+        updateBankList(_walletList.value, accountIconSlugSet)
+        updateBankList(_bankList.value, accountIconSlugSet)
 
         if (argsAccountDetails == null) {
-            val defaultWallet = _walletList.value.firstOrNull { it.isEnable }
             val defaultBank = _bankList.value.firstOrNull { it.isEnable }
+            val defaultWallet = _walletList.value.firstOrNull { it.isEnable }
             _selectedBank.value = defaultBank
             _selectedWallet.value = defaultWallet
         }
-        return Pair(_selectedBank.value, _selectedWallet.value)
+    }
+
+    private fun updateBankList(list: List<BankModel>, accountIconSlugSet: Set<String?>) {
+        list.map { item ->
+            item.isEnable = item.iconSlug !in accountIconSlugSet
+                    || item == _selectedBank.value
+                    || item == _selectedWallet.value
+        }
     }
 }

@@ -4,14 +4,14 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import coil.network.HttpException
 import com.memeusix.budgetbuddy.data.BaseRepository
-import com.memeusix.budgetbuddy.data.model.requestModel.TransactionPaginationRequestModel
+import com.memeusix.budgetbuddy.data.model.requestModel.TransactionQueryModel
 import com.memeusix.budgetbuddy.data.model.responseModel.TransactionResponseModel
 import com.memeusix.budgetbuddy.data.services.TransactionApi
 import okio.IOException
 
 class TransactionPagingSource(
     private val transactionApi: TransactionApi,
-    private val transactionPaginationRequestModel: TransactionPaginationRequestModel
+    private val transactionQueryModel: TransactionQueryModel
 ) : PagingSource<Int, TransactionResponseModel>(), BaseRepository {
 
     override fun getRefreshKey(state: PagingState<Int, TransactionResponseModel>): Int? {
@@ -22,23 +22,23 @@ class TransactionPagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TransactionResponseModel> {
-        val page = params.key ?: transactionPaginationRequestModel.page
-        val limit = transactionPaginationRequestModel.limit
+        val page = params.key ?: transactionQueryModel.page
+        val limit = transactionQueryModel.limit
 
         return try {
             val response = handleResponse {
                 transactionApi.getTransactions(
                     limit = limit,
                     page = page,
-                    type = transactionPaginationRequestModel.type,
-                    accountIds = transactionPaginationRequestModel.accountIds?.joinToString(","),
-                    categoryIds = transactionPaginationRequestModel.categoryIds?.joinToString(","),
-                    minAmount = transactionPaginationRequestModel.minAmount,
-                    maxAmount = transactionPaginationRequestModel.maxAmount,
-                    startDate = transactionPaginationRequestModel.startDate,
-                    endDate = transactionPaginationRequestModel.endDate,
-                    sort = transactionPaginationRequestModel.sort,
-                    q = transactionPaginationRequestModel.q
+                    type = transactionQueryModel.type,
+                    accountIds = transactionQueryModel.accountIds?.joinToString(","),
+                    categoryIds = transactionQueryModel.categoryIds?.joinToString(","),
+                    minAmount = transactionQueryModel.minAmount,
+                    maxAmount = transactionQueryModel.maxAmount,
+                    startDate = transactionQueryModel.startDate,
+                    endDate = transactionQueryModel.endDate,
+                    sort = transactionQueryModel.sort,
+                    q = transactionQueryModel.q
                 )
             }
             val isListEnd = response.data?.items?.isEmpty()

@@ -1,11 +1,9 @@
 package com.memeusix.budgetbuddy.ui.categories.components
 
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableDefaults
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,18 +26,17 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.CustomListItem
-import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
-import com.memeusix.budgetbuddy.ui.categories.data.getCategoryType
 import com.memeusix.budgetbuddy.ui.theme.Red75
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
+import com.memeusix.budgetbuddy.utils.getCategoryType
 
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoryList(
+    modifier: Modifier,
     categoryList: List<CategoryResponseModel>,
-    onDeleteClick: (Int) -> Unit
+    onDeleteClick: (Int) -> Unit,
 ) {
 
     val lazyListState = rememberLazyListState()
@@ -54,8 +51,7 @@ fun CategoryList(
 
     LazyColumn(
         state = lazyListState,
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = modifier,
         userScrollEnabled = true,
         flingBehavior = ScrollableDefaults.flingBehavior(),
     ) {
@@ -77,9 +73,6 @@ fun CategoryList(
                 },
             )
             HorizontalDivider(color = MaterialTheme.extendedColors.primaryBorder)
-        }
-        item {
-            VerticalSpace(76.dp)
         }
     }
 }

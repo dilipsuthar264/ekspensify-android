@@ -1,12 +1,10 @@
 package com.memeusix.budgetbuddy.ui.auth
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,10 +42,13 @@ import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
 import com.memeusix.budgetbuddy.ui.theme.Typography
+import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
+import com.memeusix.budgetbuddy.utils.handleApiResponse
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
+import com.onesignal.OneSignal
 import kotlinx.coroutines.delay
 
 @Composable
@@ -68,15 +69,10 @@ fun OtpVerificationScreen(
 
     // Login state for api
     val loginResponse by authViewModel.login.collectAsState()
-
     val sendOtpResponse by authViewModel.sendOtp.collectAsState()
-
     val isLoading = loginResponse is ApiResponse.Loading || sendOtpResponse is ApiResponse.Loading
 
-
-    /**
-     * Setting up Toast
-     */
+    // Custom Toast
     val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
     CustomToast(toastState)
 
@@ -92,92 +88,59 @@ fun OtpVerificationScreen(
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
-
-    val scrollState = rememberScrollState()
-
-    LaunchedEffect(loginResponse) {
-        when (loginResponse) {
-            is ApiResponse.Success -> {
-                loginResponse.data?.apply {
+    LaunchedEffect(loginResponse, sendOtpResponse) {
+        handleApiResponse(
+            response = loginResponse,
+            toastState = toastState,
+            navController = navController,
+            onSuccess = { data ->
+                data?.apply {
                     if (user != null && !token.isNullOrEmpty()) {
-                        authViewModel.spUtils.user = user
-                        authViewModel.spUtils.accessToken = token!!
-                        authViewModel.spUtils.isLoggedIn = true
-                        Log.e("", "OtpVerificationScreen: ${authViewModel.spUtils.pref.all}")
+                        authViewModel.spUtilsManager.logout()
+                        authViewModel.spUtilsManager.updateUser(user)
+                        authViewModel.spUtilsManager.updateAccessToken(token!!)
+                        authViewModel.spUtilsManager.updateLoginStatus(true)
+                        OneSignal.login(user!!.id.toString())
                         goToNextScreenAfterLogin(navController)
                     }
-
                 }
             }
-
-            is ApiResponse.Failure -> {
-                loginResponse.errorResponse?.apply {
-                    toastState.value = CustomToastModel(
-                        message = this.message,
-                        isVisible = true,
-                        type = ToastType.ERROR
-                    )
-                }
-            }
-
-            else -> {}
-        }
-    }
-
-    LaunchedEffect(sendOtpResponse) {
-        when (sendOtpResponse) {
-            is ApiResponse.Success -> {
-                // Show Success Message
+        )
+        handleApiResponse(
+            response = sendOtpResponse,
+            toastState = toastState,
+            navController = navController,
+            onSuccess = { data ->
                 timeRemaining = 30
                 isResendEnable = false
-
                 toastState.value = CustomToastModel(
                     message = context.getString(R.string.otp_sent_successfully),
                     isVisible = true,
                     type = ToastType.SUCCESS
                 )
-
             }
-
-            is ApiResponse.Failure -> {
-                sendOtpResponse.errorResponse?.apply {
-                    toastState.value = CustomToastModel(
-                        message = this.message,
-                        isVisible = true,
-                        type = ToastType.ERROR
-                    )
-                }
-            }
-
-            else -> {}
-        }
+        )
     }
 
-    // Shows The Loader for Api Requests
 
-    ShowLoader(isLoading)
-
-    // Main Ui For Otp Verification Screen
-
+    // Main Ui
     Scaffold(
         topBar = {
-            AppBar(stringResource(R.string.verification), navController, false)
+            AppBar(stringResource(R.string.verification), navController)
         },
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(30.dp),
             modifier = Modifier
-                .imePadding()
-                .padding(
-                    start = 20.dp, end = 20.dp, top = paddingValues.calculateTopPadding() + 20.dp
-                )
                 .fillMaxSize()
-                .verticalScroll(scrollState),
+                .dynamicImePadding(paddingValues)
+                .padding(20.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
             Text(
                 stringResource(R.string.enter_your_verification_code),
-                style = Typography.titleLarge,
+                style = MaterialTheme.typography.titleLarge,
             )
             OtpInputField(
                 modifier = Modifier
@@ -235,6 +198,9 @@ fun OtpVerificationScreen(
                 enabled = otpValue.length == 6
             )
         }
+
+
+        ShowLoader(isLoading)
     }
 }
 

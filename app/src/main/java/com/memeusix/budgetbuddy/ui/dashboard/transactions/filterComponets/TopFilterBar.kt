@@ -82,7 +82,7 @@ fun SearchBar(
         Icon(
             painter = painter,
             contentDescription = null,
-            tint = MaterialTheme.extendedColors.iconColor,
+            tint = if (isFilterApplied) MaterialTheme.colorScheme.primary else MaterialTheme.extendedColors.iconColor,
             modifier = Modifier
                 .size(30.dp)
                 .clickable(onClick = onFilterClick)

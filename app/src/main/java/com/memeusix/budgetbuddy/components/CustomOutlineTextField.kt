@@ -56,15 +56,18 @@ fun CustomOutlineTextField(
     ),
     maxLength: Int = Int.MAX_VALUE,
     type: TextFieldType = TextFieldType.TEXT,
-    isExpendable: Boolean,
+    isExpendable: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    focusRequester: FocusRequester = FocusRequester()
+    focusRequester: FocusRequester = FocusRequester(),
+    prefix: @Composable() (() -> Unit)? = null
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     Column(
-        modifier = modifier.fillMaxWidth().let {
-            if (disable) it.alpha(0.5f) else it
-        }
+        modifier = modifier
+            .fillMaxWidth()
+            .let {
+                if (disable) it.alpha(0.5f) else it
+            }
     ) {
         OutlinedTextField(
             value = state.value.text,
@@ -95,6 +98,7 @@ fun CustomOutlineTextField(
                     )
                 )
             },
+            prefix = prefix,
             colors = color,
             suffix = {
                 if (isPassword) {

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,8 +28,10 @@ import com.memeusix.budgetbuddy.data.model.responseModel.AttachmentResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.imagePicker.ImagePickerBottomSheet
 import com.memeusix.budgetbuddy.ui.categories.components.ShowIconLoader
-import com.memeusix.budgetbuddy.ui.dashboard.transactions.bottomsheet.CategoryAndAccountBottomSheet
+import com.memeusix.budgetbuddy.ui.dashboard.budget.bottomsheets.SelectAccountBottomSheet
+import com.memeusix.budgetbuddy.ui.dashboard.budget.bottomsheets.SelectCategoryBottomSheet
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
+import com.memeusix.budgetbuddy.utils.BottomSheetSelectionType
 import com.memeusix.budgetbuddy.utils.BottomSheetType
 import com.memeusix.budgetbuddy.utils.TransactionType
 import com.memeusix.budgetbuddy.utils.handleApiResponse
@@ -51,14 +54,13 @@ fun CreateTransactionFromOptions(
 ) {
     val context = LocalContext.current
     val showImagePicker = remember { mutableStateOf(false) }
-    val bottomSheetState = remember { mutableStateOf(false to BottomSheetType.CATEGORY) }
-    val categories = remember {
-        transactionViewModel.spUtils.categoriesData?.categories?.filter {
+    val categories = remember(transactionViewModel.categoryList) {
+        transactionViewModel.categoryList?.filter {
             it.type != type.getInvertedType().toString()
-        }
-            .orEmpty()
+        }.orEmpty()
     }
-    val accounts = remember { transactionViewModel.spUtils.accountData?.accounts.orEmpty() }
+    val accounts =
+        remember(transactionViewModel.accountList) { transactionViewModel.accountList.orEmpty() }
 
     val attachmentUploadState by transactionViewModel.uploadAttachment.collectAsStateWithLifecycle()
     val isAttachmentLoading = attachmentUploadState is ApiResponse.Loading
@@ -86,17 +88,37 @@ fun CreateTransactionFromOptions(
         )
     }
 
-    // Category and Account Bottom Sheet
-    if (bottomSheetState.value.first) {
-        CategoryAndAccountBottomSheet(
-            selectedCategory = selectedCategory,
-            selectedAccount = selectedAccount,
-            categories = categories,
-            accounts = accounts,
-            type = bottomSheetState.value.second
-        ) {
-            bottomSheetState.value = bottomSheetState.value.copy(first = false)
-        }
+    val showAccountBottomSheet = remember { mutableStateOf(false) }
+    val showCategoryBottomSheet = remember { mutableStateOf(false) }
+
+    // Account Bottom Sheet
+    if (showAccountBottomSheet.value) {
+        SelectAccountBottomSheet(
+            accountList = accounts,
+            selectedAccountId = selectedAccount.value.id,
+            selectionType = BottomSheetSelectionType.SINGLE,
+            onDismiss = { showAccountBottomSheet.value = false },
+            onClick = { account ->
+                account?.let {
+                    selectedAccount.value = it
+                    showAccountBottomSheet.value = false
+                }
+            })
+    }
+
+    // Category Bottom Sheet
+    if (showCategoryBottomSheet.value) {
+        SelectCategoryBottomSheet(
+            categoryList = categories,
+            selectedCategoryId = selectedCategory.value.id,
+            selectionType = BottomSheetSelectionType.SINGLE,
+            onDismiss = { showCategoryBottomSheet.value = false },
+            onClick = { category ->
+                category?.let {
+                    selectedCategory.value = it
+                    showCategoryBottomSheet.value = false
+                }
+            })
     }
 
     Column(
@@ -131,7 +153,7 @@ fun CreateTransactionFromOptions(
             selectedAccount = null,
             selectedCategory = selectedCategory.value
         ) {
-            bottomSheetState.value = true to BottomSheetType.CATEGORY
+            showCategoryBottomSheet.value = true
         }
 
         // Selected Account
@@ -141,13 +163,13 @@ fun CreateTransactionFromOptions(
             selectedCategory = null,
             selectedAccount = selectedAccount.value
         ) {
-            bottomSheetState.value = true to BottomSheetType.ACCOUNT
+            showAccountBottomSheet.value = true
         }
 
 
         // Attachment View
         if (isAttachmentLoading) {
-            ShowIconLoader(modifier.align(Alignment.CenterHorizontally))
+            ShowIconLoader(modifier.size(32.dp).align(Alignment.CenterHorizontally))
         } else {
             AttachmentView(
                 selectedAttachment,

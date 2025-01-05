@@ -52,7 +52,7 @@ import com.memeusix.budgetbuddy.ui.theme.Green100
 import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.TransactionType
-import com.memeusix.budgetbuddy.utils.dynamicPadding
+import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.formatRupees
 import com.memeusix.budgetbuddy.utils.fromJson
 import com.memeusix.budgetbuddy.utils.handleApiResponse
@@ -109,6 +109,7 @@ fun CreateTransactionScreen(
         handleApiResponse(
             response = createTransaction,
             toastState = toastState,
+            navController = navController,
             onSuccess = { data ->
                 data?.let {
                     navController.previousBackStackEntry?.savedStateHandle?.set(
@@ -121,6 +122,7 @@ fun CreateTransactionScreen(
         handleApiResponse(
             response = updateTransaction,
             toastState = toastState,
+            navController = navController,
             onSuccess = { data ->
                 data?.let {
                     navController.previousBackStackEntry?.savedStateHandle?.set(
@@ -157,7 +159,7 @@ fun CreateTransactionScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .dynamicPadding(paddingValues)
+                .dynamicImePadding(paddingValues)
         ) {
             Column(
                 modifier = Modifier
@@ -232,7 +234,7 @@ private fun AmountDisplayView(amountState: MutableState<TextFieldStateModel>) {
             )
         )
         Text(
-            "₹${amountState.value.text.ifEmpty { "0" }.toInt().formatRupees()}",
+            amountState.value.text.ifEmpty { "0" }.toInt().formatRupees(),
             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 50.sp)
         )
     }

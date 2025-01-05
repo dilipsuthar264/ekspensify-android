@@ -1,7 +1,6 @@
 package com.memeusix.budgetbuddy.components
 
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,17 +25,17 @@ import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
 import com.memeusix.budgetbuddy.utils.SetWindowDim
 import java.time.LocalDate
 
-
-@SuppressLint("NewApi")
 @Composable
 fun CustomDatePicker(
-    datePickerState: MutableState<Pair<Boolean, Boolean>>,
     initialDate: LocalDate?,
-    onDateSelected: (LocalDate?) -> Unit
+    onDateSelected: (LocalDate?) -> Unit,
+    maxDate: LocalDate = LocalDate.MAX,
+    minDate: LocalDate = LocalDate.MIN,
+    onDismiss: () -> Unit
 ) {
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     Dialog(
-        onDismissRequest = { datePickerState.value = datePickerState.value.copy(first = false) },
+        onDismissRequest = onDismiss,
         properties = DialogProperties(
             dismissOnBackPress = true,
             dismissOnClickOutside = true
@@ -55,7 +53,8 @@ fun CustomDatePicker(
         ) {
             WheelDatePicker(
                 modifier = Modifier.fillMaxWidth(),
-                maxDate = LocalDate.now(),
+                maxDate = maxDate,
+                minDate = minDate,
                 startDate = initialDate ?: LocalDate.now(),
                 textStyle = MaterialTheme.typography.bodyMedium,
                 selectorProperties = WheelPickerDefaults.selectorProperties(
@@ -78,11 +77,7 @@ fun CustomDatePicker(
                         containerColor = MaterialTheme.colorScheme.secondary,
                         contentColor = MaterialTheme.colorScheme.onSecondary
                     ),
-                    onClick = {
-                        datePickerState.value = datePickerState.value.copy(
-                            first = false,
-                        )
-                    }
+                    onClick = onDismiss
                 )
                 FilledButton(
                     text = "Set Date",
@@ -90,9 +85,6 @@ fun CustomDatePicker(
                     modifier = Modifier.weight(1f),
                     onClick = {
                         onDateSelected(selectedDate)
-                        datePickerState.value = datePickerState.value.copy(
-                            first = false,
-                        )
                     }
                 )
             }

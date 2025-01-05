@@ -3,10 +3,7 @@ package com.memeusix.budgetbuddy.ui.auth
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -38,6 +35,7 @@ import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.components.ShowLoader
+import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
@@ -48,31 +46,34 @@ import com.memeusix.budgetbuddy.ui.auth.components.DontHaveAccountText
 import com.memeusix.budgetbuddy.ui.auth.components.GoogleAuthBtn
 import com.memeusix.budgetbuddy.ui.auth.viewModel.AuthViewModel
 import com.memeusix.budgetbuddy.ui.theme.Typography
+import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.goToNextScreenAfterLogin
+import com.memeusix.budgetbuddy.utils.handleApiResponse
 import com.memeusix.budgetbuddy.utils.isValidEmail
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
+import com.onesignal.OneSignal
 
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
+    // Custom Toast
+    val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
+    CustomToast(toastState)
+
     val nameState = remember { mutableStateOf(TextFieldStateModel()) }
     val emailState = remember { mutableStateOf(TextFieldStateModel()) }
     var isCheckBoxCheck by remember { mutableStateOf(false) }
 
-    // register api response state
+    // api states
     val registerResponse by authViewModel.register.collectAsState()
-
-    // register with google state
     val signUpWithGoogleResponse by authViewModel.signUpWithGoogle.collectAsState()
 
-    // getting context
-    val context = LocalContext.current
 
-    // coroutines for thread handling in oAuth
+    val context = LocalContext.current
     val coroutines = rememberCoroutineScope()
 
 
@@ -80,111 +81,77 @@ fun RegisterScreen(
     val isLoading =
         registerResponse is ApiResponse.Loading || signUpWithGoogleResponse is ApiResponse.Loading
 
-
-    // scroll page state
-    val scrollState = rememberScrollState()
+    val isGoogleSignUpLoading = remember { mutableStateOf(false) }
 
 
-    /**
-     * Setting Up Toast
-     */
-    val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
-    CustomToast(toastState)
-
-
-    LaunchedEffect(registerResponse) {
-        when (registerResponse) {
-            is ApiResponse.Success -> {
-                navController.navigate(
-                    OtpVerificationScreenRoute(
-                        name = nameState.value.text.trim(),
-                        email = emailState.value.text.trim(),
-                    )
-                )
-            }
-
-            is ApiResponse.Failure -> {
-                registerResponse.errorResponse?.apply {
-                    toastState.value = CustomToastModel(
-                        message = this.message,
-                        isVisible = true,
-                        type = ToastType.ERROR
+    LaunchedEffect(registerResponse, signUpWithGoogleResponse) {
+        handleApiResponse(
+            response = registerResponse,
+            toastState = toastState,
+            navController = navController,
+            onSuccess = { data ->
+                data?.apply {
+                    navController.navigate(
+                        OtpVerificationScreenRoute(
+                            name = nameState.value.text.trim(),
+                            email = emailState.value.text.trim(),
+                        )
                     )
                 }
             }
-
-            else -> {}
-        }
-    }
-    LaunchedEffect(signUpWithGoogleResponse) {
-
-        when (signUpWithGoogleResponse) {
-            is ApiResponse.Success -> {
-                signUpWithGoogleResponse.data?.apply {
+        )
+        handleApiResponse(
+            response = signUpWithGoogleResponse,
+            toastState = toastState,
+            navController = navController,
+            onSuccess = { data ->
+                data?.apply {
                     if (user != null && !token.isNullOrEmpty()) {
-                        authViewModel.spUtils.pref.all.clear()
-                        authViewModel.spUtils.user = user
-                        authViewModel.spUtils.accessToken = token!!
-                        authViewModel.spUtils.isLoggedIn = true
+                        authViewModel.spUtilsManager.logout()
+                        authViewModel.spUtilsManager.updateUser(user)
+                        authViewModel.spUtilsManager.updateAccessToken(token!!)
+                        authViewModel.spUtilsManager.updateLoginStatus(true)
+
+                        OneSignal.login(user!!.id.toString())
                         goToNextScreenAfterLogin(navController)
                     }
-
                 }
             }
-
-            is ApiResponse.Failure -> {
-                signUpWithGoogleResponse.errorResponse?.apply {
-                    toastState.value = CustomToastModel(
-                        message = this.message,
-                        isVisible = true,
-                        type = ToastType.ERROR
-                    )
-                }
-            }
-
-            else -> {}
-        }
+        )
     }
-
-
-    // Shows the loader
-    ShowLoader(isLoading)
-
 
     // Main Ui
     Scaffold(
         topBar = {
-            AppBar(stringResource(R.string.sign_up), navController, false)
+            AppBar(stringResource(R.string.sign_up), navController)
         },
     ) { paddingValues ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .imePadding()
-                .padding(
-                    start = 20.dp, end = 20.dp, top = paddingValues.calculateTopPadding() + 56.dp
-                )
                 .fillMaxSize()
-                .verticalScroll(scrollState),
+                .dynamicImePadding(paddingValues)
+                .padding(20.dp)
+                .padding(top = 36.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
             CustomOutlineTextField(
                 state = nameState,
-                placeholder = "Name",
-                isExpendable = false,
+                placeholder = stringResource(R.string.name),
                 maxLength = 40
             )
-            Spacer(Modifier.height(24.dp))
+            VerticalSpace(24.dp)
             CustomOutlineTextField(
                 state = emailState,
                 placeholder = "Email",
                 isExpendable = false,
                 maxLength = 50
             )
-            Spacer(Modifier.height(16.dp))
+            VerticalSpace(16.dp)
             TermsAndConditionCheckBox(isCheckBoxCheck) {
                 isCheckBoxCheck = it
             }
-            Spacer(Modifier.height(30.dp))
+            VerticalSpace(16.dp)
             FilledButton(text = stringResource(R.string.send_otp),
                 shape = RoundedCornerShape(16.dp),
                 textModifier = Modifier.padding(vertical = 17.dp),
@@ -222,24 +189,28 @@ fun RegisterScreen(
                         }
                     }
                 })
-            Spacer(Modifier.height(15.dp))
+            VerticalSpace(15.dp)
             Text(
-                text = "Or",
+                text = stringResource(R.string.or),
                 style = Typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
             )
-            Spacer(Modifier.height(15.dp))
+            VerticalSpace(15.dp)
             GoogleAuthBtn(
                 text = stringResource(R.string.sign_up_with_google),
+                isLoading = isGoogleSignUpLoading.value,
                 onClick = {
-                    authViewModel.launchGoogleAuth(context, coroutines) { tokenId ->
+                    authViewModel.launchGoogleAuth(
+                        context,
+                        coroutines,
+                        isGoogleSignUpLoading
+                    ) { tokenId ->
                         authViewModel.signUpWithGoogle(tokenId)
                     }
                 }
             )
-
-            Spacer(Modifier.height(33.dp))
+            VerticalSpace(33.dp)
             DontHaveAccountText(
                 firstText = stringResource(R.string.already_have_an_account),
                 secondText = stringResource(R.string.login)
@@ -249,6 +220,10 @@ fun RegisterScreen(
                 }
             }
         }
+
+
+        // Shows the loader
+        ShowLoader(isLoading)
 
     }
 }

@@ -15,7 +15,7 @@ fun AccountBalance(isListItem: Boolean, balance: String) {
     val fontWeight = if (isListItem) FontWeight.Medium else FontWeight.SemiBold
     val fontSize = if (isListItem) 16.sp else 20.sp
     Text(
-        "₹$balance",
+        balance,
         fontFamily = interFontFamily,
         fontSize = fontSize,
         fontWeight = fontWeight,

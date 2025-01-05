@@ -48,6 +48,7 @@ import com.memeusix.budgetbuddy.components.HorizontalSpace
 import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.model.responseModel.TransactionResponseModel
 import com.memeusix.budgetbuddy.navigation.CreateTransactionScreenRoute
+import com.memeusix.budgetbuddy.navigation.PicturePreviewScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.components.AmountText
 import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
 import com.memeusix.budgetbuddy.ui.theme.Green100
@@ -58,7 +59,6 @@ import com.memeusix.budgetbuddy.utils.DateFormat
 import com.memeusix.budgetbuddy.utils.TransactionType
 import com.memeusix.budgetbuddy.utils.formatDateTime
 import com.memeusix.budgetbuddy.utils.getTransactionType
-import com.memeusix.budgetbuddy.utils.openImageExternally
 import com.memeusix.budgetbuddy.utils.singleClick
 import com.memeusix.budgetbuddy.utils.toJson
 
@@ -96,7 +96,11 @@ fun TransactionDetailsDialog(
             }
             if (transaction?.attachment != null) {
                 VerticalSpace(20.dp)
-                AttachmentPreview(transaction.attachment)
+                AttachmentPreview(transaction.attachment) {
+                    transaction.attachment?.let {
+                        navController.navigate(PicturePreviewScreenRoute(it))
+                    }
+                }
             }
             VerticalSpace(20.dp)
             ActionsBtnGroup(onDeleteClick = singleClick {
@@ -224,14 +228,17 @@ private fun TextWithIcon(
 
 
 @Composable
-private fun AttachmentPreview(attachment: String?) {
+private fun AttachmentPreview(attachment: String?, onClick: () -> Unit) {
     val context = LocalContext.current
     CustomListItem(
         modifier = Modifier
             .padding(horizontal = 20.dp)
             .border(1.dp, MaterialTheme.extendedColors.primaryBorder, RoundedCornerShape(15.dp))
             .clip(RoundedCornerShape(15.dp))
-            .clickable { context.openImageExternally(attachment) }
+            .clickable {
+//                context.openImageExternally(attachment)
+                onClick()
+            }
             .padding(horizontal = 16.dp, vertical = 12.dp),
         leadingContent = {
             AsyncImage(

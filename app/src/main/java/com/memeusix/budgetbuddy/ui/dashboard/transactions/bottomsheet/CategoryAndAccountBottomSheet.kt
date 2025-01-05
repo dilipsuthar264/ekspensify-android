@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -19,9 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -33,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.components.BottomSheetDialog
 import com.memeusix.budgetbuddy.components.CustomListItem
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
@@ -52,34 +50,17 @@ fun CategoryAndAccountBottomSheet(
     type: BottomSheetType,
     onDismiss: () -> Unit
 ) {
-    val state = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
-    ModalBottomSheet(
-        sheetState = state,
-        onDismissRequest = onDismiss,
-        containerColor = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.padding(top = 50.dp)
+    BottomSheetDialog(
+        title = "Select ${type.getDisplayName()}",
+        onDismiss = onDismiss
     ) {
-        Column(
-            modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            Text(
-                "Select ${type.getDisplayName()}",
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            when (type) {
-                BottomSheetType.CATEGORY -> {
-                    CategoryList(categories, selectedCategory, onDismiss)
-                }
+        when (type) {
+            BottomSheetType.CATEGORY -> {
+                CategoryList(categories, selectedCategory, onDismiss)
+            }
 
-                BottomSheetType.ACCOUNT -> {
-                    AccountList(accounts, selectedAccount, onDismiss)
-                }
+            BottomSheetType.ACCOUNT -> {
+                AccountList(accounts, selectedAccount, onDismiss)
             }
         }
     }

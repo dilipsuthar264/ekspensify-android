@@ -2,7 +2,7 @@ package com.memeusix.budgetbuddy.data.model.requestModel
 
 import java.io.Serializable
 
-data class TransactionPaginationRequestModel(
+data class TransactionQueryModel(
     val limit: Int = 10,
     var page: Int = 1,
 

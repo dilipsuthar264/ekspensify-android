@@ -27,7 +27,8 @@ private val LightColorPalette = lightColorScheme(
     onSurface = Dark100,
     onSurfaceVariant = Light20,
     surfaceContainerLow = Dark15,
-    surfaceContainerHigh = Dark15
+    surfaceContainerHigh = Dark15,
+    surfaceDim = Light80
 )
 
 
@@ -41,9 +42,10 @@ private val DarkColorPalette = darkColorScheme(
     onBackground = Light100,
     surface = Dark80,
     onSurface = Light100,
-    onSurfaceVariant = Dark15,
+    onSurfaceVariant = Dark20,
     surfaceContainerLow = Dark50,
-    surfaceContainerHigh = Dark20
+    surfaceContainerHigh = Dark20,
+    surfaceDim = Dark90
 )
 
 

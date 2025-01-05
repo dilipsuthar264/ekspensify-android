@@ -1,9 +1,11 @@
-package com.memeusix.budgetbuddy.ui.acounts.components
+package com.memeusix.budgetbuddy.components
 
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
@@ -12,22 +14,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.R
-import com.memeusix.budgetbuddy.components.FilledButton
-import com.memeusix.budgetbuddy.ui.theme.interFontFamily
 
 // Empty List View
 @Composable
-fun EmptyListView(
+fun EmptyAccountsView(
     modifier: Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit = {}
 ) {
     Column(
         modifier,
@@ -37,20 +37,20 @@ fun EmptyListView(
         Image(
             painter = painterResource(R.drawable.ic_no_account),
             contentDescription = null,
-            modifier = Modifier.padding(horizontal = 27.dp),
+            modifier = Modifier
+                .fillMaxWidth(0.8f),
             contentScale = ContentScale.Fit
         )
         Text(
             text = stringResource(R.string.no_account_message),
-            fontFamily = interFontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 12.sp,
+            style = MaterialTheme.typography.labelMedium.copy(
+                fontWeight = FontWeight.Medium
+            ),
             textAlign = TextAlign.Center,
-            lineHeight = 22.sp,
-            modifier = Modifier.padding(horizontal = 27.dp, vertical = 10.dp)
         )
+        VerticalSpace(20.dp)
         FilledButton(
-            text = "Add",
+            text = stringResource(R.string.add),
             modifier = Modifier.padding(horizontal = 50.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
@@ -60,5 +60,6 @@ fun EmptyListView(
             shape = RoundedCornerShape(16.dp),
             onClick = onClick
         )
+        VerticalSpace(40.dp)
     }
 }

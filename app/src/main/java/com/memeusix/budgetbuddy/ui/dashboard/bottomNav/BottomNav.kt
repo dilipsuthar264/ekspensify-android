@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -32,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.components.AppBar
+import com.memeusix.budgetbuddy.components.ThemeToggle
 import com.memeusix.budgetbuddy.navigation.CreateTransactionScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
@@ -39,41 +41,50 @@ import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.ActionButton
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.BottomBarContent
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.ExpandableFab
 import com.memeusix.budgetbuddy.ui.dashboard.budget.BudgetScreen
+import com.memeusix.budgetbuddy.ui.dashboard.budget.viewModel.BudgetViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.home.HomeScreen
 import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileScreen
-import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileViewModel
+import com.memeusix.budgetbuddy.ui.dashboard.profile.viewModel.ProfileViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
+import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
+import com.onesignal.OneSignal
 
 
 @Composable
 fun BottomNav(
     navController: NavHostController,
-    profileViewModel: ProfileViewModel = hiltViewModel(),
     categoryViewModel: CategoryViewModel = hiltViewModel(),
     accountViewModel: AccountViewModel = hiltViewModel(),
-    transactionViewModel: TransactionViewModel
+    transactionViewModel: TransactionViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
+    budgetViewModel: BudgetViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
     var currentIndex by rememberSaveable { mutableIntStateOf(0) }
     var isFabExpanded by rememberSaveable { mutableStateOf(false) }
 
     val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
-    LaunchedEffect(savedStateHandle) {
+    DisposableEffect(savedStateHandle) {
         savedStateHandle?.getLiveData<Boolean>(NavigationRequestKeys.REFRESH_TRANSACTION)
             ?.observeForever { result ->
                 if (result == true) {
-                    transactionViewModel.updateFilter(
-                        transactionViewModel.filterState.value.copy(
-                            updateList = !(transactionViewModel.filterState.value.updateList)
-                        )
-                    )
                     transactionViewModel.closeDialog()
+                    transactionViewModel.refreshTransaction()
                     accountViewModel.getAllAccounts()
-                    savedStateHandle.remove<Boolean>(NavigationRequestKeys.REFRESH_TRANSACTION)
+                    budgetViewModel.refreshBudgets()
+                    transactionViewModel.closeDialog()
+//                    savedStateHandle.remove<Boolean>(NavigationRequestKeys.REFRESH_TRANSACTION)
+                    savedStateHandle[NavigationRequestKeys.REFRESH_TRANSACTION] = false
                 }
             }
+        onDispose {
+            isFabExpanded = false
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        OneSignal.Notifications.requestPermission(false)
     }
 
 
@@ -95,7 +106,11 @@ fun BottomNav(
                     heading = items[currentIndex].label,
                     navController = navController,
                     elevation = false,
-                    isToggleVisible = items.lastIndex == currentIndex,
+                    actions = {
+                        if (items.lastIndex == currentIndex) {
+                            ThemeToggle()
+                        }
+                    },
                     isBackNavigation = false
                 )
             }
@@ -123,6 +138,7 @@ fun BottomNav(
                             transactionType = type
                         )
                     )
+                    isFabExpanded = false
                 }
             )
         },

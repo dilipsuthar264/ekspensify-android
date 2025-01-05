@@ -6,20 +6,21 @@ import androidx.compose.ui.graphics.Color
  * APP UI COLORS
  */
 
+// GREY
+val EmptyGrey = Color(0xFFBABABA)
+
 // Dark Colors
 val Dark10 = Color(0xFFE0E2E9)
 val Dark15 = Color(0xFFF1F1FA)
 val Dark20 = Color(0xFF666C70)
 val Dark25 = Color(0xFF464A4D)
-val Dark40 = Color(0xFF526670)
+val Dark40 = Color(0xFF26323b)
 val Dark50 = Color(0xFF464A4D)
 val Dark75 = Color(0xFF161719)
-
-//val Dark80 = Color(0xFF1D1D1F)
-//val Dark80 = Color(0xFF161621)
 val Dark80 = Color(0xFF292934)
 val Dark90 = Color(0xff31313f)
 val Dark100 = Color(0xFF0D0E0F)
+
 
 // Light Colors
 val Light20 = Color(0xFF91919F)
@@ -74,3 +75,7 @@ val Blue40 = Color(0xFF8AC0FF)
 val Blue60 = Color(0xFF57A5FF)
 val Blue80 = Color(0xFF248AFF)
 val Blue100 = Color(0xFF0077FF)
+
+// Teal
+val Teal = Color(0xFF008080)
+val Grey70 = Color(0xFF717171)

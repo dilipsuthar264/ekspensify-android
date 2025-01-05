@@ -12,7 +12,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -31,7 +30,9 @@ import androidx.navigation.NavHostController
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomListItem
+import com.memeusix.budgetbuddy.components.EmptyAccountsView
 import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.PullToRefreshLayout
 import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.ApiResponse
@@ -43,22 +44,20 @@ import com.memeusix.budgetbuddy.ui.acounts.components.AccountCardFooter
 import com.memeusix.budgetbuddy.ui.acounts.components.AccountIcon
 import com.memeusix.budgetbuddy.ui.acounts.components.AccountsCardView
 import com.memeusix.budgetbuddy.ui.acounts.components.AmountText
-import com.memeusix.budgetbuddy.ui.acounts.components.EmptyListView
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.AccountType
-import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
-import com.memeusix.budgetbuddy.utils.dynamicPadding
+import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.formatRupees
+import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
 import com.memeusix.budgetbuddy.utils.singleClick
 import com.memeusix.budgetbuddy.utils.toJson
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountsScreen(
     navController: NavHostController,
     args: AccountScreenRoute,
-    viewModel: AccountViewModel = hiltViewModel()
+    viewModel: AccountViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
     val getAllAccounts by viewModel.getAllAccounts.collectAsStateWithLifecycle()
     val isLoading = getAllAccounts is ApiResponse.Loading
@@ -66,17 +65,7 @@ fun AccountsScreen(
     val selectedAccountType = remember { mutableStateOf(AccountType.BANK) }
 
 
-    // handling data on pop-back from create account screen
-    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
-    LaunchedEffect(savedStateHandle) {
-        savedStateHandle?.getLiveData<Boolean>(NavigationRequestKeys.DELETE_OR_UPDATE_ACCOUNT)
-            ?.observeForever { result ->
-                if (result == true) {
-                    viewModel.getAllAccounts()
-                    savedStateHandle.remove<Boolean>(NavigationRequestKeys.DELETE_OR_UPDATE_ACCOUNT)
-                }
-            }
-
+    LaunchedEffect(Unit) {
         // Check if the response contains bank accounts and set the selectedAccountType accordingly
         if (getAllAccounts is ApiResponse.Success) {
             val bankAccountsExist =
@@ -96,25 +85,26 @@ fun AccountsScreen(
             )
         },
     ) { paddingValues ->
-        PullToRefreshBox(
-            isRefreshing = isLoading,
+        PullToRefreshLayout(
             onRefresh = viewModel::getAllAccounts,
             modifier = Modifier
-                .dynamicPadding(
-                    paddingValues
-                ),
+                .fillMaxSize()
+                .dynamicImePadding(paddingValues),
         ) {
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 20.dp)
+                    .fillMaxSize()
+                    .padding(20.dp)
             ) {
                 getAllAccounts.data?.let { accountList ->
                     if (accountList.isEmpty()) {
-                        EmptyListView(Modifier.fillMaxSize()) {
-                            goToCreateAccount(navController, args, accountList)
-                        }
+                        EmptyAccountsView(
+                            modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+                            onClick = singleClick {
+                                goToCreateAccount(navController, args, accountList)
+                            }
+                        )
                     } else {
-                        VerticalSpace(20.dp)
                         TotalBalance(
                             accountList.fastSumBy { it.balance ?: 0 }.toString(),
                             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -222,7 +212,6 @@ private fun AddMoreBtn(args: AccountScreenRoute, onClick: () -> Unit) {
     FilledButton(text = text,
         textModifier = Modifier.padding(vertical = 17.dp),
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.padding(top = 18.dp, bottom = 10.dp),
         onClick = singleClick { onClick() })
 }
 

@@ -1,17 +1,15 @@
 package com.memeusix.budgetbuddy.ui.categories
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,29 +20,30 @@ import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AlertDialog
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.FilledButton
+import com.memeusix.budgetbuddy.components.PullToRefreshLayout
 import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.navigation.CreateCategoryScreenRoute
 import com.memeusix.budgetbuddy.ui.categories.components.CategoryList
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
-import com.memeusix.budgetbuddy.utils.dynamicPadding
+import com.memeusix.budgetbuddy.utils.dynamicImePadding
+import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
 import com.memeusix.budgetbuddy.utils.handleApiResponse
+import com.memeusix.budgetbuddy.utils.singleClick
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreen(
-    navController: NavHostController, categoryViewModel: CategoryViewModel = hiltViewModel()
+    navController: NavHostController,
+    categoryViewModel: CategoryViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
     val getCategories by categoryViewModel.getCategories.collectAsStateWithLifecycle()
     val deleteCategories by categoryViewModel.deleteCategory.collectAsStateWithLifecycle()
-    val isLoading = remember {
-        derivedStateOf {
-            getCategories is ApiResponse.Loading || deleteCategories is ApiResponse.Loading
-        }
-    }
+    val isLoading =
+        getCategories is ApiResponse.Loading || deleteCategories is ApiResponse.Loading
 
 
     //Custom Toast
@@ -56,14 +55,14 @@ fun CategoriesScreen(
 
     if (isDeleteDialogOpen.value.first) {
         AlertDialog(
-            title = "Are you sure?",
-            message = "you want delete this category",
-            btnText = "Delete",
-            onDismiss = {
+            title = stringResource(R.string.are_you_sure),
+            message = stringResource(R.string.you_want_delete_this_category),
+            btnText = stringResource(R.string.delete),
+            onDismiss = singleClick {
                 isDeleteDialogOpen.value =
                     isDeleteDialogOpen.value.copy(false, null)
             },
-            onConfirm = {
+            onConfirm = singleClick {
                 isDeleteDialogOpen.value.second?.let { categoryViewModel.deleteCategory(it) }
                 isDeleteDialogOpen.value =
                     isDeleteDialogOpen.value.copy(false, null)
@@ -83,14 +82,14 @@ fun CategoriesScreen(
             }
     }
 
-    LaunchedEffect(deleteCategories, getCategories) {
-
+    LaunchedEffect(deleteCategories) {
         handleApiResponse(response = deleteCategories,
             toastState = toastState,
+            navController = navController,
             onSuccess = { data ->
                 data?.let {
                     categoryViewModel.getCategories()
-                    categoryViewModel.setToIdle()
+                    categoryViewModel.resetDeleteCategory()
                 }
             })
     }
@@ -105,34 +104,38 @@ fun CategoriesScreen(
             )
         },
     ) { paddingValues ->
-        PullToRefreshBox(
-            isRefreshing = isLoading.value,
+        PullToRefreshLayout(
             onRefresh = categoryViewModel::getCategories,
             modifier = Modifier
                 .fillMaxSize()
-                .dynamicPadding(paddingValues)
+                .dynamicImePadding(paddingValues)
         ) {
-            CategoryList(
-                getCategories.data.orEmpty(),
-                onDeleteClick = {
-                    isDeleteDialogOpen.value = isDeleteDialogOpen.value.copy(true, it)
-                })
-            FilledButton(
-                text = stringResource(R.string.add),
-                onClick = {
-                    navController.navigate(
-                        CreateCategoryScreenRoute(
-                            categoryResponseModelArgs = null
+            Column(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CategoryList(
+                    modifier = Modifier.weight(1f),
+                    getCategories.data.orEmpty(),
+                    onDeleteClick = {
+                        isDeleteDialogOpen.value = isDeleteDialogOpen.value.copy(true, it)
+                    }
+                )
+                FilledButton(
+                    text = stringResource(R.string.add),
+                    onClick = {
+                        navController.navigate(
+                            CreateCategoryScreenRoute(
+                                categoryResponseModelArgs = null
+                            )
                         )
-                    )
-                },
-                modifier = Modifier
-                    .padding(vertical = 10.dp, horizontal = 20.dp)
-                    .align(Alignment.BottomCenter),
-                textModifier = Modifier.padding(vertical = 17.dp)
-            )
+                    },
+                    modifier = Modifier
+                        .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp),
+                    textModifier = Modifier.padding(vertical = 17.dp)
+                )
+            }
         }
         // show Loader
-        ShowLoader(isLoading.value)
+        ShowLoader(isLoading)
     }
 }

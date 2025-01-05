@@ -5,13 +5,16 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ShowIconLoader(modifier: Modifier) {
+fun ShowIconLoader(modifier: Modifier = Modifier.size(32.dp)) {
     CircularProgressIndicator(
-        modifier = modifier
-            .size(32.dp),
+        modifier = modifier,
+        strokeCap = StrokeCap.Round,
+        strokeWidth = 3.dp,
         color = MaterialTheme.colorScheme.primary
     )
 }

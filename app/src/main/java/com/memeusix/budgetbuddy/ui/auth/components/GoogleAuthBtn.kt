@@ -20,10 +20,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.HorizontalSpace
+import com.memeusix.budgetbuddy.ui.categories.components.ShowIconLoader
 
 @Composable
 fun GoogleAuthBtn(
     text: String,
+    isLoading: Boolean = false,
     onClick: () -> Unit
 ) {
     Row(
@@ -35,19 +37,25 @@ fun GoogleAuthBtn(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painterResource(R.drawable.ic_google),
-            null,
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-                .size(28.dp)
-        )
-        HorizontalSpace(8.dp)
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        if (isLoading) {
+            ShowIconLoader(
+                modifier = Modifier.padding(vertical = 12.dp).size(28.dp),
+            )
+        } else {
+            Image(
+                painterResource(R.drawable.ic_google),
+                null,
+                modifier = Modifier
+                    .padding(vertical = 12.dp)
+                    .size(28.dp)
+            )
+            HorizontalSpace(8.dp)
+            Text(
+                text = text,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
     }
 }

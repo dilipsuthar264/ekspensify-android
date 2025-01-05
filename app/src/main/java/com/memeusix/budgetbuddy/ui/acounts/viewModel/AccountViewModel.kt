@@ -8,11 +8,10 @@ import com.memeusix.budgetbuddy.data.model.requestModel.AccountRequestModel
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.repository.AccountRepository
-import com.memeusix.budgetbuddy.utils.SpUtils
+import com.memeusix.budgetbuddy.utils.spUtils.SpUtilsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,16 +19,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val accountRepository: AccountRepository,
-    private val spUtils: SpUtils
+    private val spUtilsManager: SpUtilsManager
 ) : ViewModel(), BaseViewModel {
 
-    /**
-     * Get All Accounts
-     */
+    // Get All Accounts
     private val _getAllAccounts =
-        MutableStateFlow<ApiResponse<List<AccountResponseModel>>>(
-            ApiResponse.Idle
-        )
+        MutableStateFlow<ApiResponse<List<AccountResponseModel>>>(ApiResponse.idle())
     val getAllAccounts = _getAllAccounts.asStateFlow()
 
     init {
@@ -37,21 +32,19 @@ class AccountViewModel @Inject constructor(
     }
 
     private fun loadAccounts() {
-        if (spUtils.accountData != null && spUtils.accountData?.accounts?.isNotEmpty() == true) {
-            _getAllAccounts.value = ApiResponse.Success(spUtils.accountData?.accounts)
-        } else {
+        spUtilsManager.accountData.value?.accounts?.takeIf { it.isNotEmpty() }?.let {
+            _getAllAccounts.value = ApiResponse.success(it)
+        } ?: run {
             getAllAccounts()
         }
     }
 
     fun getAllAccounts() {
         viewModelScope.launch {
-            _getAllAccounts.value = ApiResponse.Loading(
-                currentData = getAllAccounts.value.data
-            )
+            _getAllAccounts.value = ApiResponse.loading(_getAllAccounts.value.data)
             val response = handleData(_getAllAccounts.value) { accountRepository.getAllAccounts() }
             if (response is ApiResponse.Success) {
-                spUtils.accountData = AccountListModel(response.data.orEmpty())
+                spUtilsManager.updateAccountData(AccountListModel(response.data.orEmpty()))
             }
             _getAllAccounts.value = response
         }
@@ -62,14 +55,14 @@ class AccountViewModel @Inject constructor(
      * Create Account Api
      */
     private val _createAccount =
-        MutableStateFlow<ApiResponse<AccountResponseModel>>(ApiResponse.Idle)
-    val createAccount: StateFlow<ApiResponse<AccountResponseModel>> get() = _createAccount
+        MutableStateFlow<ApiResponse<AccountResponseModel>>(ApiResponse.idle())
+    val createAccount = _createAccount.asStateFlow()
     fun createAccount(accountRequestModel: AccountRequestModel) {
         viewModelScope.launch {
-            _createAccount.value = ApiResponse.Loading()
+            _createAccount.value = ApiResponse.loading()
             _createAccount.value = accountRepository.createAccount(accountRequestModel)
             delay(500)
-            _createAccount.value = ApiResponse.Idle
+            _createAccount.value = ApiResponse.idle()
         }
     }
 
@@ -77,14 +70,14 @@ class AccountViewModel @Inject constructor(
      * Update Account Api
      */
     private val _updateAccount =
-        MutableStateFlow<ApiResponse<AccountResponseModel>>(ApiResponse.Idle)
-    val updateAccount: StateFlow<ApiResponse<AccountResponseModel>> get() = _updateAccount
+        MutableStateFlow<ApiResponse<AccountResponseModel>>(ApiResponse.idle())
+    val updateAccount = _updateAccount.asStateFlow()
     fun updateAccount(accountId: Int, accountRequestModel: AccountRequestModel) {
         viewModelScope.launch {
-            _updateAccount.value = ApiResponse.Loading()
+            _updateAccount.value = ApiResponse.loading()
             _updateAccount.value = accountRepository.updateAccount(accountId, accountRequestModel)
             delay(500)
-            _updateAccount.value = ApiResponse.Idle
+            _updateAccount.value = ApiResponse.idle()
 
         }
     }
@@ -94,13 +87,13 @@ class AccountViewModel @Inject constructor(
      */
     private val _deleteAccount =
         MutableStateFlow<ApiResponse<AccountResponseModel>>(ApiResponse.Idle)
-    val deleteAccount: StateFlow<ApiResponse<AccountResponseModel>> get() = _deleteAccount
+    val deleteAccount = _deleteAccount.asStateFlow()
     fun deleteAccount(accountId: Int) {
         viewModelScope.launch {
-            _deleteAccount.value = ApiResponse.Loading()
+            _deleteAccount.value = ApiResponse.loading()
             _deleteAccount.value = accountRepository.deleteAccount(accountId)
             delay(500)
-            _deleteAccount.value = ApiResponse.Idle
+            _deleteAccount.value = ApiResponse.idle()
         }
     }
 

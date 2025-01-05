@@ -18,7 +18,7 @@ composeBom = "2024.11.00"
 lifecycleRuntimeKtxVersion = "2.8.6"
 lifecycleVersion = "2.8.6"
 loggingInterceptor = "5.0.0-alpha.3"
-navigationCompose = "2.8.1"
+navigationCompose = "2.8.5"
 okhttp = "5.0.0-alpha.3"
 playServicesAuth = "21.2.0"
 roomRuntime = "2.6.1"
@@ -49,6 +49,9 @@ androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-f
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
+firebase-perf = { module = "com.google.firebase:firebase-perf" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

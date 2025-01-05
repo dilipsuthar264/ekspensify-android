@@ -8,7 +8,7 @@ import androidx.paging.PagingData
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.BaseRepository
 import com.memeusix.budgetbuddy.data.ErrorResponseModel
-import com.memeusix.budgetbuddy.data.model.requestModel.TransactionPaginationRequestModel
+import com.memeusix.budgetbuddy.data.model.requestModel.TransactionQueryModel
 import com.memeusix.budgetbuddy.data.model.requestModel.TransactionRequestModel
 import com.memeusix.budgetbuddy.data.model.responseModel.AttachmentResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.TransactionResponseModel
@@ -56,7 +56,7 @@ class TransactionRepository @Inject constructor(
     suspend fun uploadAttachment(
         imageUri: Uri
     ): ApiResponse<AttachmentResponseModel> {
-        val file = getFileFromUri(context, imageUri) ?: return ApiResponse.Failure(
+        val file = getFileFromUri(context, imageUri) ?: return ApiResponse.failure(
             ErrorResponseModel(
                 message = "File not found"
             )
@@ -73,18 +73,18 @@ class TransactionRepository @Inject constructor(
 
 
     fun getTransactions(
-        transactionPaginationRequestModel: TransactionPaginationRequestModel
+        transactionQueryModel: TransactionQueryModel
     ): Flow<PagingData<TransactionResponseModel>> {
         return Pager(
             config = PagingConfig(
-                pageSize = transactionPaginationRequestModel.limit,
+                pageSize = transactionQueryModel.limit,
                 enablePlaceholders = false,
                 prefetchDistance = 5
             ),
             pagingSourceFactory = {
                 TransactionPagingSource(
                     transactionApi,
-                    transactionPaginationRequestModel
+                    transactionQueryModel
                 )
             }
         ).flow

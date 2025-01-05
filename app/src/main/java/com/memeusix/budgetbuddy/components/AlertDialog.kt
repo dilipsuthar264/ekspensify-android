@@ -16,9 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.memeusix.budgetbuddy.ui.theme.Red80
-import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 
 @Composable
@@ -33,21 +33,25 @@ fun AlertDialog(
         Surface(
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp))
-                .fillMaxWidth(0.8f),
+                .fillMaxWidth(0.9f),
             color = MaterialTheme.colorScheme.background
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                modifier = Modifier.padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 20.sp
+                    )
                 )
                 if (message.isNotEmpty()) {
                     Text(
                         text = message,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 14.sp
+                        )
                     )
                 }
                 VerticalSpace(4.dp)
@@ -62,24 +66,24 @@ fun AlertDialog(
 
                     Text(
                         text = "Cancel",
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.bodyMedium,
                         modifier = buttonModifier
                             .clip(RoundedCornerShape(5.dp))
                             .background(MaterialTheme.colorScheme.surfaceContainerLow)
                             .clickable { onDismiss() }
-                            .padding(horizontal = 16.dp, vertical = 6.dp)
+                            .padding(horizontal = 20.dp, vertical = 10.dp)
                     )
 
                     Text(
                         text = btnText,
-                        style = MaterialTheme.typography.bodySmall.copy(
+                        style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.onPrimary
                         ),
                         modifier = buttonModifier
                             .clip(RoundedCornerShape(5.dp))
                             .background(Red80)
                             .clickable { onConfirm() }
-                            .padding(horizontal = 16.dp, vertical = 6.dp)
+                            .padding(horizontal = 20.dp, vertical = 10.dp)
                     )
                 }
             }

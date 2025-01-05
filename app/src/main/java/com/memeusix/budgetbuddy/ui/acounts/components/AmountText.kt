@@ -13,7 +13,7 @@ import com.memeusix.budgetbuddy.utils.formatRupees
 fun AmountText(balance: String, modifier: Modifier = Modifier, color: Color? = null) {
     val formattedBalance = balance.ifEmpty { "0" }.toInt().formatRupees()
     Text(
-        text = "₹$formattedBalance",
+        text = formattedBalance,
         style = MaterialTheme.typography.titleLarge.copy(
             fontSize = 50.sp,
             fontWeight = FontWeight.SemiBold,

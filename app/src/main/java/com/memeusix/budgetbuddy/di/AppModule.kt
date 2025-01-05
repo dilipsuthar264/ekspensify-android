@@ -1,21 +1,24 @@
 package com.memeusix.budgetbuddy.di
 
 import android.app.Application
-import android.util.Log
 import com.memeusix.budgetbuddy.BuildConfig
 import com.memeusix.budgetbuddy.data.services.AccountApi
 import com.memeusix.budgetbuddy.data.services.AuthApi
+import com.memeusix.budgetbuddy.data.services.BudgetApi
 import com.memeusix.budgetbuddy.data.services.CategoryApi
 import com.memeusix.budgetbuddy.data.services.ProfileApi
 import com.memeusix.budgetbuddy.data.services.TransactionApi
-import com.memeusix.budgetbuddy.ui.theme.ThemeManager
-import com.memeusix.budgetbuddy.utils.SpUtils
+import com.memeusix.budgetbuddy.utils.fileUtils.FileRepository
+import com.memeusix.budgetbuddy.utils.fileUtils.FileRepositoryImpl
+import com.memeusix.budgetbuddy.utils.spUtils.SpUtils
+import com.memeusix.budgetbuddy.utils.spUtils.SpUtilsManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -54,7 +57,6 @@ class AppModule {
         private fun getAuthenticationInterceptor(spUtils: SpUtils): Interceptor {
             return Interceptor { chain ->
                 val token = spUtils.accessToken
-                Log.d("AuthenticationInterceptor", "Using token: $token")
                 var request = chain.request()
                 request = if (token.isNotEmpty()) {
                     request.newBuilder()
@@ -66,6 +68,22 @@ class AppModule {
                 chain.proceed(request)
             }
         }
+
+        fun getRetryInterceptor(): Interceptor {
+            return Interceptor { chain ->
+                var response: Response
+                var tryCount = 0
+                val maxRetry = 3
+
+                do {
+                    response = chain.proceed(chain.request())
+                    tryCount++
+                } while (!response.isSuccessful && tryCount < maxRetry)
+
+                response
+            }
+        }
+
 
         private fun filterLogs(message: String): String {
             return when {
@@ -88,8 +106,14 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideThemeManager(spUtils: SpUtils): ThemeManager {
-        return ThemeManager(spUtils)
+    fun provideFileRepository(app: Application): FileRepository {
+        return FileRepositoryImpl(app.applicationContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSpUtilsManager(spUtils: SpUtils): SpUtilsManager {
+        return SpUtilsManager(spUtils)
     }
 
     @Provides
@@ -120,5 +144,11 @@ class AppModule {
     @Singleton
     fun provideTransactionApi(app: Application): TransactionApi {
         return getRetrofit(app).create(TransactionApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBudgetApi(app: Application): BudgetApi {
+        return getRetrofit(app).create(BudgetApi::class.java)
     }
 }
