@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -45,7 +47,9 @@ fun DrawableStartText(
     color: Color = MaterialTheme.extendedColors.iconColor,
     textSize: TextUnit = 10.sp,
     iconSize: Dp = 12.dp,
-    iconSpace : Dp = 2.dp,
+    iconSpace: Dp = 2.dp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    colorFilter: ColorFilter? = ColorFilter.tint(color),
     @DrawableRes icon: Int
 ) {
     IconTextRaw(modifier = modifier, iconSpacing = iconSpace,
@@ -53,7 +57,7 @@ fun DrawableStartText(
             Image(
                 painter = rememberAsyncImagePainter(icon),
                 modifier = Modifier.size(iconSize),
-                colorFilter = ColorFilter.tint(color),
+                colorFilter = colorFilter,
                 contentDescription = null,
             )
         },
@@ -61,7 +65,7 @@ fun DrawableStartText(
             Text(
                 text,
                 style = MaterialTheme.typography.labelSmall.copy(
-                    fontSize = textSize, color = color
+                    fontSize = textSize, color = color, fontWeight = fontWeight
                 ),
             )
         })
@@ -73,16 +77,20 @@ fun DrawableEndText(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = MaterialTheme.extendedColors.iconColor,
+    colorFilter: Boolean = true,
     textSize: TextUnit = 10.sp,
     iconSize: Dp = 12.dp,
+    iconSpace: Dp = 2.dp,
+    fontWeight: FontWeight = FontWeight.Normal,
     @DrawableRes icon: Int
 ) {
-    IconTextRaw(modifier = modifier, iconSpacing = 2.dp,
+    IconTextRaw(
+        modifier = modifier, iconSpacing = iconSpace,
         trailing = {
             Image(
                 painter = rememberAsyncImagePainter(icon),
                 modifier = Modifier.size(iconSize),
-                colorFilter = ColorFilter.tint(color),
+                colorFilter = if (colorFilter) ColorFilter.tint(color) else null,
                 contentDescription = null,
             )
         },
@@ -90,8 +98,9 @@ fun DrawableEndText(
             Text(
                 text,
                 style = MaterialTheme.typography.labelSmall.copy(
-                    fontSize = textSize, color = color
+                    fontSize = textSize, color = color, fontWeight = fontWeight
                 ),
+                textAlign = TextAlign.End,
             )
         })
 }

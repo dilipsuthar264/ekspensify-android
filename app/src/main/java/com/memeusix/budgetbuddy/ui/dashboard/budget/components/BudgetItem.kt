@@ -41,6 +41,7 @@ import com.memeusix.budgetbuddy.ui.theme.Red100
 import com.memeusix.budgetbuddy.ui.theme.Violet40
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.ui.theme.interFontFamily
+import com.memeusix.budgetbuddy.utils.formatBudgetId
 import com.memeusix.budgetbuddy.utils.formatRupees
 import com.memeusix.budgetbuddy.utils.roundedBorder
 

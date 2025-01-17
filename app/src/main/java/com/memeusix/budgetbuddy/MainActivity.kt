@@ -27,6 +27,8 @@ import com.memeusix.budgetbuddy.navigation.SplashScreenRoute
 import com.memeusix.budgetbuddy.navigation.viewmodel.NavigationViewModel
 import com.memeusix.budgetbuddy.ui.theme.BudgetBuddyTheme
 import com.memeusix.budgetbuddy.utils.internet.InternetChecker
+import com.memeusix.budgetbuddy.utils.smsReceiver.SmsHelper.updateReceiverState
+import com.memeusix.budgetbuddy.utils.spUtils.SpUtilsManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,6 +40,9 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var internetChecker: InternetChecker
 
+    @Inject
+    lateinit var spUtilsManager: SpUtilsManager
+
     override fun getResources(): Resources {
         val baseResources = super.getResources()
         val configuration = Configuration(baseResources.configuration)
@@ -46,15 +51,22 @@ class MainActivity : AppCompatActivity() {
         return newContext.resources
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        updateReceiverState(this, spUtilsManager.isAutoTrackingEnable.value)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.auto(
                 android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT
-            ), navigationBarStyle = SystemBarStyle.auto(
-                android.graphics.Color.TRANSPARENT,
-                android.graphics.Color.TRANSPARENT,
-            )
+            ),
+//            navigationBarStyle = SystemBarStyle.auto(
+//                android.graphics.Color.TRANSPARENT,
+//                android.graphics.Color.TRANSPARENT,
+//            )
         )
         setContent {
             DisposableEffect(Unit) {
@@ -85,6 +97,7 @@ class MainActivity : AppCompatActivity() {
 
         setNotificationEvent(intent)
     }
+
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)

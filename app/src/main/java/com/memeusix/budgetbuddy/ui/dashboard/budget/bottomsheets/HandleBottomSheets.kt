@@ -62,7 +62,7 @@ fun HandleBottomSheets(
                     ?: LocalDate.now()
 
                 DatePickerType.END_DATE -> formState.endDate?.let { LocalDate.parse(it) }
-                    ?: LocalDate.now()
+                    ?: formState.startDate.let { LocalDate.parse(it) } ?: LocalDate.now()
             },
             minDate = if (datePickerType == DatePickerType.END_DATE) formState.startDate.let {
                 LocalDate.parse(

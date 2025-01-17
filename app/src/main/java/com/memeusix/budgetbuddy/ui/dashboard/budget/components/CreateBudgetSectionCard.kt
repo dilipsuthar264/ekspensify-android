@@ -32,10 +32,12 @@ fun CreateBudgetSectionCard(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(
-                title,
-                style = MaterialTheme.typography.bodyMedium
-            )
+            if (title.isNotEmpty()) {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
             content()
         }
     }

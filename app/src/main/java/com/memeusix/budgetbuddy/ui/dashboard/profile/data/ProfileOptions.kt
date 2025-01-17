@@ -1,4 +1,4 @@
-package com.memeusix.budgetbuddy.ui.dashboard.profile.model
+package com.memeusix.budgetbuddy.ui.dashboard.profile.data
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
@@ -17,9 +17,17 @@ enum class ProfileOptions(
 ) {
     ACCOUNT("Accounts", R.drawable.ic_wallet, Violet20),
     CATEGORY("Categories", R.drawable.ic_category, Yellow20),
+    AUTO_TRACKING("Auto Tracking", R.drawable.ic_auto_tracking),
     EXPORT("Export", R.drawable.ic_exoprt, Green20),
-    SETTING("Settings", R.drawable.ic_setting, Blue20),
+    ABOUT("About", R.drawable.ic_about, Blue20),
     LOGOUT("Logout", R.drawable.ic_logout, Red20);
+}
+
+enum class AboutOptions(
+    val title: String,
+) {
+    PRIVACY_POLICY("Privacy Policy"),
+    TERMS_AND_CONDITION("Terms and Condition"),
 }
 
 
@@ -29,7 +37,8 @@ object ProfileOptionProvider {
             ProfileOptions.ACCOUNT,
             ProfileOptions.CATEGORY,
             ProfileOptions.EXPORT,
-            ProfileOptions.SETTING
+            ProfileOptions.AUTO_TRACKING,
+            ProfileOptions.ABOUT
         )
     }
 

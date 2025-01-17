@@ -22,6 +22,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
+import com.commandiron.wheel_picker_compose.core.WheelTextPicker
 import com.memeusix.budgetbuddy.utils.SetWindowDim
 import java.time.LocalDate
 

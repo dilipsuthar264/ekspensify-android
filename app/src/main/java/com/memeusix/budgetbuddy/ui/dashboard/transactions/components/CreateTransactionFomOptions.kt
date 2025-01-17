@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
+import com.memeusix.budgetbuddy.components.TextFieldRupeePrefix
 import com.memeusix.budgetbuddy.components.TextFieldType
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
@@ -32,7 +33,6 @@ import com.memeusix.budgetbuddy.ui.dashboard.budget.bottomsheets.SelectAccountBo
 import com.memeusix.budgetbuddy.ui.dashboard.budget.bottomsheets.SelectCategoryBottomSheet
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
 import com.memeusix.budgetbuddy.utils.BottomSheetSelectionType
-import com.memeusix.budgetbuddy.utils.BottomSheetType
 import com.memeusix.budgetbuddy.utils.TransactionType
 import com.memeusix.budgetbuddy.utils.handleApiResponse
 import com.memeusix.budgetbuddy.utils.openImageExternally
@@ -133,7 +133,7 @@ fun CreateTransactionFromOptions(
             disable = isUpdate,
             placeholder = "Amount",
             type = TextFieldType.NUMBER,
-
+            prefix = { TextFieldRupeePrefix() },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
 
@@ -169,7 +169,10 @@ fun CreateTransactionFromOptions(
 
         // Attachment View
         if (isAttachmentLoading) {
-            ShowIconLoader(modifier.size(32.dp).align(Alignment.CenterHorizontally))
+            ShowIconLoader(
+                modifier
+                    .size(32.dp)
+                    .align(Alignment.CenterHorizontally))
         } else {
             AttachmentView(
                 selectedAttachment,

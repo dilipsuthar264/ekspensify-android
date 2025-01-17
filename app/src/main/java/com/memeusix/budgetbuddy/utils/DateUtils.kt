@@ -3,6 +3,7 @@ package com.memeusix.budgetbuddy.utils
 import android.os.Build
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -37,6 +38,16 @@ fun String?.formatLocalDate(format: String = DateFormat.MMM_dd_yyyy): String? =
 
 fun LocalDate?.formatLocalDate(format: String = DateFormat.MMM_dd_yyyy): String? =
     this?.format(DateTimeFormatter.ofPattern(format))
+
+fun String?.formatLocalDateTime(pattern: String = DateFormat.MMM_dd_yyyy_hh_mm_a): String {
+    val formatter = DateTimeFormatter.ofPattern(pattern)
+
+    // Parse the string into a LocalDateTime object
+    val dateTime = LocalDateTime.parse(this, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+    // Return the formatted date-time string
+    return dateTime.format(formatter)
+}
 
 object DateFormat {
     const val INPUT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"

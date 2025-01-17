@@ -4,8 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +51,7 @@ fun CustomListItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-
+            modifier = Modifier.height(IntrinsicSize.Min)
             ) {
             leadingContent()
             Column(
@@ -68,8 +70,8 @@ fun CustomListItem(
                         style = TextStyle(
                             fontFamily = interFontFamily,
                             fontSize = 10.sp,
-                            fontWeight = FontWeight.Light,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.9f)
+                            fontWeight = FontWeight.Normal,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     )
                 }
@@ -82,7 +84,7 @@ fun CustomListItem(
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.extendedColors.imageBg, RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(8.dp))
                     .padding(10.dp)
             )
         }

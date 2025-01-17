@@ -54,7 +54,8 @@ fun BudgetScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Min)
-                .padding(horizontal = 20.dp, vertical = 5.dp),
+                .padding(horizontal = 20.dp, vertical = 5.dp)
+                .padding(top = 15.dp),
             filterData = budgetMeta,
             onFilterClick = { filterOptions ->
                 // TODO : this btn is disable so first remove enable = false

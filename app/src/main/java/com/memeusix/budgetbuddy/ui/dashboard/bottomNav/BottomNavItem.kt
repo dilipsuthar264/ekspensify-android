@@ -18,7 +18,7 @@ sealed class BottomNavItem(
     data object Transaction : BottomNavItem(
         R.drawable.ic_transaction_new,
         R.drawable.ic_transaction_new_fill,
-        "Transactions",
+        "Transaction",
         TransactionsScreenRoute
     )
 
@@ -35,8 +35,8 @@ sealed class BottomNavItem(
 
     data object Profile :
         BottomNavItem(
-            R.drawable.ic_user_new,
-            R.drawable.ic_user_new_fill,
+            R.drawable.ic_profile_new,
+            R.drawable.ic_profile_new_fill,
             "Profile",
             ProfileScreenRoute
         )

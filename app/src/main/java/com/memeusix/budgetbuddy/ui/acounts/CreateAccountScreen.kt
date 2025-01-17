@@ -50,6 +50,7 @@ import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.components.ShowLoader
+import com.memeusix.budgetbuddy.components.TextFieldRupeePrefix
 import com.memeusix.budgetbuddy.components.TextFieldType
 import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.ApiResponse
@@ -92,6 +93,7 @@ fun CreateAccountScreen(
     val balanceState = remember { mutableStateOf(TextFieldStateModel()) }
 
     var deleteDialogState by remember { mutableStateOf(false) }
+    var updateDialogState by remember { mutableStateOf(false) }
 
     val selectedAccountType = remember { mutableStateOf(AccountType.BANK) }
 
@@ -199,6 +201,29 @@ fun CreateAccountScreen(
             }
         )
     }
+    // Update Dialog
+    if (updateDialogState && argsAccountDetails?.id != null) {
+        AlertDialog(
+            title = stringResource(R.string.are_you_sure),
+            message = "you want update this Account",
+            btnText = context.getString(R.string.update),
+            onDismiss = {
+                updateDialogState = false
+            },
+            onConfirm = {
+                val accountRequestModel = AccountRequestModel(
+                    name = when (selectedAccountType.value) {
+                        AccountType.WALLET -> selectedWallet.value?.name
+                        AccountType.BANK -> selectedBank.value?.name
+                    },
+                    type = selectedAccountType.value.toString(),
+                    balance = balanceState.value.text.ifEmpty { "0" }.toInt(),
+                )
+                viewModel.updateAccount(argsAccountDetails.id!!, accountRequestModel)
+                updateDialogState = false
+            }
+        )
+    }
 
     // Main Ui
     Scaffold(
@@ -244,6 +269,7 @@ fun CreateAccountScreen(
                     placeholder = stringResource(R.string.balance),
                     isExpendable = false,
                     maxLength = 6,
+                    prefix = { TextFieldRupeePrefix() },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
@@ -300,7 +326,8 @@ fun CreateAccountScreen(
                         balance = balanceState.value.text.ifEmpty { "0" }.toInt(),
                     )
                     argsAccountDetails?.let {
-                        viewModel.updateAccount(it.id!!, accountRequestModel)
+                        updateDialogState = true
+//                        viewModel.updateAccount(it.id!!, accountRequestModel)
                     } ?: run {
                         viewModel.createAccount(accountRequestModel)
                     }

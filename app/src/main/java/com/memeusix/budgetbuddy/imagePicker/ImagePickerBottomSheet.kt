@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,11 +29,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -123,13 +126,40 @@ fun ImagePickerBottomSheet(
 }
 
 fun createImageUri(context: Context): Uri? {
-    val contentResolver = context.contentResolver
-    val contentValues = ContentValues().apply {
-        put(
-            MediaStore.Images.Media.DISPLAY_NAME,
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        // Android 10+ (API 29+): Use MediaStore
+        val contentResolver = context.contentResolver
+        val contentValues = ContentValues().apply {
+            put(
+                MediaStore.Images.Media.DISPLAY_NAME,
+                "captured_image_${System.currentTimeMillis()}.jpg"
+            )
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+        contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+    } else {
+        // Android 9 and below: Use FileProvider
+        val photoFile = File(
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
             "captured_image_${System.currentTimeMillis()}.jpg"
         )
-        put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.fileprovider",
+            photoFile
+        )
     }
-    return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 }
+
+
+//fun createImageUri(context: Context): Uri? {
+//    val contentResolver = context.contentResolver
+//    val contentValues = ContentValues().apply {
+//        put(
+//            MediaStore.Images.Media.DISPLAY_NAME,
+//            "captured_image_${System.currentTimeMillis()}.jpg"
+//        )
+//        put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+//    }
+//    return contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+//}

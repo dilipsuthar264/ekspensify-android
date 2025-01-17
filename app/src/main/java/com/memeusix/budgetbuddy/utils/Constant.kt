@@ -67,11 +67,11 @@ object ErrorReason {
 enum class BudgetType(val displayName: String, val description: String) {
     RECURRING(
         "Recurring Budget",
-        "Recurring budgets renew on the first day of every monthly billing period."
+        "Recurring budgets run continuously without an expiration date."
     ),
     EXPIRING(
         "Expiring Budget",
-        "Expiring daily budgets Stop renewing at the end Of the selected expiration date."
+        "Expiring budgets stop renewing at the end of the selected expiration date."
     )
 }
 
@@ -99,4 +99,8 @@ enum class BottomSheetSelectionType {
 object NotificationActivity {
     const val BUDGET = "BUDGET"
     const val TRANSACTION = "TRANSACTION"
+}
+
+enum class ExportFileFormat() {
+    PDF, CSV
 }

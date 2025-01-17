@@ -1,12 +1,13 @@
 package com.memeusix.budgetbuddy.ui.categories
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,10 +23,13 @@ import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.components.PullToRefreshLayout
 import com.memeusix.budgetbuddy.components.ShowLoader
+import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.navigation.CreateCategoryScreenRoute
 import com.memeusix.budgetbuddy.ui.categories.components.CategoryList
+import com.memeusix.budgetbuddy.ui.categories.components.CategoryTypeSelectionToggle
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
+import com.memeusix.budgetbuddy.utils.CategoryType
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
@@ -34,13 +38,21 @@ import com.memeusix.budgetbuddy.utils.singleClick
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoriesScreen(
     navController: NavHostController,
     categoryViewModel: CategoryViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
+    val selectedCategoryType = remember { mutableStateOf(CategoryType.DEBIT) }
+
     val getCategories by categoryViewModel.getCategories.collectAsStateWithLifecycle()
+
+    val categories by remember {
+        derivedStateOf {
+            getCategories.data?.filter { it.type == selectedCategoryType.value.getValue() }
+        }
+    }
+
     val deleteCategories by categoryViewModel.deleteCategory.collectAsStateWithLifecycle()
     val isLoading =
         getCategories is ApiResponse.Loading || deleteCategories is ApiResponse.Loading
@@ -52,6 +64,8 @@ fun CategoriesScreen(
 
     // delete dialog
     val isDeleteDialogOpen = remember { mutableStateOf<Pair<Boolean, Int?>>(false to null) }
+
+
 
     if (isDeleteDialogOpen.value.first) {
         AlertDialog(
@@ -88,8 +102,8 @@ fun CategoriesScreen(
             navController = navController,
             onSuccess = { data ->
                 data?.let {
-                    categoryViewModel.getCategories()
                     categoryViewModel.resetDeleteCategory()
+                    categoryViewModel.getCategories()
                 }
             })
     }
@@ -113,9 +127,14 @@ fun CategoriesScreen(
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
+                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    CategoryTypeSelectionToggle(selectedCategoryType)
+                }
+                VerticalSpace(10.dp)
+
                 CategoryList(
                     modifier = Modifier.weight(1f),
-                    getCategories.data.orEmpty(),
+                    categories.orEmpty(),
                     onDeleteClick = {
                         isDeleteDialogOpen.value = isDeleteDialogOpen.value.copy(true, it)
                     }

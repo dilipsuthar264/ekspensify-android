@@ -66,7 +66,9 @@ fun CategoryList(
                 leadingContent = {
                     CategoryIcon(category.icon)
                 },
-                modifier = Modifier.padding(vertical = 14.dp, horizontal = 20.dp),
+                modifier = Modifier
+                    .animateItem(fadeInSpec = null, fadeOutSpec = null)
+                    .padding(vertical = 14.dp, horizontal = 20.dp),
                 enable = false,
                 trailingContent = {
                     DeleteIconBtn(category, onDeleteClick)

@@ -44,7 +44,6 @@ import com.memeusix.budgetbuddy.ui.dashboard.budget.BudgetScreen
 import com.memeusix.budgetbuddy.ui.dashboard.budget.viewModel.BudgetViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.home.HomeScreen
 import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileScreen
-import com.memeusix.budgetbuddy.ui.dashboard.profile.viewModel.ProfileViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
@@ -101,19 +100,21 @@ fun BottomNav(
     Scaffold(
         modifier = Modifier.navigationBarsPadding(),
         topBar = {
-            key(currentIndex) {
-                AppBar(
-                    heading = items[currentIndex].label,
-                    navController = navController,
-                    elevation = false,
-                    actions = {
-                        if (items.lastIndex == currentIndex) {
-                            ThemeToggle()
-                        }
-                    },
-                    isBackNavigation = false
-                )
-            }
+//            key(currentIndex) {
+//                if (currentIndex != 0) {
+//                    AppBar(
+//                        heading = items[currentIndex].label,
+//                        navController = navController,
+//                        elevation = false,
+//                        actions = {
+////                            if (items.lastIndex == currentIndex) {
+////                                ThemeToggle()
+////                            }
+//                        },
+//                        isBackNavigation = false
+//                    )
+//                }
+//            }
         },
         bottomBar = {
             BottomBar(

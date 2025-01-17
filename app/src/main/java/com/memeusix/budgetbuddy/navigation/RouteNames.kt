@@ -47,6 +47,9 @@ object BudgetsScreenRoute
 @Serializable
 object ProfileScreenRoute
 
+@Serializable
+object AboutScreenRoute
+
 
 /**
  * Account Screens
@@ -77,6 +80,7 @@ data class CreateCategoryScreenRoute(
 // Transaction Screens
 @Serializable
 data class CreateTransactionScreenRoute(
+    val isPending: Boolean = false,
     val transactionType: TransactionType,
     val transactionResponseModelArgs: String? = null
 )
@@ -109,5 +113,16 @@ data class BudgetTransactionScreenRoute(
 // Image preview page
 @Serializable
 data class PicturePreviewScreenRoute(
-   val image: String
+    val image: String
 )
+
+// Auto Tracking Screen
+@Serializable
+object AutoTrackingScreenRoute
+
+@Serializable
+object PendingTransactionRoute
+
+// Export Screen
+@Serializable
+object ExportScreenRoute

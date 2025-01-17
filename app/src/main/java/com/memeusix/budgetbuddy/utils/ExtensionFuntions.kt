@@ -14,9 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Shape
@@ -57,9 +55,8 @@ fun AuthResponseModel.goToNextScreenAfterLogin(
 fun Int.formatRupees(): String {
     val format = NumberFormat.getNumberInstance(Locale("en", "IN"))
     val formattedVal = format.format(kotlin.math.abs(this))
-    return if (this < 0) "- ₹$formattedVal" else "₹$formattedVal"
+    return if (this < 0) "- ₹ $formattedVal" else "₹ $formattedVal"
 }
-
 
 
 @Composable
@@ -184,4 +181,8 @@ fun String?.getCategoryType(): String {
 fun String?.isValidUrl(): Boolean {
     if (this.isNullOrEmpty()) return false
     return Patterns.WEB_URL.matcher(this).matches()
+}
+fun String.firstLetterCap(): String {
+    return this.lowercase(Locale.getDefault())
+        .replaceFirstChar { it.titlecase(Locale.getDefault()) }
 }

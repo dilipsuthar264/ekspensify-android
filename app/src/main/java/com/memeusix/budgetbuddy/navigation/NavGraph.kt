@@ -31,14 +31,18 @@ import com.memeusix.budgetbuddy.ui.auth.IntroScreen
 import com.memeusix.budgetbuddy.ui.auth.LoginScreen
 import com.memeusix.budgetbuddy.ui.auth.OtpVerificationScreen
 import com.memeusix.budgetbuddy.ui.auth.RegisterScreen
+import com.memeusix.budgetbuddy.ui.autoTracking.AutoTrackingScreen
+import com.memeusix.budgetbuddy.ui.autoTracking.PendingTransactionScreen
 import com.memeusix.budgetbuddy.ui.categories.CategoriesScreen
 import com.memeusix.budgetbuddy.ui.categories.CreateCategoryScreen
 import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.BottomNav
 import com.memeusix.budgetbuddy.ui.dashboard.budget.BudgetDetailsScreen
 import com.memeusix.budgetbuddy.ui.dashboard.budget.BudgetTransactionScreen
 import com.memeusix.budgetbuddy.ui.dashboard.budget.CreateBudgetScreen
+import com.memeusix.budgetbuddy.ui.dashboard.profile.AboutScreen
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.CreateTransactionScreen
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.FilterScreen
+import com.memeusix.budgetbuddy.ui.export.ExportScreen
 import com.memeusix.budgetbuddy.ui.picture.PicturePreviewScreen
 import com.memeusix.budgetbuddy.utils.NotificationActivity
 
@@ -137,6 +141,15 @@ fun NavGraph(
             )
         }
 
+        // Auto Tracking Screen
+        composable<AutoTrackingScreenRoute> {
+            AutoTrackingScreen(navController)
+        }
+
+        composable<PendingTransactionRoute> {
+            PendingTransactionScreen(navController)
+        }
+
         // Transaction Screens
         composable<CreateTransactionScreenRoute> {
             val args = it.toRoute<CreateTransactionScreenRoute>()
@@ -165,8 +178,20 @@ fun NavGraph(
             val args = it.toRoute<PicturePreviewScreenRoute>()
             PicturePreviewScreen(args)
         }
+
+        // Export Screen
+        composable<ExportScreenRoute> {
+            ExportScreen(navController)
+        }
+
+        // About Screen
+        composable<AboutScreenRoute> {
+            AboutScreen(navController)
+        }
+
     }
 }
+
 
 fun handleNotificationClickNavigation(
     navController: NavHostController,

@@ -44,4 +44,6 @@ data class TransactionResponseModel(
     @SerializedName("deleted_at")
     @Expose
     var deletedAt: String? = null,
+
+    val pendingId: Int? = null
 ) : Serializable

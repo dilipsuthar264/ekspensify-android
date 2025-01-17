@@ -62,8 +62,16 @@ fun BudgetBuddyTheme(
         else -> isSystemInDarkTheme()
     }
     val systemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(
+//    systemUiController.setSystemBarsColor(
+//        color = Color.Transparent,
+//        darkIcons = !isDarkTheme
+//    )
+    systemUiController.setStatusBarColor(
         color = Color.Transparent,
+        darkIcons = !isDarkTheme
+    )
+    systemUiController.setNavigationBarColor(
+        color = if (isDarkTheme) Color.Black else Color.White,
         darkIcons = !isDarkTheme
     )
 

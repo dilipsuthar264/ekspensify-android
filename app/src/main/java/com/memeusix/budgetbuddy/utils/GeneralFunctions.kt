@@ -125,6 +125,7 @@ fun <T> handleApiResponseWithError(
         else -> Unit
     }
 }
+
 private fun goToLogin(
     navController: NavController,
     errorMessage: String
@@ -195,4 +196,9 @@ fun spacedByWithFooter(space: Dp) = object : Arrangement.Vertical {
         }
         occupied -= lastSpace
     }
+}
+
+fun formatBudgetId(id: Int?): String {
+    if (id == null) return ""
+    return "BGT #$id"
 }

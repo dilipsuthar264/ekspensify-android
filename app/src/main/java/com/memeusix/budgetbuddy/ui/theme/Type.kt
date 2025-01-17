@@ -22,6 +22,10 @@ val fonartoFontFamily = FontFamily(
     Font(R.font.fonarto_regular, FontWeight.Normal)
 )
 
+val goodlyFontFontFamily = FontFamily(
+    Font(R.font.goodly_semibold, FontWeight.SemiBold)
+)
+
 val Typography = Typography(
     headlineLarge = TextStyle(
         fontFamily = interFontFamily,

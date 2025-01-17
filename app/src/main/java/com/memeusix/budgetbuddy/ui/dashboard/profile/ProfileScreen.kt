@@ -46,12 +46,15 @@ import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
+import com.memeusix.budgetbuddy.navigation.AboutScreenRoute
 import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
+import com.memeusix.budgetbuddy.navigation.AutoTrackingScreenRoute
 import com.memeusix.budgetbuddy.navigation.CategoriesScreenRoute
+import com.memeusix.budgetbuddy.navigation.ExportScreenRoute
 import com.memeusix.budgetbuddy.navigation.IntroScreenRoute
 import com.memeusix.budgetbuddy.ui.dashboard.profile.componets.ProfileAvatar
-import com.memeusix.budgetbuddy.ui.dashboard.profile.model.ProfileOptionProvider
-import com.memeusix.budgetbuddy.ui.dashboard.profile.model.ProfileOptions
+import com.memeusix.budgetbuddy.ui.dashboard.profile.data.ProfileOptionProvider
+import com.memeusix.budgetbuddy.ui.dashboard.profile.data.ProfileOptions
 import com.memeusix.budgetbuddy.ui.dashboard.profile.viewModel.ProfileViewModel
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.handleApiResponse
@@ -141,6 +144,7 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
+                .padding(top = 20.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -269,10 +273,16 @@ private fun handleProfileOptionClick(
 
         ProfileOptions.EXPORT -> {
             Log.e(TAG, "handleProfileOptionClick: EXPORT CLICK")
+            navController.navigate(ExportScreenRoute)
         }
 
-        ProfileOptions.SETTING -> {
+        ProfileOptions.AUTO_TRACKING -> {
+            navController.navigate(AutoTrackingScreenRoute)
+        }
+
+        ProfileOptions.ABOUT -> {
             Log.e(TAG, "handleProfileOptionClick: SETTING CLICK")
+            navController.navigate(AboutScreenRoute)
         }
 
         ProfileOptions.LOGOUT -> {

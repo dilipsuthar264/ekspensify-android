@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +35,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -94,25 +96,56 @@ fun TransactionDetailsDialog(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            if (transaction?.attachment != null) {
-                VerticalSpace(20.dp)
-                AttachmentPreview(transaction.attachment) {
-                    transaction.attachment?.let {
-                        navController.navigate(PicturePreviewScreenRoute(it))
-                    }
-                }
-            }
+
             VerticalSpace(20.dp)
-            ActionsBtnGroup(onDeleteClick = singleClick {
-                showDeleteConfirm.value = true
-            }, onEditClick = singleClick {
-                navController.navigate(
-                    CreateTransactionScreenRoute(
-                        transactionType = TransactionType.valueOf(transaction?.type ?: "CREDIT"),
-                        transactionResponseModelArgs = transaction.toJson()
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .padding(horizontal = 20.dp)
+            ) {
+                transaction?.attachment?.let {
+                    AsyncImage(
+                        model = it,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(MaterialTheme.extendedColors.imageBg)
+                            .clickable { navController.navigate(PicturePreviewScreenRoute(it)) },
+                        contentScale = ContentScale.Crop
                     )
-                )
-            }, onCloseClick = singleClick { onDismiss() })
+                } ?: run {
+                    Text(
+                        "No Image\nAttached",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(MaterialTheme.extendedColors.imageBg)
+                            .wrapContentHeight(Alignment.CenterVertically),
+                    )
+                }
+                HorizontalSpace(20.dp)
+                ActionsBtnGroup(
+                    modifier = Modifier.weight(1f),
+                    onDeleteClick = singleClick {
+                        showDeleteConfirm.value = true
+                    }, onEditClick = singleClick {
+                        navController.navigate(
+                            CreateTransactionScreenRoute(
+                                transactionType = TransactionType.valueOf(
+                                    transaction?.type ?: "CREDIT"
+                                ),
+                                transactionResponseModelArgs = transaction.toJson()
+                            )
+                        )
+                    }, onCloseClick = singleClick { onDismiss() })
+            }
         }
 
         if (showDeleteConfirm.value) {
@@ -265,14 +298,12 @@ private fun AttachmentPreview(attachment: String?, onClick: () -> Unit) {
 
 @Composable
 private fun ActionsBtnGroup(
+    modifier: Modifier,
     onDeleteClick: () -> Unit, onEditClick: () -> Unit, onCloseClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Max)
-            .padding(horizontal = 20.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally)
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
     ) {
         val iconColor = MaterialTheme.extendedColors.iconColor
         val border = Modifier.border(
@@ -288,16 +319,20 @@ private fun ActionsBtnGroup(
 }
 
 @Composable
-private fun EditDeleteBtn(
+fun EditDeleteBtn(
     border: Modifier, iconColor: Color, onDeleteClick: () -> Unit, onEditClick: () -> Unit
 ) {
     Row(modifier = Modifier
         .let { border }
-        .height(IntrinsicSize.Max),
-        verticalAlignment = Alignment.CenterVertically) {
+        .height(IntrinsicSize.Max)
+        .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
         val iconModifier = Modifier
             .padding(vertical = 13.dp, horizontal = 20.dp)
             .size(30.dp)
+            .weight(1f)
         Icon(painterResource(R.drawable.ic_edit),
             contentDescription = "",
             tint = iconColor,
@@ -320,7 +355,6 @@ private fun CloseBtn(
     Row(
         modifier = border
             .clip(RoundedCornerShape(15.dp))
-            .fillMaxHeight()
             .fillMaxWidth()
             .clickable {
                 onClick()
@@ -332,7 +366,9 @@ private fun CloseBtn(
             painterResource(R.drawable.ic_close),
             contentDescription = "",
             tint = iconColor,
-            modifier = Modifier.size(18.dp)
+            modifier = Modifier
+                .padding(vertical = 18.dp)
+                .size(18.dp)
         )
         Text(
             "Close", style = MaterialTheme.typography.bodyMedium.copy(

@@ -115,6 +115,7 @@ fun AccountsScreen(
                         ) {
                             AccountCard(selectedAccountType, accountList, navController, args)
                         }
+                        VerticalSpace(10.dp)
                         AddMoreBtn(args) {
                             goToCreateAccount(navController, args, accountList)
                         }

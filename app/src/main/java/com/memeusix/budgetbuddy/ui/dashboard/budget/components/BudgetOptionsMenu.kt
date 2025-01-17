@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 @Composable
 fun BudgetOptionsMenu(
+    isClosed: Boolean = false,
     modifier: Modifier = Modifier,
     onCloseClick: () -> Unit = {},
     onDeleteClick: () -> Unit = {},
@@ -46,16 +48,18 @@ fun BudgetOptionsMenu(
         offset = DpOffset((-20).dp, Dp.Unspecified),
         modifier = modifier
     ) {
+        if (!isClosed) {
+            MenuItem(
+                text = stringResource(R.string.close_budget),
+                iconRes = R.drawable.ic_cancel_circle_half_dot,
+                onClick = {
+                    onCloseClick()
+                    isMenuOpen = false
+                },
+            )
+        }
         MenuItem(
-            text = "Close Budget",
-            iconRes = R.drawable.ic_cancel_circle_half_dot,
-            onClick = {
-                onCloseClick()
-                isMenuOpen = false
-            },
-        )
-        MenuItem(
-            text = "Delete Budget",
+            text = stringResource(R.string.delete_budget),
             iconRes = R.drawable.ic_delete,
             onClick = {
                 onDeleteClick()

@@ -30,6 +30,13 @@ class SpUtilsManager @Inject constructor(
         spUtils.isLoggedIn = isLoggedIn
     }
 
+    private val _isAutoTrackingEnable = MutableStateFlow(spUtils.isAutoTrackingEnable)
+    val isAutoTrackingEnable: StateFlow<Boolean> get() = _isAutoTrackingEnable
+    fun updateAutoTracking(isAutoTrackingEnable: Boolean) {
+        _isAutoTrackingEnable.value = isAutoTrackingEnable
+        spUtils.isAutoTrackingEnable = isAutoTrackingEnable
+    }
+
     private val _accessToken = MutableStateFlow(spUtils.accessToken)
     val accessToken: StateFlow<String> get() = _accessToken
     fun updateAccessToken(accessToken: String) {

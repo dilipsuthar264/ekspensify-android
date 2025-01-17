@@ -44,10 +44,7 @@ fun FilledButton(
         modifier = modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background, shape)
-            .onGloballyPositioned { coordinates ->
-                // Store the button's height in the singleton object
-                ButtonHeightHolder.buttonHeightPx = coordinates.size.height
-            }
+
     ) {
         Text(
             text = text,
@@ -55,16 +52,4 @@ fun FilledButton(
             modifier = textModifier
         )
     }
-}
-
-
-@Composable
-fun getBtnHeight(): Dp {
-    return with(LocalDensity.current) {
-        ButtonHeightHolder.buttonHeightPx.toDp()
-    }
-}
-
-object ButtonHeightHolder {
-    var buttonHeightPx: Int = 0
 }

@@ -12,6 +12,7 @@ import com.memeusix.budgetbuddy.data.model.requestModel.TransactionRequestModel
 import com.memeusix.budgetbuddy.data.model.responseModel.AttachmentResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.TransactionResponseModel
 import com.memeusix.budgetbuddy.data.repository.TransactionRepository
+import com.memeusix.budgetbuddy.room.repository.PendingTransactionRepo
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.FilterOptionProvider
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.SelectedFilterModel
 import com.memeusix.budgetbuddy.utils.spUtils.SpUtilsManager
@@ -29,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionViewModel @Inject constructor(
     private val transactionRepository: TransactionRepository,
+    private val pendingTransactionRepo: PendingTransactionRepo,
     val spUtilsManager: SpUtilsManager
 ) : ViewModel(), BaseViewModel {
 
@@ -148,6 +150,17 @@ class TransactionViewModel @Inject constructor(
         _transactionDetails.value = null
     }
 
+
+    /** ----- Pending Transaction ---- **/
+    fun deletePendingTransaction(id: Int) {
+        viewModelScope.launch {
+            val response = pendingTransactionRepo.deletePendingTransaction(id)
+            response.fold(
+                onFailure = {},
+                onSuccess = {}
+            )
+        }
+    }
 
 }
 

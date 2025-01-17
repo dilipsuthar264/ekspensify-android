@@ -40,6 +40,7 @@ fun SearchBar(
         Modifier
             .clip(RoundedCornerShape(12.dp))
             .padding(horizontal = 20.dp, vertical = 10.dp)
+            .padding(top = 10.dp)
             .height(50.dp)
             .fillMaxWidth()
             .border(1.dp, MaterialTheme.extendedColors.primaryBorder, RoundedCornerShape(12.dp))
@@ -59,7 +60,9 @@ fun SearchBar(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 10.dp),
-            onValueChange = { if (it.length <= 20) searchState.value = it },
+            onValueChange = {
+                if (it.length <= 20) searchState.value = it
+            },
             maxLines = 1,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(onSearch = onSearch),

@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
-import com.memeusix.budgetbuddy.ui.dashboard.profile.model.AvatarOptions
+import com.memeusix.budgetbuddy.ui.dashboard.profile.data.AvatarOptions
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.getInitials
 

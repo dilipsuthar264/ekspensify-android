@@ -6,6 +6,7 @@ import com.memeusix.budgetbuddy.data.services.AccountApi
 import com.memeusix.budgetbuddy.data.services.AuthApi
 import com.memeusix.budgetbuddy.data.services.BudgetApi
 import com.memeusix.budgetbuddy.data.services.CategoryApi
+import com.memeusix.budgetbuddy.data.services.ExportApi
 import com.memeusix.budgetbuddy.data.services.ProfileApi
 import com.memeusix.budgetbuddy.data.services.TransactionApi
 import com.memeusix.budgetbuddy.utils.fileUtils.FileRepository
@@ -18,7 +19,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -68,22 +68,6 @@ class AppModule {
                 chain.proceed(request)
             }
         }
-
-        fun getRetryInterceptor(): Interceptor {
-            return Interceptor { chain ->
-                var response: Response
-                var tryCount = 0
-                val maxRetry = 3
-
-                do {
-                    response = chain.proceed(chain.request())
-                    tryCount++
-                } while (!response.isSuccessful && tryCount < maxRetry)
-
-                response
-            }
-        }
-
 
         private fun filterLogs(message: String): String {
             return when {
@@ -150,5 +134,11 @@ class AppModule {
     @Singleton
     fun provideBudgetApi(app: Application): BudgetApi {
         return getRetrofit(app).create(BudgetApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideExportApi(app: Application): ExportApi {
+        return getRetrofit(app).create(ExportApi::class.java)
     }
 }

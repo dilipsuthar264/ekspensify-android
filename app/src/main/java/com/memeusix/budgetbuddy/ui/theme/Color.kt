@@ -79,3 +79,4 @@ val Blue100 = Color(0xFF0077FF)
 // Teal
 val Teal = Color(0xFF008080)
 val Grey70 = Color(0xFF717171)
+val Dark_Muted_Purple = Color(0xFF372B47)

@@ -49,7 +49,7 @@ import com.memeusix.budgetbuddy.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.components.FilledButton
 import com.memeusix.budgetbuddy.data.model.TextFieldStateModel
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
-import com.memeusix.budgetbuddy.ui.dashboard.profile.model.AvatarOptions
+import com.memeusix.budgetbuddy.ui.dashboard.profile.data.AvatarOptions
 import com.memeusix.budgetbuddy.utils.getInitials
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)

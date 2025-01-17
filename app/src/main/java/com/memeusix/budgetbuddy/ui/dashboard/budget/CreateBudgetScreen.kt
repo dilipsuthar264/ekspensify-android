@@ -21,11 +21,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.AppBar
 import com.memeusix.budgetbuddy.components.CustomOutlineTextField
 import com.memeusix.budgetbuddy.components.FilledButton
@@ -116,7 +118,9 @@ fun CreateBudgetScreen(
     Scaffold(
         topBar = {
             AppBar(
-                heading = "Create Budget", navController = navController, isBackNavigation = true
+                heading = stringResource(R.string.create_budget),
+                navController = navController,
+                isBackNavigation = true
             )
         },
     ) { paddingValues ->
@@ -153,7 +157,7 @@ fun CreateBudgetScreen(
                 VerticalSpace()
             }
             FilledButton(
-                text = "Create Budget",
+                text = stringResource(R.string.create_budget),
                 textModifier = Modifier.padding(vertical = 17.dp),
                 enabled = isValid,
                 onClick = {

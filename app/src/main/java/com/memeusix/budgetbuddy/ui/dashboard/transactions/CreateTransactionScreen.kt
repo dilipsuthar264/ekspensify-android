@@ -63,12 +63,12 @@ import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 fun CreateTransactionScreen(
     navController: NavHostController,
     args: CreateTransactionScreenRoute,
-    transactionViewModel: TransactionViewModel = hiltViewModel()
+    transactionViewModel: TransactionViewModel = hiltViewModel(),
 ) {
     val systemUiController = rememberSystemUiController()
     val transactionArgs =
         remember(args.transactionResponseModelArgs) { args.transactionResponseModelArgs.fromJson<TransactionResponseModel>() }
-    val isUpdate = rememberUpdatedState(transactionArgs != null)
+    val isUpdate = rememberUpdatedState(transactionArgs != null && !args.isPending)
 
     DisposableEffect(Unit) {
         val defaultDarkIcons = systemUiController.systemBarsDarkContentEnabled
@@ -116,6 +116,10 @@ fun CreateTransactionScreen(
                         NavigationRequestKeys.REFRESH_TRANSACTION, true
                     )
                     navController.popBackStack()
+
+                    if (args.isPending) {
+                        transactionViewModel.deletePendingTransaction(transactionArgs?.pendingId!!)
+                    }
                 }
             }
         )
@@ -187,14 +191,18 @@ fun CreateTransactionScreen(
                 )
             }
             FilledButton(
-                text = stringResource(R.string.add),
+                text = if (isUpdate.value) {
+                    stringResource(R.string.update)
+                } else {
+                    stringResource(R.string.add)
+                },
                 textModifier = Modifier.padding(vertical = 17.dp),
                 enabled = amountState.value.text.trim()
                     .isNotEmpty() && selectedAccount.value.id != null && selectedCategory.value.id != null,
                 onClick = {
                     val transactionRequestModel = TransactionRequestModel(
                         amount = amountState.value.text.trim().toInt(),
-                        note = noteState.value.text.trim().ifEmpty { null },
+                        note = noteState.value.text.trim(),
                         accountId = selectedAccount.value.id,
                         categoryId = selectedCategory.value.id,
                         attachmentId = selectedAttachment.value.attachmentId,

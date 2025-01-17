@@ -39,7 +39,7 @@ fun BottomNavOptions(
                 onClick = onClick
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically)
     ) {
         Icon(
             painterResource(icon),

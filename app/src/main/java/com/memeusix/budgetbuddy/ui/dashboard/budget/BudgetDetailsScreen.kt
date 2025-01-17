@@ -46,6 +46,7 @@ import com.memeusix.budgetbuddy.ui.dashboard.budget.components.BudgetReportItem
 import com.memeusix.budgetbuddy.ui.dashboard.budget.viewModel.BudgetViewModel
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.BottomSheetSelectionType
+import com.memeusix.budgetbuddy.utils.BudgetStatus
 import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
 import com.memeusix.budgetbuddy.utils.handleApiResponse
@@ -62,17 +63,15 @@ fun BudgetDetailsScreen(
     budgetViewModelNewInstance: BudgetViewModel = hiltViewModel()
 ) {
     // API STATES
-    val budgetDetailsState by budgetViewModel.budgetDetails.collectAsStateWithLifecycle()
-    val budgetDeleteState by budgetViewModel.deleteBudget.collectAsStateWithLifecycle()
-    val closeBudgetState by budgetViewModel.updateBudget.collectAsStateWithLifecycle()
+    val budgetDeleteState by budgetViewModelNewInstance.deleteBudget.collectAsStateWithLifecycle()
+    val closeBudgetState by budgetViewModelNewInstance.updateBudget.collectAsStateWithLifecycle()
 
     // loading from new instance to get fresh report each time
     val budgetReports = budgetViewModelNewInstance.getBudgetReport().collectAsLazyPagingItems()
+    val budgetDetailsState by budgetViewModelNewInstance.budgetDetails.collectAsStateWithLifecycle()
 
     val isLoading =
-        budgetDeleteState is ApiResponse.Loading
-                || budgetDetailsState is ApiResponse.Loading
-                || closeBudgetState is ApiResponse.Loading
+        budgetDeleteState is ApiResponse.Loading || budgetDetailsState is ApiResponse.Loading || closeBudgetState is ApiResponse.Loading
 
     // this is to stop calling from pop-back
     var isApiCalled by rememberSaveable { mutableStateOf(false) }
@@ -84,25 +83,25 @@ fun BudgetDetailsScreen(
     // get budget details
     LaunchedEffect(args.budgetId) {
         if (!isApiCalled) {
-            budgetViewModel.getBudgetDetails(args.budgetId)
+            budgetViewModelNewInstance.getBudgetDetails(args.budgetId)
             isApiCalled = true
         }
     }
     // handling api response
     LaunchedEffect(budgetDeleteState, budgetDetailsState) {
-        budgetViewModel.setReportId(null)
+        budgetViewModelNewInstance.setReportId(null)
         handleApiResponse(
             response = budgetDeleteState,
             toastState = toastState,
             navController = navController,
             onSuccess = { data ->
                 data?.let {
+                    budgetViewModel.refreshBudgets()
                     navController.popBackStack()
                 }
             },
         )
-        handleApiResponseWithError(
-            response = budgetDetailsState,
+        handleApiResponseWithError(response = budgetDetailsState,
             toastState = toastState,
             navController = navController,
             onSuccess = { data ->
@@ -113,14 +112,11 @@ fun BudgetDetailsScreen(
             },
             onFailure = { error ->
                 budgetViewModelNewInstance.setBudgetId(null)
-            }
-        )
-        handleApiResponse(
-            response = closeBudgetState,
+            })
+        handleApiResponse(response = closeBudgetState,
             toastState = toastState,
             navController = navController,
-            onSuccess = { data -> budgetViewModel.refreshBudgets() }
-        )
+            onSuccess = { data -> budgetViewModel.refreshBudgets() })
     }
 
     // Category Bottom Sheet
@@ -146,26 +142,22 @@ fun BudgetDetailsScreen(
     var isDelete by remember { mutableStateOf(false) }
 
     if (isDialogOpen) {
-        ConfirmDialogue(
-            isDelete = isDelete,
-            onClick = singleClick {
-                isDialogOpen = false
-                if (isDelete)
-                    budgetViewModel.deleteBudget(args.budgetId)
-                else
-                    budgetViewModel.closeBudget(args.budgetId)
-            },
-            onDismiss = {
-                isDialogOpen = false
-            }
-        )
+        ConfirmDialogue(isDelete = isDelete, onClick = singleClick {
+            isDialogOpen = false
+            if (isDelete) budgetViewModelNewInstance.deleteBudget(args.budgetId)
+            else budgetViewModelNewInstance.closeBudget(args.budgetId)
+        }, onDismiss = {
+            isDialogOpen = false
+        })
     }
 
     Scaffold(topBar = {
-        AppBar(heading = stringResource(R.string.budget_details, args.budgetId),
+        AppBar(
+            heading = stringResource(R.string.budget_details, args.budgetId),
             navController = navController,
             actions = {
                 BudgetOptionsMenu(
+                    isClosed = budgetDetailsState.data?.status == BudgetStatus.CLOSED.name,
                     modifier = Modifier.padding(horizontal = 5.dp),
                     onCloseClick = {
                         isDelete = false
@@ -174,16 +166,14 @@ fun BudgetDetailsScreen(
                     onDeleteClick = {
                         isDelete = true
                         isDialogOpen = true
-                    }
-                )
+                    })
             })
     }) { paddingValues ->
         PullToRefreshLayout(
             onRefresh = {
-                budgetViewModel.getBudgetDetails(args.budgetId)
+                budgetViewModelNewInstance.getBudgetDetails(args.budgetId)
                 budgetReports.refresh()
-            },
-            modifier = Modifier
+            }, modifier = Modifier
                 .fillMaxSize()
                 .dynamicImePadding(paddingValues)
         ) {
@@ -212,10 +202,7 @@ fun BudgetDetailsScreen(
                     }
                 }
                 BudgetReportListView(
-                    budgetDetailsState,
-                    budgetReports,
-                    navController,
-                    isLoading
+                    budgetDetailsState, budgetReports, navController, isLoading
                 )
             }
         }
@@ -239,12 +226,9 @@ private fun ColumnScope.BudgetReportListView(
         modifier = Modifier.Companion.weight(1f)
     ) {
         if (budgetDetailsState.data != null) {
-            items(
-                budgetReports.itemCount,
-                key = budgetReports.itemKey { it.id!! }) { index ->
+            items(budgetReports.itemCount, key = budgetReports.itemKey { it.id!! }) { index ->
                 val report = budgetReports[index]
-                BudgetReportItem(
-                    report = report,
+                BudgetReportItem(report = report,
                     budgetDetails = budgetDetailsState.data,
                     onClick = singleClick {
                         if (budgetDetailsState.data?.id != null && report?.id != null) {
@@ -273,16 +257,13 @@ private fun ColumnScope.BudgetReportListView(
 
 @Composable
 private fun ConfirmDialogue(
-    isDelete: Boolean,
-    onClick: () -> Unit,
-    onDismiss: () -> Unit
+    isDelete: Boolean, onClick: () -> Unit, onDismiss: () -> Unit
 ) {
     val dialogTitle = stringResource(
         if (isDelete) R.string.confirm_delete else R.string.confirm_close
     )
     val dialogMessage = stringResource(
-        R.string.are_you_sure_you_want_to_delete_this_budget,
-        if (isDelete) "delete" else "close"
+        R.string.are_you_sure_you_want_to_delete_this_budget, if (isDelete) "delete" else "close"
     )
     val buttonText =
         if (isDelete) stringResource(R.string.delete) else stringResource(R.string.close)

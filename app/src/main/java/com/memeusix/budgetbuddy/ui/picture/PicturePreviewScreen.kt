@@ -43,7 +43,6 @@ import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
 import soup.compose.photo.ExperimentalPhotoApi
-import soup.compose.photo.PhotoBox
 import soup.compose.photo.PhotoState
 import soup.compose.photo.rememberPhotoState
 
@@ -118,17 +117,11 @@ private fun PicturePreviewUI(
             .fillMaxSize()
             .systemBarsPadding()
     ) {
-        PhotoBox(
-            state = photoState,
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Image(
-                image,
-                contentDescription = "",
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+        Image(
+            image,
+            contentDescription = "",
+            modifier = Modifier.fillMaxSize()
+        )
         IconButton(
             onClick = onDownload,
             enabled = !isLoading,

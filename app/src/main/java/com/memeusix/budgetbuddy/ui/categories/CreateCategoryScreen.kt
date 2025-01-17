@@ -55,7 +55,7 @@ fun CreateCategoryScreen(
     CustomToast(toastState)
 
 
-    val selectedCategoryType = remember { mutableStateOf(CategoryType.CREDIT) }
+    val selectedCategoryType = remember { mutableStateOf(CategoryType.DEBIT) }
     val nameState = remember { mutableStateOf(TextFieldStateModel()) }
     val selectedIcon = remember { mutableStateOf(CustomIconModel()) }
 
@@ -120,7 +120,7 @@ fun CreateCategoryScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .dynamicImePadding(paddingValues)
-                .padding(20.dp)
+                .padding(horizontal = 20.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -137,7 +137,10 @@ fun CreateCategoryScreen(
                 )
 
                 if (isIconsLoading.value) {
-                    ShowIconLoader(Modifier.size(32.dp).align(Alignment.CenterHorizontally))
+                    ShowIconLoader(
+                        Modifier
+                            .size(32.dp)
+                            .align(Alignment.CenterHorizontally))
                 }
                 if (icons.value.isNotEmpty()) {
                     IconSelectionCard(
@@ -151,7 +154,7 @@ fun CreateCategoryScreen(
                 text = stringResource(R.string.add),
                 enabled = nameState.value.text.trim()
                     .isNotEmpty() && selectedIcon.value.id != null,
-                modifier = Modifier.padding(top = 10.dp),
+                modifier = Modifier.padding(top = 10.dp, bottom = 20.dp),
                 onClick = {
                     val categoryResponse = CategoryResponseModel(
                         name = nameState.value.text.trim(),

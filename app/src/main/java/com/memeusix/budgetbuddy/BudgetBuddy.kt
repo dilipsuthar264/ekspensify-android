@@ -4,21 +4,24 @@ import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import com.memeusix.budgetbuddy.utils.isValidUrl
 import com.memeusix.budgetbuddy.utils.toJson
 import com.onesignal.OneSignal
-import com.onesignal.debug.LogLevel
 import com.onesignal.notifications.INotificationClickEvent
 import com.onesignal.notifications.INotificationClickListener
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 
 @HiltAndroidApp
-class BudgetBuddy : Application() {
+class BudgetBuddy : Application(){
+
+
     override fun onCreate() {
         super.onCreate()
 
-        OneSignal.Debug.logLevel = LogLevel.VERBOSE
         // one signal initialization
         OneSignal.initWithContext(this, BuildConfig.ONESIGNAL_APP_ID)
 

@@ -2,14 +2,12 @@ package com.memeusix.budgetbuddy.utils.spUtils
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import com.memeusix.budgetbuddy.ui.theme.Theme
-import com.onesignal.OneSignal
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,6 +27,16 @@ class SpUtils @Inject constructor(val context: Context) {
     var themePreference: String
         get() = getDataByKey(THEME_PREFERENCE, Theme.LIGHT.name)
         set(value) = storeDataByKey(THEME_PREFERENCE, value)
+
+
+    var isAutoTrackingEnable: Boolean
+        get() = pref.contains(IS_AUTO_TRACKING_ENABLE) && pref.getBoolean(
+            IS_AUTO_TRACKING_ENABLE,
+            false,
+        )
+        set(isAutoTrackingEnable) = pref.edit()
+            .putBoolean(IS_AUTO_TRACKING_ENABLE, isAutoTrackingEnable).apply()
+
 
     var user: UserResponseModel?
         get() {
@@ -91,5 +99,6 @@ class SpUtils @Inject constructor(val context: Context) {
         private const val ACCOUNTS = "ACCOUNTS"
         private const val CATEGORIES = "CATEGORIES"
         private const val THEME_PREFERENCE = "THEME_PREFERENCE"
+        private const val IS_AUTO_TRACKING_ENABLE = "IS_AUTO_TRACKING_ENABLE"
     }
 }
