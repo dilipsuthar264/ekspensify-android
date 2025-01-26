@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.TimeZone
 
 fun String?.formatDateTime(
@@ -60,4 +61,14 @@ object DateFormat {
     const val MMM_dd_yyyy_hh_mm_a = "MMM dd, yyyy hh:mm a"
     const val dd_MMM_yy = "dd MMM, yy"
     const val dd_MMM_yyyy_ = "dd MMM, yyyy"
+}
+
+fun getGreetingMessage(): String {
+    val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    return when (currentHour) {
+        in 5..11 -> "Good Morning"
+        in 12..16 -> "Good Afternoon"
+        in 17..20 -> "Good Evening"
+        else -> "Good Night"
+    }
 }

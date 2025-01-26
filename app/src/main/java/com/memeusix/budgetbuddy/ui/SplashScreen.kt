@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +33,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.memeusix.budgetbuddy.R
+import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
 import com.memeusix.budgetbuddy.navigation.BottomNavRoute
 import com.memeusix.budgetbuddy.navigation.IntroScreenRoute
@@ -48,7 +50,9 @@ import javax.inject.Inject
 fun SplashScreen(
     navController: NavHostController, splashViewModel: SplashViewModel = hiltViewModel()
 ) {
-
+    val isLogin by splashViewModel.spUtilsManager.isLoggedIn.collectAsState()
+    val accessToken by splashViewModel.spUtilsManager.accessToken.collectAsState()
+    val user by splashViewModel.spUtilsManager.user.collectAsState()
     val isTypingFinished = remember { mutableStateOf(false) }
 
     // Launch the typing effect
@@ -64,7 +68,7 @@ fun SplashScreen(
     // Handle navigation after typing completes
     LaunchedEffect(isTypingFinished.value) {
         if (isTypingFinished.value) {
-            navigateAfterSplash(splashViewModel, navController)
+            navigateAfterSplash(isLogin, accessToken, user, navController)
         }
     }
     // System UI configuration
@@ -108,12 +112,16 @@ fun SplashScreen(
 
 
 fun navigateAfterSplash(
-    splashViewModel: SplashViewModel,
+    isLogin: Boolean,
+    accessToken: String,
+    user: UserResponseModel?,
     navController: NavHostController
 ) {
     when {
-        splashViewModel.spUtilsManager.isLoggedIn.value && splashViewModel.spUtilsManager.accessToken.value.isNotEmpty() -> {
-            val hasNoAccounts = splashViewModel.spUtilsManager.user.value?.accounts == 0
+        isLogin && accessToken.isNotEmpty() -> {
+            val hasNoAccounts = user?.accounts == 0
+            println(user?.accounts)
+            println(hasNoAccounts)
             if (hasNoAccounts) {
                 navController.navigate(AccountScreenRoute()) {
                     popUpTo(0) { inclusive = true }

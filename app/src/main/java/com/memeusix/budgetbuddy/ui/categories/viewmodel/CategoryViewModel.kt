@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.BaseViewModel
+import com.memeusix.budgetbuddy.data.model.requestModel.InsightsQueryModel
+import com.memeusix.budgetbuddy.data.model.responseModel.CategoryInsightsResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CustomIconModel
 import com.memeusix.budgetbuddy.data.repository.CategoryRepository
+import com.memeusix.budgetbuddy.utils.CategoryType
 import com.memeusix.budgetbuddy.utils.spUtils.SpUtilsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,16 +27,18 @@ class CategoryViewModel @Inject constructor(
     val spUtilsManager: SpUtilsManager
 ) : ViewModel(), BaseViewModel {
 
+    private val _selectedCategoryType = MutableStateFlow<CategoryType>(CategoryType.DEBIT)
+    val selectedCategoryType = _selectedCategoryType.asStateFlow()
+    fun updateSelectedCategoryType(categoryType: CategoryType) {
+        _selectedCategoryType.value = categoryType
+    }
+
     /**
      *  get Categories
      */
     private val _getCategories =
         MutableStateFlow<ApiResponse<List<CategoryResponseModel>>>(ApiResponse.idle())
     val getCategories = _getCategories.asStateFlow()
-
-    init {
-        fetchCategories()
-    }
 
     private fun fetchCategories() {
         spUtilsManager.categoriesData.value?.categories?.takeIf { it.isNotEmpty() }?.let {
@@ -55,6 +60,11 @@ class CategoryViewModel @Inject constructor(
             _getCategories.value = response
         }
     }
+
+    init {
+        fetchCategories()
+    }
+
 
     /**
      * get category icons
@@ -110,4 +120,5 @@ class CategoryViewModel @Inject constructor(
     fun resetDeleteCategory() {
         _deleteCategory.value = ApiResponse.idle()
     }
+
 }

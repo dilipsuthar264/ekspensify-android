@@ -29,7 +29,6 @@ import com.memeusix.budgetbuddy.navigation.CreateCategoryScreenRoute
 import com.memeusix.budgetbuddy.ui.categories.components.CategoryList
 import com.memeusix.budgetbuddy.ui.categories.components.CategoryTypeSelectionToggle
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
-import com.memeusix.budgetbuddy.utils.CategoryType
 import com.memeusix.budgetbuddy.utils.NavigationRequestKeys
 import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
@@ -43,13 +42,13 @@ fun CategoriesScreen(
     navController: NavHostController,
     categoryViewModel: CategoryViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
-    val selectedCategoryType = remember { mutableStateOf(CategoryType.DEBIT) }
+    val selectedCategoryType by categoryViewModel.selectedCategoryType.collectAsStateWithLifecycle()
 
     val getCategories by categoryViewModel.getCategories.collectAsStateWithLifecycle()
 
     val categories by remember {
         derivedStateOf {
-            getCategories.data?.filter { it.type == selectedCategoryType.value.getValue() }
+            getCategories.data?.filter { it.type == selectedCategoryType.getValue() }
         }
     }
 
@@ -128,7 +127,12 @@ fun CategoriesScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    CategoryTypeSelectionToggle(selectedCategoryType)
+                    CategoryTypeSelectionToggle(
+                        selectedCategoryType = selectedCategoryType,
+                        onChange = {
+                            categoryViewModel.updateSelectedCategoryType(it)
+                        }
+                    )
                 }
                 VerticalSpace(10.dp)
 

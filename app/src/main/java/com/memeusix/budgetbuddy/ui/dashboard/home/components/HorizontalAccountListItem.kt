@@ -17,11 +17,15 @@ import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.DrawableStartText
 import com.memeusix.budgetbuddy.components.VerticalSpace
+import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.ui.acounts.components.AmountText
+import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
 import com.memeusix.budgetbuddy.ui.theme.Dark15
 
 @Composable
-fun HorizontalAccountListItem() {
+fun HorizontalAccountListItem(account: AccountResponseModel) {
+    val icon =
+        BankModel.getAccounts().find { it.iconSlug == account.icon }?.icon ?: R.drawable.ic_wallet
     Box(
         modifier = Modifier
             .sizeIn(minWidth = 150.dp)
@@ -31,8 +35,8 @@ fun HorizontalAccountListItem() {
     ) {
         Column {
             DrawableStartText(
-                text = "BOB Bank",
-                icon = R.drawable.ic_bob_bank,
+                text = account.name ?: "",
+                icon = icon,
                 colorFilter = null,
                 textSize = 14.sp,
                 fontWeight = FontWeight.Medium,
@@ -47,7 +51,7 @@ fun HorizontalAccountListItem() {
                 )
             )
             VerticalSpace(2.dp)
-            AmountText("135133", size = 20.sp)
+            AmountText(account.balance.toString(), size = 20.sp)
         }
     }
 }

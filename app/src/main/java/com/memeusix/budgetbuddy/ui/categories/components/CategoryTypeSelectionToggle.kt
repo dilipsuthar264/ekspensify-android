@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,7 +23,8 @@ import com.memeusix.budgetbuddy.utils.CategoryType
 
 @Composable
 fun CategoryTypeSelectionToggle(
-    selectedCategoryType: MutableState<CategoryType>
+    selectedCategoryType: CategoryType,
+    onChange: (CategoryType) -> Unit
 ) {
     val categoryTypeEntries by remember { mutableStateOf(CategoryType.entries.toList()) }
     Row(
@@ -34,20 +34,20 @@ fun CategoryTypeSelectionToggle(
         categoryTypeEntries.forEach { categoryType ->
             CustomToggleButton(
                 text = categoryType.displayName,
-                isSelected = selectedCategoryType.value == categoryType,
+                isSelected = selectedCategoryType == categoryType,
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier
                     .weight(1f)
                     .border(
                         1.dp,
-                        if (selectedCategoryType.value == categoryType) MaterialTheme.colorScheme.secondary else MaterialTheme.extendedColors.primaryBorder,
+                        if (selectedCategoryType == categoryType) MaterialTheme.colorScheme.secondary else MaterialTheme.extendedColors.primaryBorder,
                         RoundedCornerShape(24.dp)
                     )
                     .padding(vertical = 12.dp)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = { selectedCategoryType.value = categoryType }
+                        onClick = { onChange(categoryType) }
                     ),
                 fontStyle = MaterialTheme.typography.bodyMedium.copy(
                     fontSize = 14.sp, fontWeight = FontWeight.Medium

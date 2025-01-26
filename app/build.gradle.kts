@@ -135,7 +135,7 @@ dependencies {
      * FOR VIEW MODEL AND LIVE DATA
      */
 
-// ViewModel
+    // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 // ViewModel utilities for Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -241,9 +241,6 @@ dependencies {
     implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
 
 
-    // Photo View with gesture
-    implementation ("io.github.fornewid:photo-compose:1.0.1")
-
     // WorkManager for background tasks
     implementation ("androidx.work:work-runtime-ktx:2.10.0")
 
@@ -255,6 +252,4 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation("androidx.room:room-paging:$2.6.1")
-
-    implementation ("io.github.ehsannarmani:compose-charts:0.1.0")
 }

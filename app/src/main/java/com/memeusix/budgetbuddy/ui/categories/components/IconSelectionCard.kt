@@ -27,6 +27,7 @@ import coil.compose.AsyncImage
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.data.model.responseModel.CustomIconModel
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
+import com.memeusix.budgetbuddy.utils.getColor
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -54,12 +55,6 @@ fun IconSelectionCard(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        val iconModifierBase = Modifier
-            .padding(5.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.extendedColors.imageBg)
-            .size(38.dp)
-
 
         icons.forEach { icon ->
             val isSelected = selectedIcon.value.id == icon.id
@@ -71,7 +66,14 @@ fun IconSelectionCard(
                 model = icon.path,
                 contentDescription = null,
                 placeholder = painterResource(R.drawable.ic_loading),
-                modifier = iconModifierBase
+                modifier = Modifier
+                    .padding(5.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        getColor(icon.icFillColor).copy(alpha = 0.2f)
+                            ?: MaterialTheme.extendedColors.imageBg
+                    )
+                    .size(38.dp)
                     .clickable(interactionSource = null, indication = null) {
                         selectedIcon.value = icon
                     }

@@ -1,6 +1,7 @@
 package com.memeusix.budgetbuddy.ui.dashboard.home.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,12 +22,17 @@ import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.DrawableEndText
 import com.memeusix.budgetbuddy.components.VerticalSpace
+import com.memeusix.budgetbuddy.data.model.responseModel.CategoryInsightsResponseModel
 import com.memeusix.budgetbuddy.ui.theme.Dark15
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.roundedBorder
 
 @Composable
-fun CategoryInsightCard() {
+fun CategoryInsightCard(
+    selectedType: String,
+    onClick: () -> Unit,
+    categoryInsights: List<CategoryInsightsResponseModel>
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,15 +42,18 @@ fun CategoryInsightCard() {
             .padding(16.dp)
     ) {
         Column {
-            CategoryHeaderRow()
+            CategoryHeaderRow(
+                selectedType = selectedType,
+                onClick = onClick
+            )
             VerticalSpace(20.dp)
-            PieChartRow()
+            PieChartRow(categoryInsights)
         }
     }
 }
 
 @Composable
-private fun CategoryHeaderRow() {
+private fun CategoryHeaderRow(selectedType: String, onClick: () -> Unit) {
     Row(
         Modifier
             .fillMaxWidth(),
@@ -57,7 +66,7 @@ private fun CategoryHeaderRow() {
             )
         )
         DrawableEndText(
-            text = "Income",
+            text = selectedType,
             icon = R.drawable.ic_arrow_down,
             iconSize = 22.dp,
             textSize = 12.sp,
@@ -66,6 +75,8 @@ private fun CategoryHeaderRow() {
             modifier = Modifier
                 .fillMaxHeight()
                 .roundedBorder(40.dp)
+                .clip(RoundedCornerShape(40))
+                .clickable(onClick = onClick)
                 .padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
         )
     }
@@ -73,13 +84,13 @@ private fun CategoryHeaderRow() {
 
 
 @Composable
-private fun PieChartRow() {
+private fun PieChartRow(categoryList: List<CategoryInsightsResponseModel>) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Chart()
+        Chart(categoryList)
         StartEndDateColumn()
     }
 }

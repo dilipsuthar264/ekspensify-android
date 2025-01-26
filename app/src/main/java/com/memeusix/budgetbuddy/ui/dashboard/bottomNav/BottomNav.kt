@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,8 +31,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.memeusix.budgetbuddy.components.AppBar
-import com.memeusix.budgetbuddy.components.ThemeToggle
 import com.memeusix.budgetbuddy.navigation.CreateTransactionScreenRoute
 import com.memeusix.budgetbuddy.ui.acounts.viewModel.AccountViewModel
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
@@ -43,6 +40,7 @@ import com.memeusix.budgetbuddy.ui.dashboard.bottomNav.components.ExpandableFab
 import com.memeusix.budgetbuddy.ui.dashboard.budget.BudgetScreen
 import com.memeusix.budgetbuddy.ui.dashboard.budget.viewModel.BudgetViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.home.HomeScreen
+import com.memeusix.budgetbuddy.ui.dashboard.home.viewModel.HomeViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.profile.ProfileScreen
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.TransactionScreen
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.viewmodel.TransactionViewModel
@@ -55,10 +53,11 @@ import com.onesignal.OneSignal
 @Composable
 fun BottomNav(
     navController: NavHostController,
-    categoryViewModel: CategoryViewModel = hiltViewModel(),
-    accountViewModel: AccountViewModel = hiltViewModel(),
+    categoryViewModel: CategoryViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
+    accountViewModel: AccountViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
     transactionViewModel: TransactionViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
-    budgetViewModel: BudgetViewModel = hiltViewModel(navController.getViewModelStoreOwner())
+    budgetViewModel: BudgetViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
+    homeViewModel: HomeViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
     var currentIndex by rememberSaveable { mutableIntStateOf(0) }
     var isFabExpanded by rememberSaveable { mutableStateOf(false) }
@@ -73,6 +72,8 @@ fun BottomNav(
                     accountViewModel.getAllAccounts()
                     budgetViewModel.refreshBudgets()
                     transactionViewModel.closeDialog()
+                    homeViewModel.getAcSummary()
+                    homeViewModel.getCategoryInsights()
 //                    savedStateHandle.remove<Boolean>(NavigationRequestKeys.REFRESH_TRANSACTION)
                     savedStateHandle[NavigationRequestKeys.REFRESH_TRANSACTION] = false
                 }

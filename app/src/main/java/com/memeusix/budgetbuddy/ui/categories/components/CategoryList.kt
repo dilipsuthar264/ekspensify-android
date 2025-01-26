@@ -30,6 +30,7 @@ import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.ui.theme.Red75
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 import com.memeusix.budgetbuddy.utils.getCategoryType
+import com.memeusix.budgetbuddy.utils.getColor
 
 
 @Composable
@@ -64,7 +65,7 @@ fun CategoryList(
                 title = category.name.orEmpty(),
                 subtitle = subtitle,
                 leadingContent = {
-                    CategoryIcon(category.icon)
+                    CategoryIcon(category.icon, getColor(category.icFillColor).copy(alpha = 0.2f))
                 },
                 modifier = Modifier
                     .animateItem(fadeInSpec = null, fadeOutSpec = null)

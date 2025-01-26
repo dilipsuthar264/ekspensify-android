@@ -118,4 +118,6 @@
     <string name="close_budget">Close Budget</string>
     <string name="delete_budget">Delete Budget</string>
     <string name="create_budget">Create Budget</string>
+    <string name="category_type">Category Type</string>
+    <string name="time_period">Time Period</string>
 </resources>

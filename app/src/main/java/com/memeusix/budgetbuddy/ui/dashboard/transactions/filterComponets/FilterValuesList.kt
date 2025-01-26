@@ -44,9 +44,9 @@ fun FilterValuesList(item: Serializable, isSelected: Boolean, onClick: () -> Uni
         title = when (item) {
             is CategoryResponseModel -> item.name.orEmpty()
             is AccountResponseModel -> item.name.orEmpty()
-            is DateRange -> item.displayText
-            is AmountRange -> item.displayText
-            is SortBy -> item.displayText
+            is DateRange -> item.displayName
+            is AmountRange -> item.displayName
+            is SortBy -> item.displayName
             is TransactionType -> item.displayName
             else -> item.toString()
         },

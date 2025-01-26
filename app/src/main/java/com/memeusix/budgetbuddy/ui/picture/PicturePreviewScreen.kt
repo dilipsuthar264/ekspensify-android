@@ -42,11 +42,8 @@ import com.memeusix.budgetbuddy.utils.singleClick
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToast
 import com.memeusix.budgetbuddy.utils.toastUtils.CustomToastModel
 import com.memeusix.budgetbuddy.utils.toastUtils.ToastType
-import soup.compose.photo.ExperimentalPhotoApi
-import soup.compose.photo.PhotoState
-import soup.compose.photo.rememberPhotoState
 
-@OptIn(ExperimentalPhotoApi::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PicturePreviewScreen(
     args: PicturePreviewScreenRoute,
@@ -55,7 +52,6 @@ fun PicturePreviewScreen(
     val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
     CustomToast(toastState)
 
-    val photoState = rememberPhotoState()
     val image = rememberAsyncImagePainter(args.image)
 
     var isLoading by remember { mutableStateOf(false) }
@@ -88,7 +84,6 @@ fun PicturePreviewScreen(
     }
 
     PicturePreviewUI(
-        photoState = photoState,
         image = image,
         isLoading = isLoading,
         onDownload = singleClick {
@@ -105,9 +100,7 @@ fun PicturePreviewScreen(
 }
 
 @Composable
-@OptIn(ExperimentalPhotoApi::class)
 private fun PicturePreviewUI(
-    photoState: PhotoState,
     image: AsyncImagePainter,
     isLoading: Boolean,
     onDownload: () -> Unit

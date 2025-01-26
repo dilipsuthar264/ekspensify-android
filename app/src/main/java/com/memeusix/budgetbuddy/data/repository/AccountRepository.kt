@@ -3,8 +3,11 @@ package com.memeusix.budgetbuddy.data.repository
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.BaseRepository
 import com.memeusix.budgetbuddy.data.model.requestModel.AccountRequestModel
+import com.memeusix.budgetbuddy.data.model.requestModel.InsightsQueryModel
+import com.memeusix.budgetbuddy.data.model.responseModel.AcSummaryResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.services.AccountApi
+import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.getFormattedDateRange
 import javax.inject.Inject
 
 class AccountRepository @Inject constructor(
@@ -35,5 +38,15 @@ class AccountRepository @Inject constructor(
 
     suspend fun getAllAccounts(): ApiResponse<List<AccountResponseModel>> {
         return handleResponse { accountApi.getAllAccounts() }
+    }
+
+    suspend fun getSummary(insightsQueryModel: InsightsQueryModel): ApiResponse<AcSummaryResponseModel> {
+        val (startDate, endDate) = insightsQueryModel.dateRange.getFormattedDateRange()
+        return handleResponse {
+            accountApi.getSummary(
+                startDate = startDate,
+                endDate = endDate
+            )
+        }
     }
 }

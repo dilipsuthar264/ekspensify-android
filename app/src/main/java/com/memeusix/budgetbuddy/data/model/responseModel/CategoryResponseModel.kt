@@ -27,6 +27,10 @@ data class CategoryResponseModel(
     @Expose
     var icon: String? = null,
 
+    @SerializedName("ic_fill_color")
+    @Expose
+    val icFillColor: String? = null,
+
     @SerializedName("icon_id")
     @Expose
     var iconId: Int? = null,

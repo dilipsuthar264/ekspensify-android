@@ -2,9 +2,12 @@ package com.memeusix.budgetbuddy.data.repository
 
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.BaseRepository
+import com.memeusix.budgetbuddy.data.model.requestModel.InsightsQueryModel
+import com.memeusix.budgetbuddy.data.model.responseModel.CategoryInsightsResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CustomIconModel
 import com.memeusix.budgetbuddy.data.services.CategoryApi
+import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.getFormattedDateRange
 import javax.inject.Inject
 
 class CategoryRepository @Inject constructor(
@@ -29,5 +32,18 @@ class CategoryRepository @Inject constructor(
         categoryId: Int
     ): ApiResponse<CategoryResponseModel> {
         return handleResponse { categoryApi.deleteCategory(categoryId) }
+    }
+
+    suspend fun getCategoryInsights(
+        insightsQueryModel: InsightsQueryModel
+    ): ApiResponse<List<CategoryInsightsResponseModel>> {
+        return handleResponse {
+            val (startDate, endDate) = insightsQueryModel.dateRange.getFormattedDateRange()
+            categoryApi.getCategoryInsights(
+                type = insightsQueryModel.type.name,
+                startDate = startDate,
+                endDate = endDate
+            )
+        }
     }
 }

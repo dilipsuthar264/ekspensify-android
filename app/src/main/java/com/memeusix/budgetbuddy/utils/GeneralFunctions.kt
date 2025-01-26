@@ -1,5 +1,6 @@
 package com.memeusix.budgetbuddy.utils
 
+
 import android.content.Context
 import android.net.Uri
 import android.view.Gravity
@@ -7,6 +8,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -27,6 +29,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import kotlin.math.min
+import android.graphics.Color as AndroidColor
 
 const val TAG: String = "GENERAL FUNCTIONS"
 
@@ -201,4 +204,16 @@ fun spacedByWithFooter(space: Dp) = object : Arrangement.Vertical {
 fun formatBudgetId(id: Int?): String {
     if (id == null) return ""
     return "BGT #$id"
+}
+
+fun getColor(colorCode: String?, defaultColor: Color = Color.Gray): Color {
+    return if (colorCode.isNullOrEmpty()) {
+        defaultColor
+    } else {
+        try {
+            Color(AndroidColor.parseColor(colorCode))
+        } catch (e: IllegalArgumentException) {
+            defaultColor
+        }
+    }
 }

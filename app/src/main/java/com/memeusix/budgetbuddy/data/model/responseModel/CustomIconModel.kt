@@ -19,5 +19,10 @@ data class CustomIconModel(
 
     @SerializedName("path")
     @Expose
-    var path: String? = null
+    var path: String? = null,
+
+    @SerializedName("ic_fill_color")
+    @Expose
+    val icFillColor: String? = null
+
 ) : Serializable

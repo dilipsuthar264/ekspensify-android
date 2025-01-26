@@ -35,7 +35,6 @@ import com.memeusix.budgetbuddy.ui.categories.components.IconSelectionCard
 import com.memeusix.budgetbuddy.ui.categories.components.SelectAnyIconText
 import com.memeusix.budgetbuddy.ui.categories.components.ShowIconLoader
 import com.memeusix.budgetbuddy.ui.categories.viewmodel.CategoryViewModel
-import com.memeusix.budgetbuddy.utils.CategoryType
 import com.memeusix.budgetbuddy.utils.ErrorReason
 import com.memeusix.budgetbuddy.utils.dynamicImePadding
 import com.memeusix.budgetbuddy.utils.getViewModelStoreOwner
@@ -55,7 +54,7 @@ fun CreateCategoryScreen(
     CustomToast(toastState)
 
 
-    val selectedCategoryType = remember { mutableStateOf(CategoryType.DEBIT) }
+    val selectedCategoryType by viewModel.selectedCategoryType.collectAsStateWithLifecycle()
     val nameState = remember { mutableStateOf(TextFieldStateModel()) }
     val selectedIcon = remember { mutableStateOf(CustomIconModel()) }
 
@@ -128,7 +127,12 @@ fun CreateCategoryScreen(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CategoryTypeSelectionToggle(selectedCategoryType)
+                CategoryTypeSelectionToggle(
+                    selectedCategoryType = selectedCategoryType,
+                    onChange = {
+                        viewModel.updateSelectedCategoryType(it)
+                    }
+                )
                 CustomOutlineTextField(
                     state = nameState,
                     placeholder = stringResource(R.string.name),
@@ -140,7 +144,8 @@ fun CreateCategoryScreen(
                     ShowIconLoader(
                         Modifier
                             .size(32.dp)
-                            .align(Alignment.CenterHorizontally))
+                            .align(Alignment.CenterHorizontally)
+                    )
                 }
                 if (icons.value.isNotEmpty()) {
                     IconSelectionCard(
@@ -158,7 +163,7 @@ fun CreateCategoryScreen(
                 onClick = {
                     val categoryResponse = CategoryResponseModel(
                         name = nameState.value.text.trim(),
-                        type = selectedCategoryType.value.getValue(),
+                        type = selectedCategoryType.getValue(),
                         iconId = selectedIcon.value.iconId
                     )
                     viewModel.createCategory(categoryResponse)

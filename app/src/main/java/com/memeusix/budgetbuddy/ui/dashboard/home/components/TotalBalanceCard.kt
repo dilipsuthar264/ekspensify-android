@@ -2,6 +2,7 @@ package com.memeusix.budgetbuddy.ui.dashboard.home.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +33,12 @@ import com.memeusix.budgetbuddy.ui.theme.Light100
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
 
 @Composable
-fun TotalBalanceCard() {
+fun TotalBalanceCard(
+    total: String,
+    income: String,
+    expense: String,
+    onClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .padding(horizontal = 20.dp)
@@ -44,20 +50,19 @@ fun TotalBalanceCard() {
             modifier = Modifier.padding(10.dp)
         ) {
             VerticalSpace(10.dp)
-            HeaderRow()
-
-            AmountText("2500", size = 32.sp, modifier = Modifier.padding(horizontal = 16.dp))
+            HeaderRow(onClick)
+            AmountText(total, size = 32.sp, modifier = Modifier.padding(horizontal = 16.dp))
             VerticalSpace(16.dp)
             BalanceDetailsRow(
-                "1335",
-                "151315"
+                income,
+                expense
             )
         }
     }
 }
 
 @Composable
-fun HeaderRow() {
+fun HeaderRow(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -70,7 +75,8 @@ fun HeaderRow() {
         )
         Icon(
             rememberAsyncImagePainter(R.drawable.ic_arrow_right_long),
-            contentDescription = ""
+            contentDescription = "",
+            modifier = Modifier.clickable(onClick = onClick)
         )
     }
 }

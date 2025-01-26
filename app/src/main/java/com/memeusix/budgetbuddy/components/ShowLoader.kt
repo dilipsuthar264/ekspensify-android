@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ShowLoader(isLoading: Boolean) {
+fun ShowLoader(isLoading: Boolean, isAllowClick: Boolean = false) {
 
     if (isLoading) {
         val keyboardController = LocalSoftwareKeyboardController.current
@@ -37,8 +37,13 @@ fun ShowLoader(isLoading: Boolean) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Transparent)
-                .pointerInput(Unit) {
-                    detectTapGestures { }
+                .let {
+                    if (!isAllowClick)
+                        it.pointerInput(Unit) {
+                            detectTapGestures { }
+                        }
+                    else
+                        it
                 },
             contentAlignment = Alignment.Center
         ) {

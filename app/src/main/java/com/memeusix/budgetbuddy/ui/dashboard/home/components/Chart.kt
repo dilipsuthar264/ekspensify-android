@@ -8,16 +8,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastSumBy
+import com.memeusix.budgetbuddy.data.model.responseModel.CategoryInsightsResponseModel
+import com.memeusix.budgetbuddy.utils.getColor
 
 @Composable
-fun Chart() {
+fun Chart(items: List<CategoryInsightsResponseModel>) {
     Canvas(
         modifier = Modifier
             .size(150.dp)
@@ -29,16 +31,14 @@ fun Chart() {
             val strokeWidth = radius * .6f
             var startAngle = 0f
 
-            val items = listOf(254, 5002, 715, 1050, 235)
-
-            val total = items.sum()
+            val total = items.fastSumBy { it.amount ?: 0 }
 
 
-            items.forEach {
-                val sweepAngle = (it.toFloat() / total) * 360f
+            items.forEach { item ->
+                val sweepAngle = ((item.amount ?: 0).toFloat() / total) * 360f
                 val gap = 2f
                 drawArc(
-                    color = Color.Gray,
+                    color = getColor(item.category?.icFillColor),
                     startAngle = startAngle + gap,
                     sweepAngle = sweepAngle - gap * 2,
                     useCenter = false,

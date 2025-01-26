@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.memeusix.budgetbuddy.data.ApiResponse
 import com.memeusix.budgetbuddy.data.BaseViewModel
 import com.memeusix.budgetbuddy.data.model.requestModel.AccountRequestModel
+import com.memeusix.budgetbuddy.data.model.responseModel.AcSummaryResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountListModel
 import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.repository.AccountRepository
@@ -27,9 +28,6 @@ class AccountViewModel @Inject constructor(
         MutableStateFlow<ApiResponse<List<AccountResponseModel>>>(ApiResponse.idle())
     val getAllAccounts = _getAllAccounts.asStateFlow()
 
-    init {
-        loadAccounts()
-    }
 
     private fun loadAccounts() {
         spUtilsManager.accountData.value?.accounts?.takeIf { it.isNotEmpty() }?.let {
@@ -45,9 +43,16 @@ class AccountViewModel @Inject constructor(
             val response = handleData(_getAllAccounts.value) { accountRepository.getAllAccounts() }
             if (response is ApiResponse.Success) {
                 spUtilsManager.updateAccountData(AccountListModel(response.data.orEmpty()))
+                spUtilsManager.updateUser(spUtilsManager.user.value?.copy(accounts = response.data?.size))
             }
             _getAllAccounts.value = response
         }
+    }
+
+
+
+    init {
+        loadAccounts()
     }
 
 

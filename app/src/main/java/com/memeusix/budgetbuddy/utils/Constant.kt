@@ -1,6 +1,7 @@
 package com.memeusix.budgetbuddy.utils
 
 import androidx.compose.ui.graphics.Color
+import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.Displayable
 import com.memeusix.budgetbuddy.ui.theme.Light20
 import com.memeusix.budgetbuddy.ui.theme.Teal
 
@@ -18,7 +19,7 @@ enum class AccountType {
     }
 }
 
-enum class CategoryType(val displayName: String) {
+enum class CategoryType(override val displayName: String) : Displayable {
     DEBIT("Expense"),
     CREDIT("Income"),
     BOTH("Both");
@@ -27,6 +28,12 @@ enum class CategoryType(val displayName: String) {
         return when (this) {
             BOTH -> null
             else -> this.name
+        }
+    }
+
+    companion object {
+        fun getEntriesWithNoBoth(): List<CategoryType> {
+            return entries.filter { it != BOTH }
         }
     }
 }
@@ -38,7 +45,7 @@ object NavigationRequestKeys {
     const val REFRESH_TRANSACTION = "REFRESH_TRANSACTION"
 }
 
-enum class TransactionType(val displayName: String) {
+enum class TransactionType(override val displayName: String) : Displayable {
     DEBIT("Expense"),
     CREDIT("Income");
 
@@ -64,7 +71,7 @@ object ErrorReason {
     const val ICON_NOT_FOUND = "ICON_NOT_FOUND"
 }
 
-enum class BudgetType(val displayName: String, val description: String) {
+enum class BudgetType(override val displayName: String, val description: String) : Displayable {
     RECURRING(
         "Recurring Budget",
         "Recurring budgets run continuously without an expiration date."
@@ -75,7 +82,7 @@ enum class BudgetType(val displayName: String, val description: String) {
     )
 }
 
-enum class BudgetStatus(val displayName: String, val color: Color) {
+enum class BudgetStatus(override val displayName: String, val color: Color) : Displayable {
     RUNNING("Running", Teal),
     CLOSED("Closed", Light20)
 }
@@ -85,7 +92,7 @@ enum class DatePickerType() {
     END_DATE
 }
 
-enum class BudgetPeriod(val displayName: String) {
+enum class BudgetPeriod(override val displayName: String) : Displayable {
     DAILY("Daily"),
     WEEKLY("Weekly"),
     MONTHLY("Monthly"),
