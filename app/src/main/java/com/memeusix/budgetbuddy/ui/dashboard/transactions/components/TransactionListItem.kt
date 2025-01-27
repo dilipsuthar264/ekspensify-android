@@ -21,6 +21,7 @@ import com.memeusix.budgetbuddy.utils.DateFormat
 import com.memeusix.budgetbuddy.utils.TransactionType
 import com.memeusix.budgetbuddy.utils.formatDateTime
 import com.memeusix.budgetbuddy.utils.formatRupees
+import com.memeusix.budgetbuddy.utils.getColor
 
 @Composable
 fun TransactionListItem(
@@ -35,7 +36,7 @@ fun TransactionListItem(
         subtitle = transaction?.account?.name.orEmpty(),
         desc = transaction?.note.orEmpty(),
         leadingContent = {
-            CategoryIcon(transaction?.category?.icon)
+            CategoryIcon(transaction?.category?.icon, getColor(transaction?.category?.icFillColor).copy(alpha = 0.2f))
         },
         trailingContent = {
             TransactionTrailingContent(transaction)

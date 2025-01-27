@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastSumBy
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryInsightsResponseModel
+import com.memeusix.budgetbuddy.ui.theme.EmptyGrey
 import com.memeusix.budgetbuddy.utils.getColor
 
 @Composable
@@ -32,15 +33,12 @@ fun Chart(items: List<CategoryInsightsResponseModel>) {
             var startAngle = 0f
 
             val total = items.fastSumBy { it.amount ?: 0 }
-
-
-            items.forEach { item ->
-                val sweepAngle = ((item.amount ?: 0).toFloat() / total) * 360f
-                val gap = 2f
+            println(total)
+            if (items.isEmpty()) {
                 drawArc(
-                    color = getColor(item.category?.icFillColor),
-                    startAngle = startAngle + gap,
-                    sweepAngle = sweepAngle - gap * 2,
+                    color = EmptyGrey,
+                    startAngle = 0f,
+                    sweepAngle = 360f,
                     useCenter = false,
                     topLeft = Offset(strokeWidth / 2, strokeWidth / 2),
                     size = Size(width - strokeWidth, width - strokeWidth),
@@ -51,8 +49,28 @@ fun Chart(items: List<CategoryInsightsResponseModel>) {
                         join = StrokeJoin.Round
                     )
                 )
-                startAngle += sweepAngle
+            } else {
+                items.forEach { item ->
+                    val sweepAngle = ((item.amount ?: 0).toFloat() / total) * 360f
+                    val gap = if (items.size == 1) 0f else 2f
+                    drawArc(
+                        color = getColor(item.category?.icFillColor),
+                        startAngle = startAngle + gap,
+                        sweepAngle = sweepAngle - gap * 2,
+                        useCenter = false,
+                        topLeft = Offset(strokeWidth / 2, strokeWidth / 2),
+                        size = Size(width - strokeWidth, width - strokeWidth),
+                        style = Stroke(
+                            strokeWidth,
+                            cap = StrokeCap.Butt,
+                            pathEffect = PathEffect.cornerPathEffect(10f),
+                            join = StrokeJoin.Round
+                        )
+                    )
+                    startAngle += sweepAngle
+                }
             }
         }
     }
 }
+

@@ -16,21 +16,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.memeusix.budgetbuddy.R
 import com.memeusix.budgetbuddy.components.DrawableEndText
 import com.memeusix.budgetbuddy.components.VerticalSpace
+import com.memeusix.budgetbuddy.data.model.requestModel.InsightsQueryModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryInsightsResponseModel
+import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.getFormattedDateRange
 import com.memeusix.budgetbuddy.ui.theme.Dark15
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
+import com.memeusix.budgetbuddy.utils.DateFormat
+import com.memeusix.budgetbuddy.utils.formatLocalDateTime
+import com.memeusix.budgetbuddy.utils.formatZonedDateTime
 import com.memeusix.budgetbuddy.utils.roundedBorder
 
 @Composable
 fun CategoryInsightCard(
     selectedType: String,
     onClick: () -> Unit,
+    query: InsightsQueryModel,
     categoryInsights: List<CategoryInsightsResponseModel>
 ) {
     Box(
@@ -47,7 +54,7 @@ fun CategoryInsightCard(
                 onClick = onClick
             )
             VerticalSpace(20.dp)
-            PieChartRow(categoryInsights)
+            PieChartRow(categoryInsights, query)
         }
     }
 }
@@ -60,9 +67,9 @@ private fun CategoryHeaderRow(selectedType: String, onClick: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            "Category Insight",
-            style = MaterialTheme.typography.titleSmall.copy(
-                fontWeight = FontWeight.SemiBold
+            stringResource(R.string.breakdown),
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontWeight = FontWeight.SemiBold,
             )
         )
         DrawableEndText(
@@ -84,25 +91,30 @@ private fun CategoryHeaderRow(selectedType: String, onClick: () -> Unit) {
 
 
 @Composable
-private fun PieChartRow(categoryList: List<CategoryInsightsResponseModel>) {
+private fun PieChartRow(
+    categoryList: List<CategoryInsightsResponseModel>,
+    query: InsightsQueryModel
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Chart(categoryList)
-        StartEndDateColumn()
+        StartEndDateColumn(query)
     }
 }
 
 @Composable
-private fun StartEndDateColumn() {
+private fun StartEndDateColumn(query: InsightsQueryModel) {
+    val (startDateTime, endDateTime) = query.dateRange.getFormattedDateRange()
     Column(
         horizontalAlignment = Alignment.End,
     ) {
-        DateLabel("Start Date", "14 jan, 2025")
+        println(query.dateRange.getFormattedDateRange())
+        DateLabel("from", startDateTime.formatZonedDateTime(DateFormat.dd_MMM_yyyy_))
         VerticalSpace(20.dp)
-        DateLabel("End Date", "15 dec, 2025")
+        DateLabel("to", endDateTime.formatZonedDateTime(DateFormat.dd_MMM_yyyy_))
     }
 }
 

@@ -55,41 +55,45 @@ fun DateRange.getFormattedDateRange(): Pair<String?, String?> {
     val today = LocalDate.now()
 
     fun startOfDay(date: LocalDate) = date.atStartOfDay()
-    fun endOfDay(date: LocalDate) = startOfDay(date.plusDays(1))
+    fun endOfDay(date: LocalDate): String {
+        val endOfDay = date.atTime(23, 59, 59)
+        return endOfDay.format(formatter).removeSuffix("Z") + "Z"
+    }
+
     fun range(start: LocalDate, end: LocalDate) =
-        Pair(startOfDay(start).format(formatter), startOfDay(end).format(formatter))
+        Pair(startOfDay(start).format(formatter), endOfDay(end).format(formatter))
 
 
     return when (this) {
-        DateRange.TODAY -> range(today, today.plusDays(1))
+        DateRange.TODAY -> range(today, today)
 
-        DateRange.YESTERDAY -> range(today.minusDays(1), today)
+        DateRange.YESTERDAY -> range(today.minusDays(1), today.minusDays(1))
 
-        DateRange.THIS_MONTH -> range(today.withDayOfMonth(1), today.plusDays(1))
+        DateRange.THIS_MONTH -> range(today.withDayOfMonth(1), today)
 
         DateRange.LAST_MONTH -> {
             val startOfMonth = today.minusMonths(1).withDayOfMonth(1)
-            range(startOfMonth, startOfMonth.plusMonths(1))
+            range(startOfMonth, startOfMonth.plusMonths(1).minusDays(1))
         }
 
         DateRange.THIS_WEEK -> range(
             today.with(DayOfWeek.MONDAY),
-            today.plusDays(1)
+            today
         )
 
         DateRange.LAST_WEEK -> {
             val startOfLastWeek = today.with(DayOfWeek.MONDAY).minusWeeks(1)
-            range(startOfLastWeek, startOfLastWeek.plusWeeks(1))
+            range(startOfLastWeek, startOfLastWeek.plusWeeks(1).minusDays(1))
         }
 
         DateRange.THIS_YEAR -> range(
             today.withDayOfYear(1),
-            today.plusDays(1)
+            today
         )
 
         DateRange.LAST_YEAR -> {
             val startDateOfLastYear = today.minusYears(1).withDayOfYear(1)
-            range(startDateOfLastYear, startDateOfLastYear.plusYears(1))
+            range(startDateOfLastYear, startDateOfLastYear.plusYears(1).minusDays(1))
         }
 
         DateRange.CUSTOM -> Pair(null, null)

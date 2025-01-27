@@ -86,6 +86,7 @@ fun BalanceDetailsRow(income: String, expense: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 20.dp)
             .height(IntrinsicSize.Min)
             .background(
                 MaterialTheme.extendedColors.iconColor,

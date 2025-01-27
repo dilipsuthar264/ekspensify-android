@@ -24,16 +24,15 @@ import com.memeusix.budgetbuddy.components.PullToRefreshLayout
 import com.memeusix.budgetbuddy.components.ShowLoader
 import com.memeusix.budgetbuddy.components.VerticalSpace
 import com.memeusix.budgetbuddy.data.ApiResponse
-import com.memeusix.budgetbuddy.navigation.AccountScreenRoute
 import com.memeusix.budgetbuddy.navigation.AutoTrackingScreenRoute
 import com.memeusix.budgetbuddy.navigation.PendingTransactionRoute
 import com.memeusix.budgetbuddy.ui.dashboard.home.bottomSheets.HomeInsightsBottomSheetDialog
 import com.memeusix.budgetbuddy.ui.dashboard.home.components.AutoTrackingCard
+import com.memeusix.budgetbuddy.ui.dashboard.home.components.BalanceDetailsRow
 import com.memeusix.budgetbuddy.ui.dashboard.home.components.CategoryInsightCard
 import com.memeusix.budgetbuddy.ui.dashboard.home.components.HomeAppBar
 import com.memeusix.budgetbuddy.ui.dashboard.home.components.HorizontalAccountListItem
 import com.memeusix.budgetbuddy.ui.dashboard.home.components.InsightsCategoryItem
-import com.memeusix.budgetbuddy.ui.dashboard.home.components.TotalBalanceCard
 import com.memeusix.budgetbuddy.ui.dashboard.home.viewModel.HomeViewModel
 import com.memeusix.budgetbuddy.ui.dashboard.transactions.data.DateRange
 import com.memeusix.budgetbuddy.utils.CategoryType
@@ -119,21 +118,6 @@ fun HomeScreen(
                     )
                 }
                 item {
-                    val summaryData = getAcSummary.data
-                    this@Column.AnimatedVisibility(
-                        visible = summaryData != null
-                    ) {
-                        TotalBalanceCard(
-                            total = summaryData?.total.toString(),
-                            income = summaryData?.credit?.toString() ?: "0",
-                            expense = summaryData?.debit?.toString() ?: "0",
-                            onClick = {
-                                navController.navigate(AccountScreenRoute(isFromProfile = true))
-                            }
-                        )
-                    }
-                }
-                item {
                     val accounts = getAccounts?.accounts.orEmpty()
                     this@Column.AnimatedVisibility(
                         visible = accounts.isNotEmpty()
@@ -149,19 +133,35 @@ fun HomeScreen(
                         }
                     }
                 }
-                val categoryInsights = getCategoryInsights.data.orEmpty()
                 item {
+                    val summaryData = getAcSummary.data
                     this@Column.AnimatedVisibility(
-                        visible = categoryInsights.isNotEmpty()
+                        visible = summaryData != null
                     ) {
-                        CategoryInsightCard(
-                            selectedType = selectedQuery.type.displayName,
-                            onClick = {
-                                showCategoryTypeOptions = true
-                            },
-                            categoryInsights
+//                        TotalBalanceCard(
+//                            total = summaryData?.total.toString(),
+//                            income = summaryData?.credit?.toString() ?: "0",
+//                            expense = summaryData?.debit?.toString() ?: "0",
+//                            onClick = {
+//                                navController.navigate(AccountScreenRoute(isFromProfile = true))
+//                            }
+//                        )
+                        BalanceDetailsRow(
+                            income = summaryData?.credit.toString(),
+                            expense = summaryData?.debit.toString()
                         )
                     }
+                }
+                val categoryInsights = getCategoryInsights.data.orEmpty()
+                item {
+                    CategoryInsightCard(
+                        selectedType = selectedQuery.type.displayName,
+                        onClick = {
+                            showCategoryTypeOptions = true
+                        },
+                        selectedQuery,
+                        categoryInsights
+                    )
                 }
                 items(categoryInsights) { item ->
                     InsightsCategoryItem(item)

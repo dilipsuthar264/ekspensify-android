@@ -50,6 +50,17 @@ fun String?.formatLocalDateTime(pattern: String = DateFormat.MMM_dd_yyyy_hh_mm_a
     return dateTime.format(formatter)
 }
 
+fun String?.formatZonedDateTime(pattern: String =DateFormat.MMM_dd_yyyy_hh_mm_a): String {
+    val formatter = DateTimeFormatter.ofPattern(pattern)
+
+    // Parse the string into a ZonedDateTime object
+    val dateTime = ZonedDateTime.parse(this, DateTimeFormatter.ISO_ZONED_DATE_TIME)
+
+    // Format the ZonedDateTime as per the given pattern
+    return dateTime.format(formatter)
+}
+
+
 object DateFormat {
     const val INPUT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
     const val dd_MMM_yyyy_hh_mm_a = "dd-MMM-yyyy hh:mm a"

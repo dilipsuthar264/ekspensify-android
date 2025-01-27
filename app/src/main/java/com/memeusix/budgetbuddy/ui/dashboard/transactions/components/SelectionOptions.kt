@@ -25,6 +25,7 @@ import com.memeusix.budgetbuddy.data.model.responseModel.AccountResponseModel
 import com.memeusix.budgetbuddy.data.model.responseModel.CategoryResponseModel
 import com.memeusix.budgetbuddy.ui.acounts.data.BankModel
 import com.memeusix.budgetbuddy.ui.theme.extendedColors
+import com.memeusix.budgetbuddy.utils.getColor
 
 @Composable
 fun SelectionOptions(
@@ -46,6 +47,8 @@ fun SelectionOptions(
             }
         }
     }
+    val iconBg =
+        if (isCategory) getColor(selectedCategory?.icFillColor).copy(0.2f) else MaterialTheme.extendedColors.imageBg
 
     val (icon, title) = iconAndTitle ?: (null to null)
 
@@ -77,7 +80,7 @@ fun SelectionOptions(
         CustomListItem(
             leadingContent = {
                 if (icon != null) {
-                    ListIcon(icon)
+                    ListIcon(icon, bgColor = iconBg)
                 }
             },
             enable = !disable,

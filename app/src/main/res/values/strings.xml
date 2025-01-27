@@ -120,4 +120,6 @@
     <string name="create_budget">Create Budget</string>
     <string name="category_type">Category Type</string>
     <string name="time_period">Time Period</string>
+    <string name="category_breakdown">Category Breakdown</string>
+    <string name="breakdown">Breakdown</string>
 </resources>

@@ -32,17 +32,19 @@ class InternetChecker @Inject constructor(
         }
     }
 
+    private fun updateNetworkStatus() {
+        val activityNetwork = connectivityManager.activeNetwork
+        val capability = connectivityManager.getNetworkCapabilities(activityNetwork)
+        isConnected.value =
+            capability?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
+                    && capability.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+    }
 
 
     fun startTracking() {
-        val activityNetwork = connectivityManager.activeNetwork
-        val capability = connectivityManager.getNetworkCapabilities(activityNetwork)
-
-        isConnected.value =
-            capability?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
-
         val request = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(request, netWorkCallBack)
+        updateNetworkStatus()
     }
 
     fun stopTracking() {
