@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">192.168.0.108</domain>
+        <domain includeSubdomains="true">192.168.19.124</domain>
+        <domain includeSubdomains="true">3.111.131.27</domain>
+        <domain includeSubdomains="true">api.esquaregames.in</domain>
+    </domain-config>
+</network-security-config>

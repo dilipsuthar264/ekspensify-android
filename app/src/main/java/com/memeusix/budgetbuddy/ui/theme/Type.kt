@@ -16,7 +16,14 @@ val interFontFamily = FontFamily(
     Font(R.font.inter__semi_bold, FontWeight.SemiBold),
     Font(R.font.inter__medium, FontWeight.Medium),
     Font(R.font.inter_black, FontWeight.Black),
-    // Add more fonts from the folder if needed
+)
+
+val fonartoFontFamily = FontFamily(
+    Font(R.font.fonarto_regular, FontWeight.Normal)
+)
+
+val goodlyFontFontFamily = FontFamily(
+    Font(R.font.goodly_semibold, FontWeight.SemiBold)
 )
 
 val Typography = Typography(
@@ -42,7 +49,7 @@ val Typography = Typography(
     ),
     bodyLarge = TextStyle(
         fontFamily = interFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp
     ),
     bodyMedium = TextStyle(

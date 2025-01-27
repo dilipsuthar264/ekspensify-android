@@ -1,98 +1,162 @@
 package com.memeusix.budgetbuddy.ui.auth.viewModel
 
 import android.content.Context
-import android.content.Intent
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.MutableState
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.memeusix.budgetbuddy.data.BaseModel
-import com.memeusix.budgetbuddy.data.model.AuthRequestModel
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+import com.memeusix.budgetbuddy.BuildConfig
+import com.memeusix.budgetbuddy.data.ApiResponse
+import com.memeusix.budgetbuddy.data.model.requestModel.AuthRequestModel
+import com.memeusix.budgetbuddy.data.model.responseModel.AuthResponseModel
+import com.memeusix.budgetbuddy.data.model.responseModel.UserResponseModel
 import com.memeusix.budgetbuddy.data.repository.AuthRepository
-import com.memeusix.budgetbuddy.utils.GoogleKeys
+import com.memeusix.budgetbuddy.utils.spUtils.SpUtilsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.security.MessageDigest
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    val spUtilsManager: SpUtilsManager
 ) : ViewModel() {
+
     companion object {
         val TAG = AuthViewModel::class.java.name
     }
 
-    /**
-     *  Login Api Calling
-     */
-    private val _login = MutableStateFlow<BaseModel<Any>>(BaseModel())
-    val login: StateFlow<BaseModel<Any>> = _login
+    //Login With Google
+    private val _signInWithGoogle =
+        MutableStateFlow<ApiResponse<AuthResponseModel>>(ApiResponse.idle())
+    val signInWithGoogle = _signInWithGoogle.asStateFlow()
+    fun signInWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            _signInWithGoogle.value = ApiResponse.loading()
+            _signInWithGoogle.value = authRepository.signInWithGoogle(idToken)
+            delay(500)
+            _signInWithGoogle.value = ApiResponse.idle()
+        }
+    }
+
+    //Register  With Google
+    private val _signUpWithGoogle =
+        MutableStateFlow<ApiResponse<AuthResponseModel>>(ApiResponse.idle())
+    val signUpWithGoogle = _signUpWithGoogle.asStateFlow()
+    fun signUpWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            _signUpWithGoogle.value = ApiResponse.loading()
+            _signUpWithGoogle.value = authRepository.signUpWithGoogle(idToken)
+            delay(500)
+            _signUpWithGoogle.value = ApiResponse.idle()
+        }
+    }
+
+    // Login Api Calling
+    private val _login = MutableStateFlow<ApiResponse<AuthResponseModel>>(ApiResponse.idle())
+    val login = _login.asStateFlow()
     fun login(authRequestModel: AuthRequestModel) {
         viewModelScope.launch {
-            _login.value = BaseModel.loading()
+            _login.value = ApiResponse.loading()
             _login.value = authRepository.login(authRequestModel)
+            delay(500)
+            _login.value = ApiResponse.idle()
         }
     }
 
 
-    /**
-     *  Register Api calling
-     */
-    private val _register = MutableStateFlow<BaseModel<Any>>(BaseModel())
-    val register : StateFlow<BaseModel<Any>> = _register
-
-    fun register(authRequestModel: AuthRequestModel){
+    // Register Api calling
+    private val _register = MutableStateFlow<ApiResponse<UserResponseModel>>(ApiResponse.idle())
+    val register = _register.asStateFlow()
+    fun register(authRequestModel: AuthRequestModel) {
         viewModelScope.launch {
-            _register.value = BaseModel.loading()
+            _register.value = ApiResponse.loading()
             _register.value = authRepository.register(authRequestModel)
+            delay(500)
+            _register.value = ApiResponse.idle()
         }
     }
 
-
-    /**
-     * Google sign in
-     */
-    private val _userAccount = mutableStateOf<GoogleSignInAccount?>(null)
-    val userAccount: State<GoogleSignInAccount?> = _userAccount
-    private lateinit var googleSignInClient: GoogleSignInClient
-
-    fun signInWithGoogle(context: Context, intentLauncher: (Intent) -> Unit) {
-        val googleSignInClient = GoogleSignIn.getClient(
-            context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(GoogleKeys.CLIENT_ID)
-                .build()
-        )
-        val signInIntent = googleSignInClient.signInIntent
-        googleSignInClient.signOut().addOnCompleteListener {
-            _userAccount.value = null
-        }
-        intentLauncher(signInIntent)
-    }
-    fun handleGoogleSignInResult(intent: Intent) {
+    // Send Otp Api calling
+    private val _sendOtp = MutableStateFlow<ApiResponse<Any>>(ApiResponse.idle())
+    val sendOtp = _sendOtp.asStateFlow()
+    fun sendOtp(authRequestModel: AuthRequestModel) {
         viewModelScope.launch {
+            _sendOtp.value = ApiResponse.loading()
+            _sendOtp.value = authRepository.sendOtp(authRequestModel)
+            delay(500)
+            _sendOtp.value = ApiResponse.idle()
+        }
+    }
+
+
+    // Google sign in
+    fun launchGoogleAuth(
+        context: Context,
+        coroutines: CoroutineScope,
+        loadingState: MutableState<Boolean>,
+        onResult: (String) -> Unit
+    ) {
+        loadingState.value = true
+
+        val credentialManager = CredentialManager.create(context)
+
+        val googleIdOptions: GetGoogleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(false)
+            .setServerClientId(BuildConfig.CLIENT_ID)
+            .setNonce(generateNonce())
+            .build()
+
+//        val googleIdOptions: GetSignInWithGoogleOption =
+//            GetSignInWithGoogleOption.Builder(BuildConfig.CLIENT_ID)
+//                .setNonce(generateNonce())
+//                .build()
+
+        val request: GetCredentialRequest = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOptions)
+            .build()
+
+        coroutines.launch {
             try {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(intent)
-                val account = task.getResult(ApiException::class.java)
-                _userAccount.value = account
-                Log.e(TAG, "handleGoogleSignInResult: ${account.email}")
-                Log.e(TAG, "handleGoogleSignInResult: ${account.displayName}")
-                Log.e(TAG, "handleGoogleSignInResult: ${account.idToken}")
-            } catch (e: ApiException) {
-                Log.e(TAG, "handleGoogleSignInResult: $e")
-                _userAccount.value = null
+                val result = credentialManager.getCredential(
+                    request = request,
+                    context = context,
+                )
+                val credential = result.credential
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                val googleIdToken = googleIdTokenCredential.idToken
+                // call back for result
+                onResult(googleIdToken)
+                loadingState.value = false
+            } catch (e: GetCredentialException) {
+                Log.e(TAG, "signInWithGoogle: $e")
+                loadingState.value = false
+            } catch (e: GoogleIdTokenParsingException) {
+                Log.e(TAG, "signInWithGoogle: $e")
+                loadingState.value = false
             }
         }
     }
 
+    private fun generateNonce(): String {
+        val rawNonce = UUID.randomUUID().toString()
+        val bytes = rawNonce.toByteArray()
+        val md = MessageDigest.getInstance("SHA-256")
+        val digest = md.digest(bytes)
+        val hashNonce = digest.fold("") { str, it -> str + "%02x".format(it) }
+        return hashNonce
+    }
 
 }
