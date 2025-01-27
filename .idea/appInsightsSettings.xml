@@ -23,10 +23,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.memeusix.budgetbuddy" />
-                  <option name="mobileSdkAppId" value="1:13427562784:android:7a5be9ab7be81983989f45" />
-                  <option name="projectId" value="budget-buddy-488ec" />
-                  <option name="projectNumber" value="13427562784" />
+                  <option name="appId" value="com.memeusix.ekspensify" />
+                  <option name="mobileSdkAppId" value="1:727578414899:android:c5107e39dd1d5a70cfb846" />
+                  <option name="projectId" value="ekspensify" />
+                  <option name="projectNumber" value="727578414899" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
