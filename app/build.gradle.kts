@@ -22,15 +22,15 @@ plugins {
 
 
 android {
-    namespace = "com.memeusix.budgetbuddy"
+    namespace = "com.memeusix.ekspensify"
     compileSdk = 35
 
     val properties = Properties()
     properties.load(project.rootProject.file("local.properties").inputStream())
     defaultConfig {
-        applicationId = "com.memeusix.budgetbuddy"
+        applicationId = "com.memeusix.ekspensify"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -117,12 +117,12 @@ dependencies {
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+//    androidTestImplementation(libs.androidx.junit)
+//    androidTestImplementation(libs.androidx.espresso.core)
+//    androidTestImplementation(platform(libs.androidx.compose.bom))
+//    androidTestImplementation(libs.androidx.ui.test.junit4)
+//    debugImplementation(libs.androidx.ui.tooling)
+//    debugImplementation(libs.androidx.ui.test.manifest)
 
     /**
      * FOR DAGGER HILT
@@ -228,11 +228,6 @@ dependencies {
 
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
 
-
-    /**
-     * Memory Leak
-     */
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
 
 
     /**
