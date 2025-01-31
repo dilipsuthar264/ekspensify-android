@@ -11,6 +11,13 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+buildCache {
+    local {
+        isEnabled = true
+    }
+}
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
@@ -23,4 +30,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Ekspensify"
 include(":app")
- 

@@ -86,7 +86,7 @@ fun ProfileScreen(
             onConfirm = {
                 isLogoutDialogOpen.value = false
                 navController.navigate(IntroScreenRoute) {
-                    popUpTo(0) { inclusive = true }
+                    popUpTo(0) { inclusive = false }
                 }
                 viewmodel.spUtilsManager.logout()
             }

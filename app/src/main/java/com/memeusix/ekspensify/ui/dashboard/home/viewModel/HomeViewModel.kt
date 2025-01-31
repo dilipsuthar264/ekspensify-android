@@ -20,8 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val spUtilsManager: SpUtilsManager,
-    val categoryRepository: CategoryRepository,
-    val accountRepository: AccountRepository
+    private val categoryRepository: CategoryRepository,
+    private val accountRepository: AccountRepository
 ) : ViewModel(), BaseViewModel {
 
     private val _insightsQueries = MutableStateFlow(InsightsQueryModel())
