@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.targets.js.npm.includedRange
 import java.util.Properties
 
 plugins {
@@ -20,7 +21,6 @@ plugins {
 
 
 
-
 android {
     namespace = "com.memeusix.ekspensify"
     compileSdk = 35
@@ -33,6 +33,7 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
+        multiDexEnabled = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -41,6 +42,15 @@ android {
 
         buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
         buildConfigField("String", "ONESIGNAL_APP_ID", properties.getProperty("ONESIGNAL_APP_ID"))
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(properties.getProperty("RELEASE_STORE_FILE"))
+            storePassword = properties.getProperty("RELEASE_STORE_PASSWORD")
+            keyAlias = properties.getProperty("RELEASE_KEY_ALIAS")
+            keyPassword = properties.getProperty("RELEASE_KEY_PASSWORD")
+        }
     }
 
     flavorDimensions += "base_url"
@@ -56,17 +66,21 @@ android {
         }
     }
 
+
+
     buildTypes {
         debug {
             isDebuggable = true
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            isDebuggable = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -116,7 +130,7 @@ dependencies {
     implementation(libs.androidx.ui.test.android)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
-    testImplementation(libs.junit)
+//    testImplementation(libs.junit)
 //    androidTestImplementation(libs.androidx.junit)
 //    androidTestImplementation(libs.androidx.espresso.core)
 //    androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -208,8 +222,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
 
     implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation ("io.coil-kt:coil-gif:2.1.0")
-    implementation ("com.airbnb.android:lottie-compose:6.1.0")
+    implementation("io.coil-kt:coil-gif:2.1.0")
+    implementation("com.airbnb.android:lottie-compose:6.1.0")
 
 
     implementation("androidx.compose.animation:animation:1.7.5")
@@ -229,7 +243,6 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
 
 
-
     /**
      * one signal
      */
@@ -237,7 +250,7 @@ dependencies {
 
 
     // WorkManager for background tasks
-    implementation ("androidx.work:work-runtime-ktx:2.10.0")
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
 
     /**
      * ROOM DATABASE

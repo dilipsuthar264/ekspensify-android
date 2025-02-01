@@ -21,6 +21,7 @@ loggingInterceptor = "5.0.0-alpha.3"
 navigationCompose = "2.8.5"
 okhttp = "5.0.0-alpha.3"
 playServicesAuth = "21.2.0"
+r8 = "8.7.18"
 roomRuntime = "2.6.1"
 uiTextGoogleFonts = "1.7.2"
 serialization = "1.6.3"
@@ -73,6 +74,7 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+r8 = { module = "com.android.tools:r8", version.ref = "r8" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }

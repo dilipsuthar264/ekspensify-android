@@ -21,4 +21,7 @@ buildscript {
         google()
         maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
     }
+    dependencies{
+        classpath (libs.r8)
+    }
 }

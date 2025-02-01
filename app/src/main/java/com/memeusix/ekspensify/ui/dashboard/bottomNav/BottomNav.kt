@@ -53,8 +53,8 @@ import com.onesignal.OneSignal
 @Composable
 fun BottomNav(
     navController: NavHostController,
-    categoryViewModel: CategoryViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
-    accountViewModel: AccountViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
+    categoryViewModel: CategoryViewModel = hiltViewModel(),
+    accountViewModel: AccountViewModel = hiltViewModel(),
     transactionViewModel: TransactionViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
     budgetViewModel: BudgetViewModel = hiltViewModel(navController.getViewModelStoreOwner()),
     homeViewModel: HomeViewModel = hiltViewModel(navController.getViewModelStoreOwner())

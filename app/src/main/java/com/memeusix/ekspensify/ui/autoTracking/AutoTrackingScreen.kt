@@ -51,7 +51,7 @@ import com.memeusix.ekspensify.ui.theme.Red20
 import com.memeusix.ekspensify.ui.theme.fonartoFontFamily
 import com.memeusix.ekspensify.utils.dynamicImePadding
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun AutoTrackingScreen(
     navController: NavHostController,
