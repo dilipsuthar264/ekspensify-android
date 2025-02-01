@@ -117,46 +117,46 @@ fun CategoriesScreen(
             )
         },
     ) { paddingValues ->
-        PullToRefreshLayout(
-            onRefresh = categoryViewModel::getCategories,
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .dynamicImePadding(paddingValues)
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
+            Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                CategoryTypeSelectionToggle(
+                    selectedCategoryType = selectedCategoryType,
+                    onChange = {
+                        categoryViewModel.updateSelectedCategoryType(it)
+                    }
+                )
+            }
+            VerticalSpace(10.dp)
+            PullToRefreshLayout(
+                onRefresh = categoryViewModel::getCategories,
+                modifier = Modifier
+                    .weight(1f)
             ) {
-                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    CategoryTypeSelectionToggle(
-                        selectedCategoryType = selectedCategoryType,
-                        onChange = {
-                            categoryViewModel.updateSelectedCategoryType(it)
-                        }
-                    )
-                }
-                VerticalSpace(10.dp)
-
                 CategoryList(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.fillMaxSize(),
                     categories.orEmpty(),
                     onDeleteClick = {
                         isDeleteDialogOpen.value = isDeleteDialogOpen.value.copy(true, it)
                     }
                 )
-                FilledButton(
-                    text = stringResource(R.string.add),
-                    onClick = {
-                        navController.navigate(
-                            CreateCategoryScreenRoute(
-                                categoryResponseModelArgs = null
-                            )
-                        )
-                    },
-                    modifier = Modifier
-                        .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp),
-                    textModifier = Modifier.padding(vertical = 17.dp)
-                )
             }
+            FilledButton(
+                text = stringResource(R.string.add),
+                onClick = {
+                    navController.navigate(
+                        CreateCategoryScreenRoute(
+                            categoryResponseModelArgs = null
+                        )
+                    )
+                },
+                modifier = Modifier
+                    .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 20.dp),
+                textModifier = Modifier.padding(vertical = 17.dp)
+            )
         }
         // show Loader
         ShowLoader(isLoading)

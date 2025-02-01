@@ -49,7 +49,6 @@ fun CategoryList(
         previousListSize = categoryList.size
     }
 
-
     LazyColumn(
         state = lazyListState,
         modifier = modifier,

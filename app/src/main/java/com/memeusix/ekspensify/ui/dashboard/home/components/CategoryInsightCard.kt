@@ -1,5 +1,6 @@
 package com.memeusix.ekspensify.ui.dashboard.home.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.memeusix.ekspensify.R
 import com.memeusix.ekspensify.components.DrawableEndText
 import com.memeusix.ekspensify.components.VerticalSpace
@@ -99,7 +102,21 @@ private fun PieChartRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Chart(categoryList)
+        if (categoryList.isEmpty()) {
+            Column(
+                Modifier.size(150.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Image(
+                    rememberAsyncImagePainter(R.drawable.img_empty_chart),
+                    contentDescription = null,
+                )
+                VerticalSpace(15.dp)
+                Text("No Date Found!", style = MaterialTheme.typography.bodyMedium)
+            }
+        } else {
+            Chart(categoryList)
+        }
         StartEndDateColumn(query)
     }
 }
