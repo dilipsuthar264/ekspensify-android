@@ -1,8 +1,6 @@
-# **🎉 Ekspensify - Your Personal Finance Buddy!**
+# 🎉 Ekspensify - Your Personal Finance Buddy!
 
 ## **🚀 Overview**
-
----
 
 Welcome to **Ekspensify**, your personal finance tracking app made with **Kotlin** and **Jetpack Compose**! This project is all about making financial management simple, fun, and stress-free. Whether you’re budgeting like a pro or just starting, **Ekspensify** helps you stay on top of your money! 💰✨
 
@@ -11,8 +9,6 @@ Welcome to **Ekspensify**, your personal finance tracking app made with **Kotlin
 I wanted a **clean, intuitive, and fun way** to track income and expenses. No more boring spreadsheets - just a smooth experience with a **beautiful UI, insightful analytics, and helpful budgeting tools**. This app is my solution to making finance tracking **enjoyable and effortless**! 🚀
 
 ## **🌟 Features**
-
----
 
 - 📌 **Track Income & Expenses**: Effortlessly record and keep track of your income and expenses in real time.
 - 🏷 **Categories for Income & Expenses**: Includes all standard categories and allows custom categories.
@@ -29,8 +25,6 @@ I wanted a **clean, intuitive, and fun way** to track income and expenses. No mo
 
 ## **🛠 Tech Stack**
 
----
-
 - **Kotlin** – Used as the primary programming language for the app.
 - **Jetpack Compose** – Used for building modern, declarative UI components.
 - **MVVM Architecture** - Keeping code clean and maintainable.
@@ -45,11 +39,7 @@ I wanted a **clean, intuitive, and fun way** to track income and expenses. No mo
 
 ## **📸 Screenshots**
 
----
-
 ## **🔧 Installation & Setup**
-
----
 
 This is a complete Android app that interacts with a backend server. While you can't fully run the app locally without the server (since it relies on server APIs), you can still use it for testing and experimentation.
 
@@ -73,13 +63,9 @@ This is a complete Android app that interacts with a backend server. While you c
 
 ## **🤝 Contributing**
 
----
-
 Love this project? Want to make it even better? Feel free to **open issues, submit pull requests, or just drop feedback**! Let’s build something amazing together. 💡💻
 
 ## **📬 Let's Connect!**
-
----
 
 Got feedback or ideas? Reach out to me! I’d love to hear from you. 🎉
 
