@@ -120,8 +120,6 @@ fun navigateAfterSplash(
     when {
         isLogin && accessToken.isNotEmpty() -> {
             val hasNoAccounts = user?.accounts == 0
-            println(user?.accounts)
-            println(hasNoAccounts)
             if (hasNoAccounts) {
                 navController.navigate(AccountScreenRoute()) {
                     popUpTo(0) { inclusive = true }

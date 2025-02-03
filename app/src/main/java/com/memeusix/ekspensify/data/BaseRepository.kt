@@ -93,7 +93,6 @@ interface BaseRepository {
 //                code = response.code
 //            ) else BaseModel.error(response.errorResponse)
 //        } ?: run {
-//            Log.e(TAG, "handleRequest: ${response.errorResponse}")
 //            return BaseModel.error(response.errorResponse)
 //        }
 //    }

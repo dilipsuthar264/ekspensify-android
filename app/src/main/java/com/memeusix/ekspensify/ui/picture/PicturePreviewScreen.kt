@@ -87,7 +87,6 @@ fun PicturePreviewScreen(
         image = image,
         isLoading = isLoading,
         onDownload = singleClick {
-            println(permissionState.status.isGranted)
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q && !permissionState.status.isGranted) {
                 permissionState.launchPermissionRequest()
             } else {

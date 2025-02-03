@@ -20,8 +20,6 @@ class SmsReceiver : BroadcastReceiver() {
                 val smsMessage = SmsMessage.createFromPdu(pdu as ByteArray)
                 val messageBody = smsMessage.messageBody
 
-                Log.e(TAG, "doWork: $messageBody", )
-
                 val workRequest = OneTimeWorkRequestBuilder<SmsProcessingWorker>()
                     .setInputData(workDataOf("sms_body" to messageBody))
                     .build()

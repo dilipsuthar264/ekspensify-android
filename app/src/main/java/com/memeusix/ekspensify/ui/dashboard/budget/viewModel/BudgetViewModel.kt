@@ -131,7 +131,6 @@ class BudgetViewModel @Inject constructor(
         combine(_budgetQuery, budgetId) { budgetQueryModel, budgetId ->
             budgetQueryModel to budgetId
         }.flatMapLatest { (budgetQuery, budgetId) ->
-            println(budgetId)
             if (budgetId != null) {
                 budgetRepository.getBudgetReport(budgetId, budgetQuery)
             } else {

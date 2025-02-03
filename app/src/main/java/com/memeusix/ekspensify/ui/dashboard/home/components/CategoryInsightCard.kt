@@ -127,7 +127,6 @@ private fun StartEndDateColumn(query: InsightsQueryModel) {
     Column(
         horizontalAlignment = Alignment.End,
     ) {
-        println(query.dateRange.getFormattedDateRange())
         DateLabel("from", startDateTime.formatZonedDateTime(DateFormat.dd_MMM_yyyy_))
         VerticalSpace(20.dp)
         DateLabel("to", endDateTime.formatZonedDateTime(DateFormat.dd_MMM_yyyy_))

@@ -1,6 +1,5 @@
 package com.memeusix.ekspensify.navigation
 
-import android.util.Log
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
@@ -58,7 +57,6 @@ fun NavGraph(
     var isNavHostReady by remember { mutableStateOf(false) }
 
     LaunchedEffect(notificationEventState, isNavHostReady) {
-        Log.i("NAV", "NavGraph: $notificationEventState")
         if (isNavHostReady) {
             handleNotificationClickNavigation(navController, notificationEventState)
         }

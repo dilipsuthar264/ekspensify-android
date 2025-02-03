@@ -167,7 +167,6 @@ fun getFileFromUri(context: Context, uri: Uri): File? {
         }
         tempFile
     } catch (e: Exception) {
-        e.printStackTrace()
         null
     }
 }

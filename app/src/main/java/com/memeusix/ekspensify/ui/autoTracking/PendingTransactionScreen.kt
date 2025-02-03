@@ -115,7 +115,6 @@ fun PendingTransactionScreen(
                             )
                         },
                         onAddClick = singleClick {
-                            println(transaction)
                             val account =
                                 pendingTransactionViewModel.getAccountModel(transaction.accountName)
                             navController.navigate(

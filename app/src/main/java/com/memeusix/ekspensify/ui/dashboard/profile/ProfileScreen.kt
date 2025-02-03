@@ -1,6 +1,5 @@
 package com.memeusix.ekspensify.ui.dashboard.profile
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -272,7 +271,6 @@ private fun handleProfileOptionClick(
         }
 
         ProfileOptions.EXPORT -> {
-            Log.e(TAG, "handleProfileOptionClick: EXPORT CLICK")
             navController.navigate(ExportScreenRoute)
         }
 
@@ -281,7 +279,6 @@ private fun handleProfileOptionClick(
         }
 
         ProfileOptions.ABOUT -> {
-            Log.e(TAG, "handleProfileOptionClick: SETTING CLICK")
             navController.navigate(AboutScreenRoute)
         }
 
@@ -291,4 +288,3 @@ private fun handleProfileOptionClick(
     }
 }
 
-private val TAG = "PROFILE SCREEN"

@@ -141,10 +141,8 @@ class AuthViewModel @Inject constructor(
                 onResult(googleIdToken)
                 loadingState.value = false
             } catch (e: GetCredentialException) {
-                Log.e(TAG, "signInWithGoogle: $e")
                 loadingState.value = false
             } catch (e: GoogleIdTokenParsingException) {
-                Log.e(TAG, "signInWithGoogle: $e")
                 loadingState.value = false
             }
         }

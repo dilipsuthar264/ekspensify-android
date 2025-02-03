@@ -51,11 +51,6 @@ object SmsHelper {
             val bankMatch = bankPatternCompiled.find(smsBody)
             bank = bankMatch?.value?.trim()
 
-            // Log extracted data
-            Log.e(
-                TAG,
-                "Parsed SMS: amount=$amount, type=$type, bank=$bank "
-            )
             return if (amount == null || type == null) {
                 null
             } else {
@@ -68,7 +63,6 @@ object SmsHelper {
                 )
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error parsing SMS: ${e.message}")
             return null
         }
     }

@@ -33,7 +33,6 @@ fun Chart(items: List<CategoryInsightsResponseModel>) {
             var startAngle = 0f
 
             val total = items.fastSumBy { it.amount ?: 0 }
-            println(total)
             if (items.isEmpty()) {
                 drawArc(
                     color = EmptyGrey,

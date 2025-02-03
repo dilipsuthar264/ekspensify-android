@@ -57,3 +57,13 @@
 
 # Optimize only if you're sure
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+# Remove log calls in release builds
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** i(...);
+    public static *** w(...);
+    public static *** e(...);
+    public static *** v(...);
+}
+
