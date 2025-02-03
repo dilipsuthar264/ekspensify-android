@@ -1,6 +1,5 @@
 package com.memeusix.ekspensify.ui.dashboard.profile
 
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -289,4 +288,3 @@ private fun handleProfileOptionClick(
     }
 }
 
-private val TAG = "PROFILE SCREEN"

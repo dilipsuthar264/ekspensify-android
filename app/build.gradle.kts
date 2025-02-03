@@ -215,49 +215,50 @@ dependencies {
     /**
      *  for google auth
      */
-    implementation("androidx.credentials:credentials:1.3.0")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
-    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
 
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation(libs.androidx.appcompat)
 
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("io.coil-kt:coil-gif:2.1.0")
-    implementation("com.airbnb.android:lottie-compose:6.1.0")
-
-
-    implementation("androidx.compose.animation:animation:1.7.5")
-
-    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
+    implementation(libs.lottie.compose)
 
 
-    implementation("androidx.paging:paging-runtime-ktx:3.3.4")
-    implementation("androidx.paging:paging-runtime:3.3.4")
-    implementation("androidx.paging:paging-compose:3.3.4")
+    implementation(libs.androidx.animation)
 
-    implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
+    implementation(libs.accompanist.permissions)
+
+
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
+    implementation(libs.wheelpickercompose)
 
     // for LocalDateTime time api uses for below 26 sdk
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0")
+    implementation(libs.androidx.constraintlayout.compose)
 
 
     /**
      * one signal
      */
-    implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+    implementation(libs.onesignal)
 
 
     // WorkManager for background tasks
-    implementation("androidx.work:work-runtime-ktx:2.10.0")
+    implementation(libs.androidx.work.runtime.ktx)
 
     /**
      * ROOM DATABASE
      */
-    implementation("androidx.room:room-runtime:2.6.1")
-    annotationProcessor("androidx.room:room-compiler:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    implementation("androidx.room:room-paging:$2.6.1")
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    //noinspection KaptUsageInsteadOfKsp
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
 }
