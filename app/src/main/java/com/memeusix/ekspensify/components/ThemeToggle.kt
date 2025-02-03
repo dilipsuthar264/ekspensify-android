@@ -35,7 +35,6 @@ fun ThemeToggle(viewModel: ThemeViewModel = hiltViewModel()) {
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.extendedColors.imageBg)
             .clickable {
-                Log.e("", "ThemeToggle:")
                 viewModel.toggleTheme()
             }
             .padding(7.dp)

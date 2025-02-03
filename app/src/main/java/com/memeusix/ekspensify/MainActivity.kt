@@ -106,7 +106,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setNotificationEvent(intent: Intent) {
         val notification = intent.extras?.getString("notification")
-        Log.i(TAG, "setNotificationEvent: $notification")
         navigationViewModel.setNotificationEvent(notification)
     }
 

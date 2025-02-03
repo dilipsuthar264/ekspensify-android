@@ -272,7 +272,6 @@ private fun handleProfileOptionClick(
         }
 
         ProfileOptions.EXPORT -> {
-            Log.e(TAG, "handleProfileOptionClick: EXPORT CLICK")
             navController.navigate(ExportScreenRoute)
         }
 
@@ -281,7 +280,6 @@ private fun handleProfileOptionClick(
         }
 
         ProfileOptions.ABOUT -> {
-            Log.e(TAG, "handleProfileOptionClick: SETTING CLICK")
             navController.navigate(AboutScreenRoute)
         }
 

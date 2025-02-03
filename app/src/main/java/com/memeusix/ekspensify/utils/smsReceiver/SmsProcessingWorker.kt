@@ -17,14 +17,7 @@ class SmsProcessingWorker(
 
         val smsBody = inputData.getString("sms_body") ?: return Result.failure()
 
-        Log.e(TAG, "doWork: $smsBody")
-
-        val processTransactionData = SmsHelper.parseSms(smsBody)
-
-        if (processTransactionData == null) {
-            Log.e(TAG, "Failed to parse SMS.")
-            return Result.failure()
-        }
+        val processTransactionData = SmsHelper.parseSms(smsBody) ?: return Result.failure()
 
 
         val ekspensifyDataBase = EkspensifyDatabase.getDataBase(applicationContext)
@@ -35,12 +28,9 @@ class SmsProcessingWorker(
 
         response.fold(
             onSuccess = {
-                Log.e(TAG, "doWork: created succesfully")
                 return Result.success()
             },
             onFailure = {
-                Log.e(TAG, "doWork : failed to create")
-
                 return Result.failure()
             }
         )

@@ -58,7 +58,6 @@ fun NavGraph(
     var isNavHostReady by remember { mutableStateOf(false) }
 
     LaunchedEffect(notificationEventState, isNavHostReady) {
-        Log.i("NAV", "NavGraph: $notificationEventState")
         if (isNavHostReady) {
             handleNotificationClickNavigation(navController, notificationEventState)
         }

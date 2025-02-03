@@ -20,7 +20,6 @@ class PendingTransactionRepo @Inject constructor(
             pendingTransactionDao.createPendingTransaction(pendingTransactionModel)
             Result.success(pendingTransactionModel)
         } catch (e: Exception) {
-            println(e)
             Result.failure(e)
         }
 
@@ -50,7 +49,6 @@ class PendingTransactionRepo @Inject constructor(
                 pagingSourceFactory = { pendingTransactionDao.getPendingTransactions() }
             ).flow
         } catch (e: Exception) {
-            println(e)
             emptyFlow()
         }
     }

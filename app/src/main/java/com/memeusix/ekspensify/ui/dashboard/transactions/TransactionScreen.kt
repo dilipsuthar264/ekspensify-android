@@ -56,7 +56,6 @@ fun TransactionScreen(
     val selectedFilterModel by transactionViewModel.userSelectedFilters.collectAsStateWithLifecycle()
 
     LaunchedEffect(deleteTransaction) {
-        Log.e("TransactionScreen", "TransactionScreen: ${transactionViewModel.transactionQueryParameters.value}")
         handleApiResponse(
             response = deleteTransaction,
             toastState = toastState,

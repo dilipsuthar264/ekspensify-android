@@ -106,7 +106,6 @@ fun BudgetDetailsScreen(
             navController = navController,
             onSuccess = { data ->
                 data?.let {
-                    println(data)
                     budgetViewModelNewInstance.setBudgetId(data.id)
                 }
             },

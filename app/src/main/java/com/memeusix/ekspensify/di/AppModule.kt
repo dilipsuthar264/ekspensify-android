@@ -47,11 +47,15 @@ class AppModule {
         }
 
         private fun getLoggingInterceptor(): HttpLoggingInterceptor {
-            val httpLoggingInterceptor = HttpLoggingInterceptor() { message ->
-                HttpLoggingInterceptor.Logger.DEFAULT.log(filterLogs(message))
+            return if (BuildConfig.DEBUG) {
+                val httpLoggingInterceptor = HttpLoggingInterceptor { message ->
+                    HttpLoggingInterceptor.Logger.DEFAULT.log(filterLogs(message))
+                }
+                httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+                httpLoggingInterceptor
+            } else {
+                HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.NONE }
             }
-            httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-            return httpLoggingInterceptor
         }
 
         private fun getAuthenticationInterceptor(spUtils: SpUtils): Interceptor {

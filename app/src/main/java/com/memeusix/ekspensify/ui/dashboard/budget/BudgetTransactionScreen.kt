@@ -55,10 +55,6 @@ fun BudgetTransactionScreen(
 
     val saveState = navController.currentBackStackEntry?.savedStateHandle
     LaunchedEffect(deleteTransaction) {
-        Log.e(
-            "TransactionScreen",
-            "TransactionScreen: ${transactionViewModel.transactionQueryParameters.value}"
-        )
         handleApiResponse(
             response = deleteTransaction,
             toastState = toastState,
