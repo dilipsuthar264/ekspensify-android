@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.npm.includedRange
 import java.util.Properties
 
 plugins {
@@ -182,7 +181,9 @@ dependencies {
      */
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation("androidx.compose.animation:animation-graphics:1.7.7")
 
+    implementation(libs.ui)
 
     /**
      * for splash screen
@@ -261,4 +262,8 @@ dependencies {
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
+
+    // base line profiling
+    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
+
 }

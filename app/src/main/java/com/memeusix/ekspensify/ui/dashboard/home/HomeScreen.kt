@@ -127,6 +127,9 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item {
+                    VerticalSpace(15.dp)
+                }
+                item {
                     AutoTrackingCard(
                         isEnable = isAutoTrackingEnable,
                         onEnableClick = { navController.navigate(AutoTrackingScreenRoute) },
@@ -181,9 +184,6 @@ fun HomeScreen(
                 }
                 items(categoryInsights) { item ->
                     InsightsCategoryItem(item)
-                }
-                item {
-                    VerticalSpace(20.dp)
                 }
             }
 

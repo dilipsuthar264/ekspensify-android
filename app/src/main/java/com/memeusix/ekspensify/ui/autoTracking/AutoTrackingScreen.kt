@@ -82,6 +82,7 @@ fun AutoTrackingScreen(
 
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBar(
                 heading = "",

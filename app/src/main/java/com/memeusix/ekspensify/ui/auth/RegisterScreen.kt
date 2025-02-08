@@ -122,6 +122,7 @@ fun RegisterScreen(
 
     // Main Ui
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBar(stringResource(R.string.sign_up), navController)
         },
@@ -131,10 +132,10 @@ fun RegisterScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .dynamicImePadding(paddingValues)
-                .padding(20.dp)
-                .padding(top = 36.dp)
+                .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
+            VerticalSpace(56.dp)
             CustomOutlineTextField(
                 state = nameState,
                 placeholder = stringResource(R.string.name),
@@ -219,6 +220,7 @@ fun RegisterScreen(
                     popUpTo(RegisterScreenRoute) { inclusive = true }
                 }
             }
+            VerticalSpace(20.dp)
         }
 
 

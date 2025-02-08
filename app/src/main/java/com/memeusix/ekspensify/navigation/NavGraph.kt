@@ -1,16 +1,21 @@
 package com.memeusix.ekspensify.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
+import coil.transform.AnimatedTransformation
 import com.memeusix.ekspensify.data.model.requestModel.AuthRequestModel
 import com.memeusix.ekspensify.navigation.viewmodel.NavigationViewModel
 import com.memeusix.ekspensify.navigation.viewmodel.NotificationEventModel
@@ -70,17 +76,21 @@ fun NavGraph(
         navController = navController,
         startDestination = SplashScreenRoute,
         enterTransition = {
-            fadeIn(animationSpec = tween(300))
+            slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(350)) +
+                    fadeIn(tween(350))
         },
+        exitTransition = {
+            fadeOut(tween(350))
+        },
+        popEnterTransition = {
+            fadeIn(tween(350))
+        },
+        contentAlignment = Alignment.Center,
         popExitTransition = {
-            fadeOut(
-                animationSpec = tween(300)
-            )
+            slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(350))+
+                    fadeOut(tween(350))
         },
-        exitTransition = { ExitTransition.KeepUntilTransitionsFinished },
-        popEnterTransition = { EnterTransition.None },
     ) {
-
         composable<SplashScreenRoute> {
             SplashScreen(navController)
         }

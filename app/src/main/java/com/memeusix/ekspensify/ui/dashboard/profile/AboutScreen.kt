@@ -1,6 +1,7 @@
 package com.memeusix.ekspensify.ui.dashboard.profile
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -28,11 +29,13 @@ import com.memeusix.ekspensify.utils.dynamicImePadding
 fun AboutScreen(
     navController: NavHostController
 ) {
-    Scaffold(topBar = {
-        AppBar(
-            heading = "About", navController
-        )
-    }) { paddingValues ->
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            AppBar(
+                heading = "About", navController
+            )
+        }) { paddingValues ->
         Column(
             modifier = Modifier
                 .dynamicImePadding(paddingValues)

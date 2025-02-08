@@ -25,6 +25,7 @@ import com.memeusix.ekspensify.components.VerticalSpace
 import com.memeusix.ekspensify.data.model.responseModel.UserResponseModel
 import com.memeusix.ekspensify.ui.dashboard.transactions.data.DateRange
 import com.memeusix.ekspensify.ui.theme.extendedColors
+import com.memeusix.ekspensify.ui.theme.goodlyFontFontFamily
 import com.memeusix.ekspensify.utils.getGreetingMessage
 import com.memeusix.ekspensify.utils.roundedBorder
 
@@ -39,13 +40,14 @@ fun HomeAppBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
-            .padding(20.dp),
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 5.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column() {
             Text(
                 getGreetingMessage(), style = MaterialTheme.typography.labelMedium.copy(
                     fontWeight = FontWeight.Medium,
+                    fontFamily = goodlyFontFontFamily,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )

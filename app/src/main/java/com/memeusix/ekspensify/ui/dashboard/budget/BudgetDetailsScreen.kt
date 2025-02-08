@@ -150,7 +150,9 @@ fun BudgetDetailsScreen(
         })
     }
 
-    Scaffold(topBar = {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
         AppBar(
             heading = stringResource(R.string.budget_details, args.budgetId),
             navController = navController,

@@ -38,6 +38,7 @@ import com.memeusix.ekspensify.components.AppBar
 import com.memeusix.ekspensify.components.FilledButton
 import com.memeusix.ekspensify.components.OtpInputField
 import com.memeusix.ekspensify.components.ShowLoader
+import com.memeusix.ekspensify.components.VerticalSpace
 import com.memeusix.ekspensify.data.ApiResponse
 import com.memeusix.ekspensify.data.model.requestModel.AuthRequestModel
 import com.memeusix.ekspensify.ui.auth.viewModel.AuthViewModel
@@ -125,6 +126,7 @@ fun OtpVerificationScreen(
 
     // Main Ui
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBar(stringResource(R.string.verification), navController)
         },
@@ -135,9 +137,10 @@ fun OtpVerificationScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .dynamicImePadding(paddingValues)
-                .padding(20.dp)
+                .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
+            VerticalSpace(20.dp)
             Text(
                 stringResource(R.string.enter_your_verification_code),
                 style = MaterialTheme.typography.titleLarge,
@@ -197,6 +200,8 @@ fun OtpVerificationScreen(
                 },
                 enabled = otpValue.length == 6
             )
+            VerticalSpace(20.dp)
+
         }
 
 

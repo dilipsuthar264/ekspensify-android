@@ -96,7 +96,9 @@ fun ExportScreen(
 
 
 
-    Scaffold(topBar = {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
         AppBar(
             heading = stringResource(R.string.export), navController = navController
         )

@@ -107,7 +107,9 @@ fun CreateCategoryScreen(
     }
 
     // Main Ui
-    Scaffold(topBar = {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
         AppBar(
             heading = stringResource(R.string.create_category),
             elevation = false,

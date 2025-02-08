@@ -149,6 +149,7 @@ fun CreateTransactionScreen(
     }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         containerColor = bgColor,
         contentColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {

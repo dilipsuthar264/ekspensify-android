@@ -116,6 +116,7 @@ fun CreateBudgetScreen(
     }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBar(
                 heading = stringResource(R.string.create_budget),

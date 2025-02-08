@@ -99,7 +99,7 @@ fun BottomNav(
     }
 
     Scaffold(
-        modifier = Modifier.navigationBarsPadding(),
+        modifier = Modifier.fillMaxSize().navigationBarsPadding(),
         topBar = {
 //            key(currentIndex) {
 //                if (currentIndex != 0) {

@@ -76,6 +76,7 @@ fun AccountsScreen(
 
     // Main Ui
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBar(
                 heading = stringResource(R.string.accounts),

@@ -69,7 +69,7 @@ fun HandleBottomSheets(
                     it
                 )
             } else LocalDate.now(),
-            maxDate = if (formState.endDate != null) LocalDate.parse(formState.endDate) else LocalDate.MAX,
+            maxDate = if ( datePickerType == DatePickerType.START_DATE) LocalDate.parse(formState.endDate) else LocalDate.MAX,
             onDismiss = { showDatePicker.value = false }, onDateSelected = { date ->
                 when (datePickerType) {
                     DatePickerType.START_DATE -> createBudgetState.updateStartDate(date.toString())

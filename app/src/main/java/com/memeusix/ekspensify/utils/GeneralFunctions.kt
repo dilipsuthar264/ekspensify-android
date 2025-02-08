@@ -133,18 +133,19 @@ private fun goToLogin(
     navController: NavController,
     errorMessage: String
 ) {
-    // Navigate to IntroScreen and clear back stack
-    navController.navigate(IntroScreenRoute) {
-        popUpTo(0) { inclusive = false }
-    }
-
-    // Perform logout using a helper function or manager
-    SpUtilsManager(SpUtils(navController.context)).logout()
-
-    // Display the error message as a toast
-    Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).apply {
-        setGravity(Gravity.TOP, 0, 0)
-        show()
+    val spUtils = SpUtilsManager(SpUtils(navController.context))
+    if (spUtils.isLoggedIn.value) {
+        // Navigate to IntroScreen and clear back stack
+        navController.navigate(IntroScreenRoute) {
+            popUpTo(0) { inclusive = false }
+        }
+        // Perform logout using a helper function or manager
+        spUtils.logout()
+        // Display the error message as a toast
+        Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).apply {
+            setGravity(Gravity.TOP, 0, 0)
+            show()
+        }
     }
 }
 

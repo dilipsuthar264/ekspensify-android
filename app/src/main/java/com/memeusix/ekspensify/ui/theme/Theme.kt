@@ -2,6 +2,7 @@ package com.memeusix.ekspensify.ui.theme
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
+import androidx.compose.foundation.OverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -78,16 +79,14 @@ fun EkspensifyTheme(
     val colors = if (isDarkTheme) DarkColorPalette else LightColorPalette
     val extendedColors = if (isDarkTheme) DarkExtendedColors else LightExtendedColors
 
-    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+    CompositionLocalProvider(
+        LocalExtendedColors provides extendedColors,
+        LocalOverscrollConfiguration provides null
+    ) {
         MaterialTheme(
             colorScheme = colors,
             typography = Typography,
-            content = {
-                CompositionLocalProvider(
-                    LocalOverscrollConfiguration provides null,
-                    content = content
-                )
-            }
+            content = content
         )
     }
 }
