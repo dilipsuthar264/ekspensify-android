@@ -2,9 +2,11 @@ package com.memeusix.ekspensify.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,7 +54,8 @@ fun DrawableStartText(
     colorFilter: ColorFilter? = ColorFilter.tint(color),
     @DrawableRes icon: Int
 ) {
-    IconTextRaw(modifier = modifier, iconSpacing = iconSpace,
+    IconTextRaw(
+        modifier = modifier, iconSpacing = iconSpace,
         leading = {
             Image(
                 painter = rememberAsyncImagePainter(icon),

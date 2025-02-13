@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,6 +32,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.memeusix.ekspensify.R
 import com.memeusix.ekspensify.data.model.responseModel.UserResponseModel
@@ -55,19 +60,32 @@ fun SplashScreen(
     val user by splashViewModel.spUtilsManager.user.collectAsState()
     val isTypingFinished = remember { mutableStateOf(false) }
 
-    // Launch the typing effect
-    val typedText = typeWriterText(
-        text = stringResource(R.string.app_name),
-        duration = SPLASH_DURATION,
-        onFinish = {
-            isTypingFinished.value = true
-        }
+//    // Launch the typing effect
+//    val typedText = typeWriterText(
+//        text = stringResource(R.string.app_name),
+//        duration = SPLASH_DURATION,
+//        onFinish = {
+//            isTypingFinished.value = true
+//        }
+//    )
+
+
+    // Lotte animation for logo
+    val animationLogoComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ekspensify_logo_animation))
+    val animationLogoProgress by animateLottieCompositionAsState(
+        composition = animationLogoComposition,
+        iterations = 1,
+        speed = 1.5f,
+        isPlaying = true,
     )
 
 
-    // Handle navigation after typing completes
-    LaunchedEffect(isTypingFinished.value) {
-        if (isTypingFinished.value) {
+//     Handle navigation after typing completes
+    LaunchedEffect(animationLogoProgress) {
+//        if (isTypingFinished.value) {
+//            navigateAfterSplash(isLogin, accessToken, user, navController)
+//        }
+        if (animationLogoProgress == 1f) {
             navigateAfterSplash(isLogin, accessToken, user, navController)
         }
     }
@@ -86,26 +104,32 @@ fun SplashScreen(
         }
     }
 
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
-        contentAlignment = Alignment.Center
+         contentAlignment = Alignment.Center
     ) {
-        Spacer(
-            modifier = Modifier
-                .offset(x = (-20).dp, y = (-10).dp)
-                .blur(60.dp, BlurredEdgeTreatment.Unbounded)
-                .clip(CircleShape)
-                .background(Yellow100, CircleShape)
-                .fillMaxWidth(0.2f)
-                .aspectRatio(1f)
-        )
-        Text(
-            text = typedText,
-            fontFamily = fonartoFontFamily,
-            fontSize = 30.sp,
-            color = MaterialTheme.colorScheme.onPrimary,
+//        Spacer(
+//            modifier = Modifier
+//                .offset(x = (-20).dp, y = (-10).dp)
+//                .blur(60.dp, BlurredEdgeTreatment.Unbounded)
+//                .clip(CircleShape)
+//                .background(Yellow100, CircleShape)
+//                .fillMaxWidth(0.2f)
+//                .aspectRatio(1f)
+//        )
+//        Text(
+//            text = typedText,
+//            fontFamily = fonartoFontFamily,
+//            fontSize = 30.sp,
+//            color = MaterialTheme.colorScheme.onPrimary,
+//        )
+        LottieAnimation(
+            composition = animationLogoComposition,
+            progress = { animationLogoProgress },
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

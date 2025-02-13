@@ -194,7 +194,7 @@ fun ProfileScreen(
             }
             VerticalSpace(20.dp)
         }
-        ShowLoader(isLoading)
+        ShowLoader(isLoading, true)
     }
 }
 

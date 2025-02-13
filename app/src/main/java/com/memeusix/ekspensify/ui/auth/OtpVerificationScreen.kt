@@ -46,6 +46,7 @@ import com.memeusix.ekspensify.ui.theme.Typography
 import com.memeusix.ekspensify.utils.dynamicImePadding
 import com.memeusix.ekspensify.utils.goToNextScreenAfterLogin
 import com.memeusix.ekspensify.utils.handleApiResponse
+import com.memeusix.ekspensify.utils.handleApiResponseWithError
 import com.memeusix.ekspensify.utils.toastUtils.CustomToast
 import com.memeusix.ekspensify.utils.toastUtils.CustomToastModel
 import com.memeusix.ekspensify.utils.toastUtils.ToastType
@@ -90,10 +91,13 @@ fun OtpVerificationScreen(
         focusRequester.requestFocus()
     }
     LaunchedEffect(loginResponse, sendOtpResponse) {
-        handleApiResponse(
+        handleApiResponseWithError(
             response = loginResponse,
             toastState = toastState,
             navController = navController,
+            onFailure = {
+                otpValue = ""
+            },
             onSuccess = { data ->
                 data?.apply {
                     if (user != null && !token.isNullOrEmpty()) {
@@ -119,6 +123,7 @@ fun OtpVerificationScreen(
                     isVisible = true,
                     type = ToastType.SUCCESS
                 )
+                otpValue = ""
             }
         )
     }

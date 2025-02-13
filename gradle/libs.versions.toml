@@ -46,6 +46,8 @@ hiltCommon = "1.2.0"
 hiltWork = "1.2.0"
 wheelpickercompose = "1.1.11"
 workRuntimeKtx = "2.10.0"
+composeMaterial = "1.4.0"
+composeTesting = "1.0.0-alpha01"
 
 
 [libraries]
@@ -116,6 +118,8 @@ androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.
 androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
 ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 wheelpickercompose = { module = "com.github.commandiron:WheelPickerCompose", version.ref = "wheelpickercompose" }
+androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
+androidx-compose-testing = { group = "androidx.xr.compose", name = "compose-testing", version.ref = "composeTesting" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

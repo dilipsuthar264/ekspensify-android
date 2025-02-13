@@ -28,7 +28,7 @@ android {
     properties.load(project.rootProject.file("local.properties").inputStream())
     defaultConfig {
         applicationId = "com.memeusix.ekspensify"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -142,6 +142,7 @@ dependencies {
      */
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.compose.material)
     kapt(libs.hilt.android.compiler)
 
     /**
@@ -263,7 +264,5 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
 
-    // base line profiling
-    implementation("androidx.profileinstaller:profileinstaller:1.4.1")
 
 }

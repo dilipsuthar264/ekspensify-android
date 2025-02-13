@@ -104,7 +104,6 @@ fun HomeScreen(
             onDismiss = { showCategoryTypeOptions = false }
         )
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()

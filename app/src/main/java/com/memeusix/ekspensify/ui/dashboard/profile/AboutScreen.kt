@@ -23,7 +23,9 @@ import com.memeusix.ekspensify.components.CustomListItem
 import com.memeusix.ekspensify.ui.dashboard.budget.components.CreateBudgetSectionCard
 import com.memeusix.ekspensify.ui.dashboard.profile.data.AboutOptions
 import com.memeusix.ekspensify.ui.theme.extendedColors
+import com.memeusix.ekspensify.utils.CommonData
 import com.memeusix.ekspensify.utils.dynamicImePadding
+import com.memeusix.ekspensify.utils.openWebLink
 
 @Composable
 fun AboutScreen(
@@ -53,7 +55,7 @@ fun AboutScreen(
                                 contentDescription = null,
                             )
                         },
-                        onClick = {}
+                        onClick = { handleAboutOptionClick(it, navController) }
                     )
                 }
             }
@@ -67,6 +69,22 @@ fun AboutScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp)
+            )
+        }
+    }
+}
+
+private fun handleAboutOptionClick(clickedOption: AboutOptions, navController: NavHostController) {
+    when (clickedOption) {
+        AboutOptions.PRIVACY_POLICY -> {
+            navController.context.openWebLink(
+                CommonData.PRIVACY_POLICY
+            )
+        }
+
+        AboutOptions.TERMS_AND_CONDITION -> {
+            navController.context.openWebLink(
+                CommonData.TERMS_AND_CONDITION
             )
         }
     }

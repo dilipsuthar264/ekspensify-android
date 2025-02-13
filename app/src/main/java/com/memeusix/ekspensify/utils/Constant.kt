@@ -7,6 +7,11 @@ import com.memeusix.ekspensify.ui.theme.Teal
 
 const val SPLASH_DURATION = 300L
 
+object CommonData{
+    const val PRIVACY_POLICY = "https://chemical-comma-538.notion.site/Privacy-Policy-191575538d2c80b9983ded1811775d3e"
+    const val TERMS_AND_CONDITION = "https://chemical-comma-538.notion.site/Term-Condition-191575538d2c805d9e17f3e10eb3c8b1"
+}
+
 enum class AccountType {
     BANK,
     WALLET;

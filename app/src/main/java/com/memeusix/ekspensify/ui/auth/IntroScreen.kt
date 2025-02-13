@@ -71,6 +71,7 @@ fun IntroScreen(navController: NavHostController) {
         ) { page ->
             PageView(introPages[page], modifier = Modifier.fillMaxWidth())
         }
+//        Spacer(Modifier.weight(1f))
         VerticalSpace(30.dp)
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -138,8 +139,7 @@ fun PageView(introPages: IntroPages, modifier: Modifier) {
         Text(
             introPages.title,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge
-                .copy(
+            style = MaterialTheme.typography.titleLarge.copy(
                     fontSize = 30.sp,
                     color = MaterialTheme.colorScheme.onBackground
                 ),
@@ -150,6 +150,8 @@ fun PageView(introPages: IntroPages, modifier: Modifier) {
             style = MaterialTheme.typography.bodyLarge.copy(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             ),
+            minLines = 2,
+            maxLines = 2,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 15.dp)
         )

@@ -185,6 +185,7 @@ fun CreateTransactionScreen(
                     transactionViewModel = transactionViewModel,
                     toastState = toastState,
                     type = transactionType,
+                    navController = navController,
                     modifier = Modifier
                         .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
                         .background(MaterialTheme.colorScheme.background)

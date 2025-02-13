@@ -96,7 +96,7 @@ fun String.generateIconSlug(): String {
     return "ic_" + this.trim().lowercase().replace(' ', '_')
 }
 
-fun Context.openImageExternally(imageUri: String?) {
+fun Context.openWebLink(imageUri: String?) {
     if (imageUri.orEmpty().isNotEmpty()) {
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(imageUri)

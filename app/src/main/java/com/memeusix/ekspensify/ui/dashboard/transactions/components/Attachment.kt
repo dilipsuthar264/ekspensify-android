@@ -1,14 +1,17 @@
 package com.memeusix.ekspensify.ui.dashboard.transactions.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,9 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.memeusix.ekspensify.R
-import com.memeusix.ekspensify.components.CustomListItem
 import com.memeusix.ekspensify.data.model.responseModel.AttachmentResponseModel
+import com.memeusix.ekspensify.ui.theme.Light100
 import com.memeusix.ekspensify.ui.theme.extendedColors
+import com.memeusix.ekspensify.utils.roundedBorder
 
 @Composable
 fun AttachmentView(
@@ -54,48 +58,51 @@ fun AttachmentView(
             )
         }
     }
-    Box(
-        modifier = Modifier
-            .clip( RoundedCornerShape(16.dp))
-            .fillMaxWidth()
-            .requiredHeight(56.dp)
-            .then(borderModifier)
-            .clickable { onClick(hasAttachment) }
-            .padding(horizontal = 16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        if (hasAttachment) {
-            CustomListItem(
-                leadingContent = {
-                    AsyncImage(
-                        model = selectedAttachment.value?.path,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                    )
-                },
-                title = selectedAttachment.value?.path ?: "",
-                trailingContent = {
-                    Icon(
-                        painterResource(R.drawable.ic_cancel_circle_half_dot),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.clickable { onDelete() }
-                    )
-                },
-                onClick = { onClick(true) }
+    if (hasAttachment) {
+        Box(
+            modifier = Modifier
+        ) {
+            AsyncImage(
+                model = selectedAttachment.value.path,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(80.dp)
+                    .clickable { onClick(true) }
+                    .clip(RoundedCornerShape(16.dp))
+                    .roundedBorder()
             )
-        } else {
+            Icon(
+                painterResource(R.drawable.ic_close_circle),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .offset(y = (-8).dp, x = 8.dp)
+                    .clip(CircleShape)
+                    .background(Light100)
+                    .size(28.dp)
+                    .align(Alignment.TopEnd)
+                    .clickable { onDelete() }
+            )
+        }
+    } else {
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .fillMaxWidth()
+                .requiredHeight(56.dp)
+                .then(borderModifier)
+                .clickable { onClick(false) }
+                .padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(
                     8.dp,
                     Alignment.CenterHorizontally
                 ),
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(
                     painterResource(R.drawable.ic_attechment),
