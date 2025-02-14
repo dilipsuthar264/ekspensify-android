@@ -1,6 +1,5 @@
 package com.memeusix.ekspensify.ui.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.memeusix.ekspensify.R
 import com.memeusix.ekspensify.components.FilledButton
 import com.memeusix.ekspensify.components.VerticalSpace
@@ -63,6 +61,7 @@ fun IntroScreen(navController: NavHostController) {
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.weight(1f))
+
         HorizontalPager(
             state = pagerState,
             userScrollEnabled = true,
@@ -140,9 +139,9 @@ fun PageView(introPages: IntroPages, modifier: Modifier) {
             introPages.title,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge.copy(
-                    fontSize = 30.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                ),
+                fontSize = 30.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            ),
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
