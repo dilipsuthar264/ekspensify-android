@@ -180,10 +180,18 @@ private fun AutoTrackingSection(smsFeatureState: Boolean, onEnable: (Boolean) ->
 @Composable
 private fun SafeAndSecureSection() {
     CreateBudgetSectionCard(title = "") {
-        SecureRow("Safe & Secure", R.drawable.ic_shield_check, 16.dp)
-        SecureRow("No OTPs or personal messages accessed.", R.drawable.ic_shield_user, 16.dp)
         SecureRow(
-            "Data stays on your device, no servers involved.",
+            text = stringResource(R.string.safe_secure),
+            iconRes = R.drawable.ic_shield_check,
+            iconSize = 16.dp
+        )
+        SecureRow(
+            stringResource(R.string.no_otps_or_personal_messages_accessed),
+            R.drawable.ic_shield_user,
+            16.dp
+        )
+        SecureRow(
+            stringResource(R.string.data_stays_on_your_device_no_servers_involved),
             R.drawable.ic_safe_square,
             16.dp
         )
@@ -321,7 +329,7 @@ private fun SecureRow(text: String, iconRes: Int, iconSize: Dp) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = rememberAsyncImagePainter(iconRes),
+            painter = painterResource(iconRes),
             modifier = Modifier.size(iconSize),
             contentDescription = null,
         )

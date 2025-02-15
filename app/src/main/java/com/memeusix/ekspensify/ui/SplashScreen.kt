@@ -1,5 +1,6 @@
 package com.memeusix.ekspensify.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -141,6 +142,9 @@ fun navigateAfterSplash(
     user: UserResponseModel?,
     navController: NavHostController
 ) {
+    println("IS Login  : $isLogin")
+    println("accessToekn : $accessToken")
+    println(" user : $user")
     when {
         isLogin && accessToken.isNotEmpty() -> {
             val hasNoAccounts = user?.accounts == 0

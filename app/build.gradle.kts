@@ -182,7 +182,7 @@ dependencies {
      */
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation("androidx.compose.animation:animation-graphics:1.7.7")
+    implementation(libs.androidx.animation.graphics)
 
     implementation(libs.ui)
 
