@@ -4,7 +4,9 @@ import androidx.compose.ui.graphics.Color
 import com.memeusix.ekspensify.R
 import com.memeusix.ekspensify.data.model.responseModel.BudgetReportResponseModel
 import com.memeusix.ekspensify.data.model.responseModel.BudgetResponseModel
+import com.memeusix.ekspensify.ui.theme.Green100
 import com.memeusix.ekspensify.ui.theme.Grey70
+import com.memeusix.ekspensify.ui.theme.Red100
 import com.memeusix.ekspensify.ui.theme.Teal
 import com.memeusix.ekspensify.ui.theme.Yellow100
 import com.memeusix.ekspensify.utils.BudgetPeriod
@@ -95,4 +97,17 @@ fun getStartEndDateText(startDate: String?, endDate: String?): String {
     val startDateFormatted = startDate?.formatDateTime(DateFormat.dd_MMM_yy)
     val endDateFormatted = endDate?.formatDateTime(DateFormat.dd_MMM_yy) ?: "Present"
     return "$startDateFormatted - $endDateFormatted"
+}
+
+
+fun BudgetResponseModel?.getColor(): Color {
+    return when {
+        this?.status == "CLOSED" -> Grey70
+        this.isBudgetExceed() -> Red100
+        else -> Green100
+    }
+}
+
+fun BudgetResponseModel?.isClosed(): Boolean {
+    return this?.status == "CLOSED"
 }

@@ -105,6 +105,16 @@ fun Context.openWebLink(imageUri: String?) {
     }
 }
 
+fun Context.sendEmail(to: String, subject: String, body: String = "") {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("mailto:")
+        putExtra(Intent.EXTRA_EMAIL, arrayOf(to))
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
+    }
+    this.startActivity(Intent.createChooser(intent, "Choose an email app"))
+}
+
 
 fun Modifier.dynamicImePadding(paddingValues: PaddingValues): Modifier {
     return this.then(
@@ -182,6 +192,7 @@ fun String?.isValidUrl(): Boolean {
     if (this.isNullOrEmpty()) return false
     return Patterns.WEB_URL.matcher(this).matches()
 }
+
 fun String.firstLetterCap(): String {
     return this.lowercase(Locale.getDefault())
         .replaceFirstChar { it.titlecase(Locale.getDefault()) }

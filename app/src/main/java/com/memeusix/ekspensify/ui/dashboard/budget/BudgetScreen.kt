@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +32,7 @@ import com.memeusix.ekspensify.navigation.BudgetDetailsScreenRoute
 import com.memeusix.ekspensify.navigation.CreateBudgetScreenRoute
 import com.memeusix.ekspensify.ui.dashboard.budget.components.BudgetFilterRow
 import com.memeusix.ekspensify.ui.dashboard.budget.components.BudgetItem
+import com.memeusix.ekspensify.ui.dashboard.budget.helper.isClosed
 import com.memeusix.ekspensify.ui.dashboard.budget.viewModel.BudgetViewModel
 import com.memeusix.ekspensify.ui.theme.extendedColors
 import com.memeusix.ekspensify.utils.getViewModelStoreOwner
@@ -44,8 +46,6 @@ fun BudgetScreen(
     val lazyState = rememberLazyListState()
     val budgets = budgetViewModel.getBudgets().collectAsLazyPagingItems()
     val budgetMeta by budgetViewModel.budgetMeta.collectAsStateWithLifecycle()
-
-
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -90,7 +90,10 @@ fun BudgetScreen(
                             .clickable(onClick = singleClick {
                                 navController.navigate(BudgetDetailsScreenRoute(budget?.id!!))
                             })
-                            .padding(horizontal = 20.dp, vertical = 16.dp),
+                            .padding(horizontal = 20.dp, vertical = 16.dp)
+                            .alpha(
+                                if (budget.isClosed()) 0.6f else 1f
+                            ),
                     )
                     HorizontalDivider(color = MaterialTheme.extendedColors.primaryBorder)
                 }

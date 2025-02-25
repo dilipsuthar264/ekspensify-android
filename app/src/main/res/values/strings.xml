@@ -128,4 +128,8 @@
     <string name="by_signing_up_you_agree_to_the">"By signing up, you agree to the "</string>
     <string name="swipe_to_enable">Swipe to Enable</string>
     <string name="safe_secure"><![CDATA[Safe & Secure]]></string>
+    <string name="ekspensify_feedback">Ekspensify(%1$s) Feedback</string>
+    <string name="support_request_ekspensify">Support Request - Ekspensify</string>
+    <string name="select_start_date">Select Start Date</string>
+    <string name="select_end_date">Select End Date</string>
 </resources>

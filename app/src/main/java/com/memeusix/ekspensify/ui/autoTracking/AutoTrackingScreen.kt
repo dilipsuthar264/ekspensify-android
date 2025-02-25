@@ -144,7 +144,7 @@ fun AutoTrackingScreen(
 
 @Composable
 private fun AutoTrackingSection(smsFeatureState: Boolean, onEnable: (Boolean) -> Unit) {
-    CreateBudgetSectionCard(title = "") {
+    CreateBudgetSectionCard(title = "", isAnimateSize = false) {
         VerticalSpace(34.dp)
         Image(
             painter = rememberAsyncImagePainter(R.drawable.img_autotracking),
@@ -179,7 +179,7 @@ private fun AutoTrackingSection(smsFeatureState: Boolean, onEnable: (Boolean) ->
 
 @Composable
 private fun SafeAndSecureSection() {
-    CreateBudgetSectionCard(title = "") {
+    CreateBudgetSectionCard(title = "", isAnimateSize = false) {
         SecureRow(
             text = stringResource(R.string.safe_secure),
             iconRes = R.drawable.ic_shield_check,

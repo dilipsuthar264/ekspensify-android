@@ -26,8 +26,11 @@ enum class ProfileOptions(
 enum class AboutOptions(
     val title: String,
 ) {
+    WEBSITE("Website"),
     PRIVACY_POLICY("Privacy Policy"),
     TERMS_AND_CONDITION("Terms and Condition"),
+    SEND_FEEDBACK("Send Feedback"),
+    CONTACT_US("Contact Us")
 }
 
 

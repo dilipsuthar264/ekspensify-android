@@ -76,19 +76,19 @@ fun NavGraph(
         navController = navController,
         startDestination = SplashScreenRoute,
         enterTransition = {
-            slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(300)) +
-                    fadeIn(tween(300))
+            slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, animationSpec = tween(250)) +
+                    fadeIn(tween(250))
         },
         exitTransition = {
-            fadeOut(tween(300))
+            fadeOut(tween(250))
         },
         popEnterTransition = {
-            fadeIn(tween(300))
+            fadeIn(tween(250))
         },
         contentAlignment = Alignment.Center,
         popExitTransition = {
-            slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(300))+
-                    fadeOut(tween(300))
+            slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, animationSpec = tween(250))+
+                    fadeOut(tween(250))
         },
     ) {
         composable<SplashScreenRoute> {

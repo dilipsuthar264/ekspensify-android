@@ -27,6 +27,8 @@ import com.memeusix.ekspensify.R
 import com.memeusix.ekspensify.components.EmptyView
 import com.memeusix.ekspensify.components.PagingListLoader
 import com.memeusix.ekspensify.components.PullToRefreshLayout
+import com.memeusix.ekspensify.components.ShowLoader
+import com.memeusix.ekspensify.data.ApiResponse
 import com.memeusix.ekspensify.data.model.responseModel.TransactionResponseModel
 import com.memeusix.ekspensify.navigation.FilterScreenRoute
 import com.memeusix.ekspensify.ui.dashboard.transactions.components.TransactionListItem
@@ -52,6 +54,7 @@ fun TransactionScreen(
     val deleteTransaction by transactionViewModel.deleteTransaction.collectAsStateWithLifecycle()
     val toastState = remember { mutableStateOf<CustomToastModel?>(null) }
     val searchState = remember { mutableStateOf("") }
+    val isLoading = deleteTransaction is ApiResponse.Loading
 
     val selectedFilterModel by transactionViewModel.userSelectedFilters.collectAsStateWithLifecycle()
 
@@ -116,6 +119,7 @@ fun TransactionScreen(
                     transactionViewModel.openDialog(transaction)
                 }
             )
+            ShowLoader(isLoading)
         }
     }
 }

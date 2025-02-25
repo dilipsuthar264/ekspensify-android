@@ -1,8 +1,8 @@
 package com.memeusix.ekspensify.ui.theme
 
+import android.provider.Settings
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
-import androidx.compose.foundation.OverscrollConfiguration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -12,7 +12,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.LocalReduceMotion
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
@@ -50,7 +53,7 @@ private val DarkColorPalette = darkColorScheme(
 )
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalWearFoundationApi::class)
 @Composable
 fun EkspensifyTheme(
     themeViewModel: ThemeViewModel = hiltViewModel(),
@@ -81,7 +84,7 @@ fun EkspensifyTheme(
 
     CompositionLocalProvider(
         LocalExtendedColors provides extendedColors,
-        LocalOverscrollConfiguration provides null
+        LocalOverscrollConfiguration provides null,
     ) {
         MaterialTheme(
             colorScheme = colors,

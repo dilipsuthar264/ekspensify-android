@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CreateBudgetSectionCard(
     title: String,
+    isAnimateSize: Boolean = true,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Surface(
@@ -24,7 +25,9 @@ fun CreateBudgetSectionCard(
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .animateContentSize()
+            .let {
+                if (isAnimateSize) it.animateContentSize() else it
+            }
     ) {
         Column(
             Modifier

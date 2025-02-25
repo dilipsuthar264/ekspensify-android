@@ -26,6 +26,7 @@ import com.memeusix.ekspensify.ui.theme.extendedColors
 import com.memeusix.ekspensify.utils.CommonData
 import com.memeusix.ekspensify.utils.dynamicImePadding
 import com.memeusix.ekspensify.utils.openWebLink
+import com.memeusix.ekspensify.utils.sendEmail
 
 @Composable
 fun AboutScreen(
@@ -85,6 +86,29 @@ private fun handleAboutOptionClick(clickedOption: AboutOptions, navController: N
         AboutOptions.TERMS_AND_CONDITION -> {
             navController.context.openWebLink(
                 CommonData.TERMS_AND_CONDITION
+            )
+        }
+
+        AboutOptions.WEBSITE -> {
+            navController.context.openWebLink(
+                CommonData.WEBSITE
+            )
+        }
+
+        AboutOptions.SEND_FEEDBACK -> {
+            navController.context.sendEmail(
+                to = CommonData.ADMIN_MAIL,
+                subject = navController.context.getString(
+                    R.string.ekspensify_feedback,
+                    BuildConfig.VERSION_NAME
+                )
+            )
+        }
+
+        AboutOptions.CONTACT_US -> {
+            navController.context.sendEmail(
+                to = CommonData.SUPPORT_MAIL,
+                subject = navController.context.getString(R.string.support_request_ekspensify)
             )
         }
     }

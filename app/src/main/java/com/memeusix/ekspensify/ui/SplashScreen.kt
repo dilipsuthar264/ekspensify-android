@@ -142,9 +142,6 @@ fun navigateAfterSplash(
     user: UserResponseModel?,
     navController: NavHostController
 ) {
-    println("IS Login  : $isLogin")
-    println("accessToekn : $accessToken")
-    println(" user : $user")
     when {
         isLogin && accessToken.isNotEmpty() -> {
             val hasNoAccounts = user?.accounts == 0
