@@ -38,6 +38,7 @@ I wanted a **clean, intuitive, and fun way** to track income and expenses. No mo
 - **Paging3** – For efficient paginated data retrieval and display in the UI.
 
 ## **📸 Screenshots**
+<img src="ekspensify_preview.svg" alt="preview"/>
 
 ## **🔧 Installation & Setup**
 
@@ -69,5 +70,5 @@ Love this project? Want to make it even better? Feel free to **open issues, subm
 
 Got feedback or ideas? Reach out to me! I’d love to hear from you. 🎉
 
-- 📧 Email: memeusix@gmail.com
+- 📧 Email: admin@ekspensify.in
 - 💼 LinkedIn:  [Dilip Kumar | LinkedIn](https://www.linkedin.com/in/dilipkumar264/)

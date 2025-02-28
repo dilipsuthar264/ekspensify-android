@@ -25,6 +25,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -148,9 +149,18 @@ fun CreateTransactionScreen(
         }
     }
 
+    val linearGradient = Brush.linearGradient(
+        listOf(
+            bgColor,
+            bgColor,
+            bgColor,
+            MaterialTheme.colorScheme.background
+        )
+    )
+
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = bgColor,
+        modifier = Modifier.fillMaxSize().background(linearGradient),
+//        containerColor = bgColor,
         contentColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             AppBar(
@@ -168,7 +178,7 @@ fun CreateTransactionScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .background(bgColor)
+                    .background(linearGradient)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.SpaceBetween
