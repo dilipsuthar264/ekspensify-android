@@ -116,6 +116,7 @@ fun CreateBudgetScreen(
     }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBar(
                 heading = stringResource(R.string.create_budget),
@@ -239,7 +240,7 @@ fun RenewalTypeSection(
             style = MaterialTheme.typography.bodyMedium
         )
         DateFieldWithIcon(
-            text = formState.startDate.formatLocalDate() ?: "Select Start Date",
+            text = formState.startDate.formatLocalDate() ?: stringResource(R.string.select_start_date),
             isSelected = formState.startDate.isNotEmpty(),
             onClick = onStartDateClick
         )
@@ -249,7 +250,7 @@ fun RenewalTypeSection(
                 style = MaterialTheme.typography.bodyMedium
             )
             DateFieldWithIcon(
-                text = formState.endDate.formatLocalDate() ?: "Select End Date",
+                text = formState.endDate.formatLocalDate() ?: stringResource(R.string.select_end_date),
                 isSelected = !formState.endDate.isNullOrEmpty(),
                 onClick = onEndDateClick
             )

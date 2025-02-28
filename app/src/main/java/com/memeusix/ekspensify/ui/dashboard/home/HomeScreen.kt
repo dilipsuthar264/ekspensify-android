@@ -104,7 +104,6 @@ fun HomeScreen(
             onDismiss = { showCategoryTypeOptions = false }
         )
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -126,6 +125,9 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
+                item {
+                    VerticalSpace(15.dp)
+                }
                 item {
                     AutoTrackingCard(
                         isEnable = isAutoTrackingEnable,
@@ -181,9 +183,6 @@ fun HomeScreen(
                 }
                 items(categoryInsights) { item ->
                     InsightsCategoryItem(item)
-                }
-                item {
-                    VerticalSpace(20.dp)
                 }
             }
 

@@ -12,12 +12,6 @@ pluginManagement {
     }
 }
 
-buildCache {
-    local {
-        isEnabled = true
-    }
-}
-
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {

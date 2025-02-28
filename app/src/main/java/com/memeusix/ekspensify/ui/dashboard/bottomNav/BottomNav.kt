@@ -1,5 +1,11 @@
 package com.memeusix.ekspensify.ui.dashboard.bottomNav
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -99,7 +105,9 @@ fun BottomNav(
     }
 
     Scaffold(
-        modifier = Modifier.navigationBarsPadding(),
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding(),
         topBar = {
 //            key(currentIndex) {
 //                if (currentIndex != 0) {
@@ -221,12 +229,22 @@ private fun ContentView(
                 }
             }
     ) {
-        when (currentItem) {
-            is BottomNavItem.Home -> HomeScreen(navController)
-            is BottomNavItem.Transaction -> TransactionScreen(navController, transactionViewModel)
-            is BottomNavItem.Budget -> BudgetScreen(navController)
-            is BottomNavItem.Profile -> ProfileScreen(navController)
-            is BottomNavItem.Action -> Unit
+        AnimatedContent(
+            targetState = currentItem,
+            transitionSpec = {
+                fadeIn(tween(200)) + slideInVertically(
+                    initialOffsetY = { -it / 10 },
+                    animationSpec = tween(200)
+                ) togetherWith fadeOut(tween(200))
+            }, label = ""
+        ) { targetScreen ->
+            when (targetScreen) {
+                is BottomNavItem.Home -> HomeScreen(navController)
+                is BottomNavItem.Transaction -> TransactionScreen(navController, transactionViewModel)
+                is BottomNavItem.Budget -> BudgetScreen(navController)
+                is BottomNavItem.Profile -> ProfileScreen(navController)
+                is BottomNavItem.Action -> Unit
+            }
         }
     }
 

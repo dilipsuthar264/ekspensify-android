@@ -38,6 +38,7 @@ import com.memeusix.ekspensify.components.AppBar
 import com.memeusix.ekspensify.components.FilledButton
 import com.memeusix.ekspensify.components.OtpInputField
 import com.memeusix.ekspensify.components.ShowLoader
+import com.memeusix.ekspensify.components.VerticalSpace
 import com.memeusix.ekspensify.data.ApiResponse
 import com.memeusix.ekspensify.data.model.requestModel.AuthRequestModel
 import com.memeusix.ekspensify.ui.auth.viewModel.AuthViewModel
@@ -45,6 +46,7 @@ import com.memeusix.ekspensify.ui.theme.Typography
 import com.memeusix.ekspensify.utils.dynamicImePadding
 import com.memeusix.ekspensify.utils.goToNextScreenAfterLogin
 import com.memeusix.ekspensify.utils.handleApiResponse
+import com.memeusix.ekspensify.utils.handleApiResponseWithError
 import com.memeusix.ekspensify.utils.toastUtils.CustomToast
 import com.memeusix.ekspensify.utils.toastUtils.CustomToastModel
 import com.memeusix.ekspensify.utils.toastUtils.ToastType
@@ -89,10 +91,13 @@ fun OtpVerificationScreen(
         focusRequester.requestFocus()
     }
     LaunchedEffect(loginResponse, sendOtpResponse) {
-        handleApiResponse(
+        handleApiResponseWithError(
             response = loginResponse,
             toastState = toastState,
             navController = navController,
+            onFailure = {
+                otpValue = ""
+            },
             onSuccess = { data ->
                 data?.apply {
                     if (user != null && !token.isNullOrEmpty()) {
@@ -118,6 +123,7 @@ fun OtpVerificationScreen(
                     isVisible = true,
                     type = ToastType.SUCCESS
                 )
+                otpValue = ""
             }
         )
     }
@@ -125,6 +131,7 @@ fun OtpVerificationScreen(
 
     // Main Ui
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBar(stringResource(R.string.verification), navController)
         },
@@ -135,9 +142,10 @@ fun OtpVerificationScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .dynamicImePadding(paddingValues)
-                .padding(20.dp)
+                .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
+            VerticalSpace(20.dp)
             Text(
                 stringResource(R.string.enter_your_verification_code),
                 style = MaterialTheme.typography.titleLarge,
@@ -197,6 +205,8 @@ fun OtpVerificationScreen(
                 },
                 enabled = otpValue.length == 6
             )
+            VerticalSpace(20.dp)
+
         }
 
 

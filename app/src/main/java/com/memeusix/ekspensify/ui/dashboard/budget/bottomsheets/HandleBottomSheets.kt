@@ -62,21 +62,21 @@ fun HandleBottomSheets(
                     ?: LocalDate.now()
 
                 DatePickerType.END_DATE -> formState.endDate?.let { LocalDate.parse(it) }
-                    ?: formState.startDate.let { LocalDate.parse(it) } ?: LocalDate.now()
+                    ?: formState.startDate.let { LocalDate.parse(it) }.plusDays(1) ?: LocalDate.now().plusDays(1)
             },
             minDate = if (datePickerType == DatePickerType.END_DATE) formState.startDate.let {
-                LocalDate.parse(
-                    it
-                )
-            } else LocalDate.now(),
-            maxDate = if (formState.endDate != null) LocalDate.parse(formState.endDate) else LocalDate.MAX,
+                LocalDate.parse(it)
+            }.plusDays(1) else LocalDate.now(),
+            maxDate = if (datePickerType == DatePickerType.START_DATE) {
+                formState.endDate?.let { LocalDate.parse(it) } ?: LocalDate.MAX
+            } else LocalDate.MAX,
             onDismiss = { showDatePicker.value = false }, onDateSelected = { date ->
                 when (datePickerType) {
                     DatePickerType.START_DATE -> createBudgetState.updateStartDate(date.toString())
                     DatePickerType.END_DATE -> createBudgetState.updateEndDate(date.toString())
                 }
                 showDatePicker.value = false
-            }
+            }   
         )
     }
 

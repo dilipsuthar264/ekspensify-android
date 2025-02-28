@@ -1,6 +1,7 @@
 package com.memeusix.ekspensify.ui.dashboard.profile
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -22,17 +23,22 @@ import com.memeusix.ekspensify.components.CustomListItem
 import com.memeusix.ekspensify.ui.dashboard.budget.components.CreateBudgetSectionCard
 import com.memeusix.ekspensify.ui.dashboard.profile.data.AboutOptions
 import com.memeusix.ekspensify.ui.theme.extendedColors
+import com.memeusix.ekspensify.utils.CommonData
 import com.memeusix.ekspensify.utils.dynamicImePadding
+import com.memeusix.ekspensify.utils.openWebLink
+import com.memeusix.ekspensify.utils.sendEmail
 
 @Composable
 fun AboutScreen(
     navController: NavHostController
 ) {
-    Scaffold(topBar = {
-        AppBar(
-            heading = "About", navController
-        )
-    }) { paddingValues ->
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            AppBar(
+                heading = "About", navController
+            )
+        }) { paddingValues ->
         Column(
             modifier = Modifier
                 .dynamicImePadding(paddingValues)
@@ -50,7 +56,7 @@ fun AboutScreen(
                                 contentDescription = null,
                             )
                         },
-                        onClick = {}
+                        onClick = { handleAboutOptionClick(it, navController) }
                     )
                 }
             }
@@ -64,6 +70,45 @@ fun AboutScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp)
+            )
+        }
+    }
+}
+
+private fun handleAboutOptionClick(clickedOption: AboutOptions, navController: NavHostController) {
+    when (clickedOption) {
+        AboutOptions.PRIVACY_POLICY -> {
+            navController.context.openWebLink(
+                CommonData.PRIVACY_POLICY
+            )
+        }
+
+        AboutOptions.TERMS_AND_CONDITION -> {
+            navController.context.openWebLink(
+                CommonData.TERMS_AND_CONDITION
+            )
+        }
+
+        AboutOptions.WEBSITE -> {
+            navController.context.openWebLink(
+                CommonData.WEBSITE
+            )
+        }
+
+        AboutOptions.SEND_FEEDBACK -> {
+            navController.context.sendEmail(
+                to = CommonData.ADMIN_MAIL,
+                subject = navController.context.getString(
+                    R.string.ekspensify_feedback,
+                    BuildConfig.VERSION_NAME
+                )
+            )
+        }
+
+        AboutOptions.CONTACT_US -> {
+            navController.context.sendEmail(
+                to = CommonData.SUPPORT_MAIL,
+                subject = navController.context.getString(R.string.support_request_ekspensify)
             )
         }
     }

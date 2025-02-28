@@ -19,7 +19,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun BottomSheetDialog(
     title: String,
-    state: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+    state: SheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+        confirmValueChange = { true }),
     onDismiss: () -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {

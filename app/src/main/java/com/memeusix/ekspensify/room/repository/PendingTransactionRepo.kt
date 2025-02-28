@@ -26,7 +26,6 @@ class PendingTransactionRepo @Inject constructor(
     }
 
     // * delete
-
     suspend fun deletePendingTransaction(id: Int): Result<PendingTransactionModel> {
         return try {
             pendingTransactionDao.deletePendingTransaction(id)
@@ -38,7 +37,6 @@ class PendingTransactionRepo @Inject constructor(
 
 
     // * get pending transaction
-
     fun getPendingTransaction(): Flow<PagingData<PendingTransactionModel>> {
         return try {
             Pager(

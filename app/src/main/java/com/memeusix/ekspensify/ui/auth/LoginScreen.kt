@@ -35,6 +35,7 @@ import com.memeusix.ekspensify.components.AppBar
 import com.memeusix.ekspensify.components.CustomOutlineTextField
 import com.memeusix.ekspensify.components.FilledButton
 import com.memeusix.ekspensify.components.ShowLoader
+import com.memeusix.ekspensify.components.VerticalSpace
 import com.memeusix.ekspensify.data.ApiResponse
 import com.memeusix.ekspensify.data.model.TextFieldStateModel
 import com.memeusix.ekspensify.data.model.requestModel.AuthRequestModel
@@ -116,6 +117,7 @@ fun LoginScreen(
 
     // Main Ui
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBar(stringResource(R.string.login), navController)
         },
@@ -125,9 +127,10 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .dynamicImePadding(paddingValues)
-                .padding(20.dp)
+                .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
+            VerticalSpace(20.dp)
             LoginImage()
             CustomOutlineTextField(
                 state = email,
@@ -146,7 +149,7 @@ fun LoginScreen(
                                 email.value.copy(error = context.getString(R.string.please_enter_your_email))
                         }
 
-                        !email.value.text.isValidEmail() -> {
+                        !email.value.text.trim().isValidEmail() -> {
                             email.value =
                                 email.value.copy(error = context.getString(R.string.please_enter_a_valid_email))
                         }
@@ -154,13 +157,12 @@ fun LoginScreen(
                         else -> {
                             authViewModel.sendOtp(
                                 AuthRequestModel(
-                                    email = email.value.text.trim { it == ' ' }
+                                    email = email.value.text.trim()
                                 )
                             )
                         }
                     }
                 })
-
             Spacer(Modifier.height(15.dp))
             Text(
                 text = stringResource(R.string.or),
@@ -191,6 +193,7 @@ fun LoginScreen(
                     popUpTo(LoginScreenRoute) { inclusive = true }
                 }
             }
+            VerticalSpace(20.dp)
         }
 
         // show loader

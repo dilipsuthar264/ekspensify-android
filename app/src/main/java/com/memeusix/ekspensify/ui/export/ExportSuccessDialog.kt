@@ -114,7 +114,7 @@ private fun TitleText() {
 
 @Composable
 private fun LottieAnime() {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.animation))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.send_email_animation))
     LottieAnimation(
         composition = composition,
         modifier = Modifier

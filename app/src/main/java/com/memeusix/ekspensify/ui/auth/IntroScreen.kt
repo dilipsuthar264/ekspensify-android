@@ -2,6 +2,7 @@ package com.memeusix.ekspensify.ui.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerDefaults
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -46,7 +48,7 @@ fun IntroScreen(navController: NavHostController) {
     val pagerState = rememberPagerState(
         pageCount = { introPages.size },
         initialPage = 0,
-        initialPageOffsetFraction = 0f
+        initialPageOffsetFraction = 0f,
     )
     val textModifier = Modifier.padding(vertical = 17.dp)
     val btnModifier = Modifier.padding(horizontal = 20.dp)
@@ -60,11 +62,16 @@ fun IntroScreen(navController: NavHostController) {
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.weight(1f))
+
         HorizontalPager(
             state = pagerState,
+            userScrollEnabled = true,
+            flingBehavior = PagerDefaults.flingBehavior(state = pagerState),
+            snapPosition = SnapPosition.Center
         ) { page ->
             PageView(introPages[page], modifier = Modifier.fillMaxWidth())
         }
+//        Spacer(Modifier.weight(1f))
         VerticalSpace(30.dp)
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -122,7 +129,7 @@ fun PageView(introPages: IntroPages, modifier: Modifier) {
         verticalArrangement = Arrangement.Center,
     ) {
         Image(
-            painter = painterResource(id = introPages.image),
+            painter = painterResource(introPages.image),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
@@ -132,15 +139,19 @@ fun PageView(introPages: IntroPages, modifier: Modifier) {
         Text(
             introPages.title,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge,
-            fontSize = 32.sp,
-            color = MaterialTheme.colorScheme.onBackground
+            style = MaterialTheme.typography.titleLarge.copy(
+                fontSize = 30.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            ),
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = introPages.description,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            ),
+            minLines = 2,
+            maxLines = 2,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 15.dp)
         )

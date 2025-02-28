@@ -15,23 +15,23 @@ data class IntroPages(
                 IntroPages(
                     image = R.drawable.ic_onboarding_1,
                     title = "Ekspensify",
-                    description = "Become your own money manager and make every Rupee count"
+                    description = "Tracking money made easy, so you can stress less and enjoy more!"
                 )
             )
 
             pages.add(
                 IntroPages(
                     image = R.drawable.ic_onboarding_2,
-                    title = "Track Expenses",
-                    description = "Track your transaction easily, with categories and financial report"
+                    title = "Auto Tracking",
+                    description = "Automatically track and categorize your expenses in real-time."
                 )
             )
 
             pages.add(
                 IntroPages(
                     image = R.drawable.ic_onboarding_3,
-                    title = "Budget Planning",
-                    description = "Become your own money manager and make every Rupee count"
+                    title = "Set Budgets",
+                    description = "Set budgets, control expenses, and save smarter."
                 )
             )
 

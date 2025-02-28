@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.memeusix.ekspensify.components.CustomOutlineTextField
 import com.memeusix.ekspensify.components.TextFieldRupeePrefix
 import com.memeusix.ekspensify.components.TextFieldType
@@ -28,6 +29,7 @@ import com.memeusix.ekspensify.data.model.responseModel.AccountResponseModel
 import com.memeusix.ekspensify.data.model.responseModel.AttachmentResponseModel
 import com.memeusix.ekspensify.data.model.responseModel.CategoryResponseModel
 import com.memeusix.ekspensify.imagePicker.ImagePickerBottomSheet
+import com.memeusix.ekspensify.navigation.PicturePreviewScreenRoute
 import com.memeusix.ekspensify.ui.categories.components.ShowIconLoader
 import com.memeusix.ekspensify.ui.dashboard.budget.bottomsheets.SelectAccountBottomSheet
 import com.memeusix.ekspensify.ui.dashboard.budget.bottomsheets.SelectCategoryBottomSheet
@@ -35,7 +37,6 @@ import com.memeusix.ekspensify.ui.dashboard.transactions.viewmodel.TransactionVi
 import com.memeusix.ekspensify.utils.BottomSheetSelectionType
 import com.memeusix.ekspensify.utils.TransactionType
 import com.memeusix.ekspensify.utils.handleApiResponse
-import com.memeusix.ekspensify.utils.openImageExternally
 import com.memeusix.ekspensify.utils.toastUtils.CustomToastModel
 
 
@@ -50,7 +51,8 @@ fun CreateTransactionFromOptions(
     modifier: Modifier,
     transactionViewModel: TransactionViewModel,
     type: TransactionType,
-    toastState: MutableState<CustomToastModel?>
+    toastState: MutableState<CustomToastModel?>,
+    navController: NavHostController,
 ) {
     val context = LocalContext.current
     val showImagePicker = remember { mutableStateOf(false) }
@@ -172,19 +174,15 @@ fun CreateTransactionFromOptions(
             ShowIconLoader(
                 modifier
                     .size(32.dp)
-                    .align(Alignment.CenterHorizontally))
+                    .align(Alignment.CenterHorizontally)
+            )
         } else {
             AttachmentView(
                 selectedAttachment,
                 onClick = { isView ->
                     if (isView) {
-                        selectedAttachment.value.let {
-                            context.openImageExternally(it.path)
-//                            navController.navigate(
-//                                ImageWebViewRoute(
-//                                    it.path
-//                                )
-//                            )
+                        selectedAttachment.value.path?.let {
+                            navController.navigate(PicturePreviewScreenRoute(it))
                         }
                     } else {
                         showImagePicker.value = true

@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.npm.includedRange
 import java.util.Properties
 
 plugins {
@@ -29,7 +28,7 @@ android {
     properties.load(project.rootProject.file("local.properties").inputStream())
     defaultConfig {
         applicationId = "com.memeusix.ekspensify"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -75,12 +74,13 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            isDebuggable = false
             signingConfig = signingConfigs.getByName("release")
+//            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -88,6 +88,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -143,6 +144,7 @@ dependencies {
      */
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.compose.material)
     kapt(libs.hilt.android.compiler)
 
     /**
@@ -182,7 +184,9 @@ dependencies {
      */
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.animation.graphics)
 
+    implementation(libs.ui)
 
     /**
      * for splash screen
@@ -261,4 +265,6 @@ dependencies {
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
+
+
 }

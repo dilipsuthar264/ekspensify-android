@@ -96,13 +96,23 @@ fun String.generateIconSlug(): String {
     return "ic_" + this.trim().lowercase().replace(' ', '_')
 }
 
-fun Context.openImageExternally(imageUri: String?) {
+fun Context.openWebLink(imageUri: String?) {
     if (imageUri.orEmpty().isNotEmpty()) {
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(imageUri)
         }
         startActivity(intent)
     }
+}
+
+fun Context.sendEmail(to: String, subject: String, body: String = "") {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse("mailto:")
+        putExtra(Intent.EXTRA_EMAIL, arrayOf(to))
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
+    }
+    this.startActivity(Intent.createChooser(intent, "Choose an email app"))
 }
 
 
@@ -182,6 +192,7 @@ fun String?.isValidUrl(): Boolean {
     if (this.isNullOrEmpty()) return false
     return Patterns.WEB_URL.matcher(this).matches()
 }
+
 fun String.firstLetterCap(): String {
     return this.lowercase(Locale.getDefault())
         .replaceFirstChar { it.titlecase(Locale.getDefault()) }

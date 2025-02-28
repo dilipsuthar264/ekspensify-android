@@ -7,6 +7,14 @@ import com.memeusix.ekspensify.ui.theme.Teal
 
 const val SPLASH_DURATION = 300L
 
+object CommonData{
+    const val WEBSITE = "https://www.ekspensify.in"
+    const val PRIVACY_POLICY = "https://www.ekspensify.in/privacy-policy"
+    const val TERMS_AND_CONDITION = "https://www.ekspensify.in/terms-conditions"
+    const val SUPPORT_MAIL = "support@ekspensify.in"
+    const val ADMIN_MAIL = "admin@ekspensify.in"
+}
+
 enum class AccountType {
     BANK,
     WALLET;

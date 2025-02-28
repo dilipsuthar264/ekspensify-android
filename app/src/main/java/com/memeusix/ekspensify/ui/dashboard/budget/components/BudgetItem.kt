@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -30,13 +31,14 @@ import com.memeusix.ekspensify.R
 import com.memeusix.ekspensify.components.DrawableStartText
 import com.memeusix.ekspensify.components.VerticalSpace
 import com.memeusix.ekspensify.data.model.responseModel.BudgetResponseModel
+import com.memeusix.ekspensify.ui.dashboard.budget.helper.getColor
 import com.memeusix.ekspensify.ui.dashboard.budget.helper.getOnGoingText
 import com.memeusix.ekspensify.ui.dashboard.budget.helper.getPeriod
 import com.memeusix.ekspensify.ui.dashboard.budget.helper.getProgressValue
 import com.memeusix.ekspensify.ui.dashboard.budget.helper.getStartEndDateText
 import com.memeusix.ekspensify.ui.dashboard.budget.helper.getTagValues
 import com.memeusix.ekspensify.ui.dashboard.budget.helper.isBudgetExceed
-import com.memeusix.ekspensify.ui.theme.Green100
+import com.memeusix.ekspensify.ui.dashboard.budget.helper.isClosed
 import com.memeusix.ekspensify.ui.theme.Red100
 import com.memeusix.ekspensify.ui.theme.Violet40
 import com.memeusix.ekspensify.ui.theme.extendedColors
@@ -51,10 +53,10 @@ fun BudgetItem(
     onCategoryClick: () -> Unit = {},
     onAccountClick: () -> Unit = {}
 ) {
-    val color = if (budget.isBudgetExceed()) Red100 else Green100
+    val color = budget.getColor()
 
     Column(
-        modifier = modifier,
+        modifier = modifier
     ) {
         if (budget?.isDetailsPage == false) {
             BudgetItemTitle("#${budget.id}")
@@ -119,6 +121,7 @@ fun BudgetDatePeriodRow(
 
 @Composable
 private fun BudgetSpentLimitRow(budget: BudgetResponseModel?) {
+    val color = budget.getColor()
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Bottom,
@@ -127,7 +130,7 @@ private fun BudgetSpentLimitRow(budget: BudgetResponseModel?) {
         BudgetSpentLimitText(
             spent = budget?.spent ?: 0,
             limit = budget?.limit ?: 0,
-            color = if (budget.isBudgetExceed()) Red100 else Green100
+            color = color
         )
         if (budget.isBudgetExceed()) {
             Text(

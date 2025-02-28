@@ -72,7 +72,7 @@ fun AppBarBackBtn(
         modifier = Modifier.padding(start = 5.dp).size(size)
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_arrow_left),
+            painter = painterResource(R.drawable.ic_back_arrow),
             contentDescription = "Back",
             tint = navigationIconTint
         )

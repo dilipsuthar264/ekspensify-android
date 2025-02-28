@@ -129,7 +129,9 @@ fun FilterScreen(
             })
     }
 
-    Scaffold(topBar = {
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
         AppBar(
             heading = stringResource(R.string.filters),
             elevation = false,

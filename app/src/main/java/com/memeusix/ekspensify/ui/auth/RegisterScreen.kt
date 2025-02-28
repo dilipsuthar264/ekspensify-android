@@ -26,7 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -46,6 +52,7 @@ import com.memeusix.ekspensify.ui.auth.components.DontHaveAccountText
 import com.memeusix.ekspensify.ui.auth.components.GoogleAuthBtn
 import com.memeusix.ekspensify.ui.auth.viewModel.AuthViewModel
 import com.memeusix.ekspensify.ui.theme.Typography
+import com.memeusix.ekspensify.utils.CommonData
 import com.memeusix.ekspensify.utils.dynamicImePadding
 import com.memeusix.ekspensify.utils.goToNextScreenAfterLogin
 import com.memeusix.ekspensify.utils.handleApiResponse
@@ -122,6 +129,7 @@ fun RegisterScreen(
 
     // Main Ui
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             AppBar(stringResource(R.string.sign_up), navController)
         },
@@ -131,10 +139,10 @@ fun RegisterScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .dynamicImePadding(paddingValues)
-                .padding(20.dp)
-                .padding(top = 36.dp)
+                .padding(horizontal = 20.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
+            VerticalSpace(56.dp)
             CustomOutlineTextField(
                 state = nameState,
                 placeholder = stringResource(R.string.name),
@@ -219,6 +227,7 @@ fun RegisterScreen(
                     popUpTo(RegisterScreenRoute) { inclusive = true }
                 }
             }
+            VerticalSpace(20.dp)
         }
 
 
@@ -241,9 +250,42 @@ private fun TermsAndConditionCheckBox(isCheckBoxCheck: Boolean, onCheckChange: (
                 uncheckedColor = MaterialTheme.colorScheme.primary
             )
         )
+        val annotatedString = buildAnnotatedString {
+            append(stringResource(R.string.by_signing_up_you_agree_to_the))
+            withLink(
+                LinkAnnotation.Url(
+                    url = CommonData.TERMS_AND_CONDITION,
+                    styles = TextLinkStyles(
+                        style = SpanStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                            textDecoration = TextDecoration.Underline
+                        ),
+                    )
+                )
+            ) {
+                append(stringResource(R.string.terms_of_service))
+            }
+            append(
+                stringResource(R.string.and)
+            )
+            withLink(
+                LinkAnnotation.Url(
+                    url = CommonData.PRIVACY_POLICY,
+                    styles = TextLinkStyles(
+                        style = SpanStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    )
+                )
+            ) {
+                append(stringResource(R.string.privacy_policy))
+            }
+        }
+
         Text(
-            stringResource(R.string.by_signing_up_you_agree_to_the_terms_of_service_and_privacy_policy),
-            style = MaterialTheme.typography.bodySmall
+            annotatedString,
+            style = MaterialTheme.typography.bodySmall,
         )
     }
 }

@@ -74,8 +74,10 @@ fun <T> handleApiResponse(
 
         is ApiResponse.Failure -> {
             val errorMessage = response.errorResponse?.message ?: "An error occurred"
-            if (response.errorResponse?.code == 401) {
-                navController?.let { nav ->
+            val spUtils = navController?.context?.let { SpUtils(it) }?.let { SpUtilsManager(it) }
+
+            if (response.errorResponse?.code == 401 && spUtils?.isLoggedIn?.value == true) {
+                navController.let { nav ->
                     goToLogin(nav, errorMessage)
                     return
                 }
@@ -107,9 +109,10 @@ fun <T> handleApiResponseWithError(
 
         is ApiResponse.Failure -> {
             val errorMessage = response.errorResponse?.message ?: "An error occurred"
+            val spUtils = navController?.context?.let { SpUtils(it) }?.let { SpUtilsManager(it) }
 
-            if (response.errorResponse?.code == 401) {
-                navController?.let { nav ->
+            if (response.errorResponse?.code == 401 && spUtils?.isLoggedIn?.value == true) {
+                navController.let { nav ->
                     goToLogin(nav, errorMessage)
                     return
                 }
@@ -133,19 +136,19 @@ private fun goToLogin(
     navController: NavController,
     errorMessage: String
 ) {
+    val spUtils = SpUtilsManager(SpUtils(navController.context))
     // Navigate to IntroScreen and clear back stack
     navController.navigate(IntroScreenRoute) {
         popUpTo(0) { inclusive = false }
     }
-
     // Perform logout using a helper function or manager
-    SpUtilsManager(SpUtils(navController.context)).logout()
-
+    spUtils.logout()
     // Display the error message as a toast
     Toast.makeText(navController.context, errorMessage, Toast.LENGTH_SHORT).apply {
         setGravity(Gravity.TOP, 0, 0)
         show()
     }
+
 }
 
 
