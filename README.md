@@ -70,5 +70,5 @@ Love this project? Want to make it even better? Feel free to **open issues, subm
 
 Got feedback or ideas? Reach out to me! I’d love to hear from you. 🎉
 
-- 📧 Email: admin@ekspensify.in
+- 📧 Email: team@ekspensify.in
 - 💼 LinkedIn:  [Dilip Kumar | LinkedIn](https://www.linkedin.com/in/dilipkumar264/)

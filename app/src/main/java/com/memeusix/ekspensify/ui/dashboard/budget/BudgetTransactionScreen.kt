@@ -30,6 +30,7 @@ import com.memeusix.ekspensify.utils.getViewModelStoreOwner
 import com.memeusix.ekspensify.utils.handleApiResponse
 import com.memeusix.ekspensify.utils.toastUtils.CustomToast
 import com.memeusix.ekspensify.utils.toastUtils.CustomToastModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun BudgetTransactionScreen(
@@ -39,6 +40,9 @@ fun BudgetTransactionScreen(
     transactionViewModel: TransactionViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
     LaunchedEffect(Unit) {
+        budgetViewModel.setBudgetId(null)
+        budgetViewModel.setReportId(null)
+//        delay(100)
         budgetViewModel.setBudgetId(args.budgetId)
         budgetViewModel.setReportId(args.budgetReportId)
     }

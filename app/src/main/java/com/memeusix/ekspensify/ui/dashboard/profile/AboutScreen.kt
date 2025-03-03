@@ -97,7 +97,7 @@ private fun handleAboutOptionClick(clickedOption: AboutOptions, navController: N
 
         AboutOptions.SEND_FEEDBACK -> {
             navController.context.sendEmail(
-                to = CommonData.ADMIN_MAIL,
+                to = CommonData.TEAM_MAIL,
                 subject = navController.context.getString(
                     R.string.ekspensify_feedback,
                     BuildConfig.VERSION_NAME
