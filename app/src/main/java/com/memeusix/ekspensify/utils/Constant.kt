@@ -12,7 +12,7 @@ object CommonData{
     const val PRIVACY_POLICY = "https://www.ekspensify.in/privacy-policy"
     const val TERMS_AND_CONDITION = "https://www.ekspensify.in/terms-conditions"
     const val SUPPORT_MAIL = "support@ekspensify.in"
-    const val ADMIN_MAIL = "admin@ekspensify.in"
+    const val TEAM_MAIL = "team@ekspensify.in"
 }
 
 enum class AccountType {

@@ -21,6 +21,13 @@ I wanted a **clean, intuitive, and fun way** to track income and expenses. No mo
 - ☁ **Cloud Storage:** Your transaction records are securely stored on the server, keeping them safe and accessible.
 - 📄 **PDF & CSV Export**: Easily export transaction data for reporting and record-keeping.
 
+## **🎉 Download the App**
+
+You can get the latest version of the app from the Google Play Store:
+
+**✨ Latest Version:** 1.0
+
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80"/>](https://play.google.com/store/apps/details?id=com.memeusix.ekspensify)
 
 
 ## **🛠 Tech Stack**
@@ -70,5 +77,5 @@ Love this project? Want to make it even better? Feel free to **open issues, subm
 
 Got feedback or ideas? Reach out to me! I’d love to hear from you. 🎉
 
-- 📧 Email: admin@ekspensify.in
+- 📧 Email: team@ekspensify.in
 - 💼 LinkedIn:  [Dilip Kumar | LinkedIn](https://www.linkedin.com/in/dilipkumar264/)
