@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.memeusix.ekspensify">
+    package="com.ekspensify.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -35,7 +35,7 @@
 
 
     <application
-        android:name="com.memeusix.ekspensify.EkspensifyApp"
+        android:name="com.ekspensify.app.EkspensifyApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -47,7 +47,7 @@
         android:theme="@style/Theme.Ekspensify"
         tools:targetApi="35">
         <activity
-            android:name="com.memeusix.ekspensify.MainActivity"
+            android:name="com.ekspensify.app.MainActivity"
             android:configChanges="orientation"
             android:exported="true"
             android:launchMode="singleTask"
@@ -72,7 +72,7 @@
         </activity>
 
         <receiver
-            android:name="com.memeusix.ekspensify.utils.smsReceiver.SmsReceiver"
+            android:name="com.ekspensify.app.utils.smsReceiver.SmsReceiver"
             android:exported="true"
             android:enabled="true"
             android:permission="android.permission.BROADCAST_SMS">

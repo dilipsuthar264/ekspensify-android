@@ -21,13 +21,13 @@ plugins {
 
 
 android {
-    namespace = "com.memeusix.ekspensify"
+    namespace = "com.ekspensify.app"
     compileSdk = 35
 
     val properties = Properties()
     properties.load(project.rootProject.file("local.properties").inputStream())
     defaultConfig {
-        applicationId = "com.memeusix.ekspensify"
+        applicationId = "com.ekspensify.app"
         minSdk = 25
         targetSdk = 35
         versionCode = 1
