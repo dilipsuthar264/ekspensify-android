@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ekspensify.app.ui.dashboard.bottomNav.BottomNavItem
@@ -51,6 +52,8 @@ fun BottomNavOptions(
         Text(
             item.label,
             style = Typography.bodyLarge.copy(fontSize = 10.sp),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.extendedColors.iconColor
         )
     }

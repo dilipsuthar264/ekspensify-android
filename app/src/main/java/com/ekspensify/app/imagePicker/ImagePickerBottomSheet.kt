@@ -30,10 +30,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.ekspensify.app.R
 import com.ekspensify.app.ui.theme.extendedColors
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.rememberPermissionState
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
@@ -43,20 +45,9 @@ fun ImagePickerBottomSheet(
 ) {
     val context = LocalContext.current
 
-    val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        listOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.READ_MEDIA_IMAGES
-        )
-    } else {
-        listOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-    }
-
-    val permissionState = rememberMultiplePermissionsState(permissions)
-    val checkForPermission = permissionState.allPermissionsGranted
+    val permission = Manifest.permission.CAMERA
+    val permissionState = rememberPermissionState(permission)
+    val checkForPermission = permissionState.status.isGranted
 
     val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
 
@@ -99,7 +90,7 @@ fun ImagePickerBottomSheet(
                                 cameraLauncher.launch(photoUri)
                             }
                         } else {
-                            permissionState.launchMultiplePermissionRequest()
+                            permissionState.launchPermissionRequest()
                         }
                     }
                     .padding(20.dp)
@@ -111,11 +102,11 @@ fun ImagePickerBottomSheet(
                     .clip(RoundedCornerShape(16.dp))
                     .background(MaterialTheme.extendedColors.imageBg)
                     .clickable {
-                        if (checkForPermission) {
-                            imagePickerLauncher.launch("image/*")
-                        } else {
-                            permissionState.launchMultiplePermissionRequest()
-                        }
+//                        if (checkForPermission) {
+                        imagePickerLauncher.launch("image/*")
+//                        } else {
+//                            permissionState.launchMultiplePermissionRequest()
+//                        }
                     }
                     .padding(20.dp)
             )

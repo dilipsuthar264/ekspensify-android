@@ -53,6 +53,7 @@ fun DateFieldWithIcon(
                 .background(MaterialTheme.colorScheme.background)
                 .roundedBorder(CustomCornerShape(topLeft = 16.dp, bottomLeft = 16.dp))
                 .padding(horizontal = 16.dp)
+                .clickable(onClick = onClick, interactionSource = null, indication = null)
                 .wrapContentHeight(Alignment.CenterVertically)
         )
         Image(

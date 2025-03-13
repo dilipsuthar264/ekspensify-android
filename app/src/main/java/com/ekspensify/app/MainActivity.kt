@@ -1,15 +1,12 @@
 package com.ekspensify.app
 
 import android.content.Intent
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.DisposableEffect
@@ -20,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.ekspensify.app.components.OfflineText
 import com.ekspensify.app.navigation.NavGraph
 import com.ekspensify.app.navigation.SplashScreenRoute
 import com.ekspensify.app.navigation.viewmodel.NavigationViewModel
@@ -42,13 +38,13 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var spUtilsManager: SpUtilsManager
 
-    override fun getResources(): Resources {
-        val baseResources = super.getResources()
-        val configuration = Configuration(baseResources.configuration)
-        configuration.fontScale = 1.0f
-        val newContext = createConfigurationContext(configuration)
-        return newContext.resources
-    }
+//    override fun getResources(): Resources {
+//        val baseResources = super.getResources()
+//        val configuration = Configuration(baseResources.configuration)
+//        configuration.fontScale = 1.0f
+//        val newContext = createConfigurationContext(configuration)
+//        return newContext.resources
+//    }
 
 
     override fun onResume() {
@@ -82,13 +78,18 @@ class MainActivity : AppCompatActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        NavGraph(navController, navigationViewModel, Modifier.weight(1f)) {
-                            isSplash = it?.route == SplashScreenRoute::class.java.canonicalName
-                        }
-                        OfflineText(!isConnected && !isSplash)
+                    // Checking for internet connectivity this feature is off right now enable it in future
+//                    Column(
+//                        modifier = Modifier.fillMaxSize()
+//                    ) {
+//                        NavGraph(navController, navigationViewModel, Modifier.weight(1f)) {
+//                            isSplash = it?.route == SplashScreenRoute::class.java.canonicalName
+//                        }
+//                        OfflineText(!isConnected && !isSplash)
+//                    }
+
+                    NavGraph(navController, navigationViewModel, Modifier.fillMaxSize()) {
+                        isSplash = it?.route == SplashScreenRoute::class.java.canonicalName
                     }
                 }
             }
