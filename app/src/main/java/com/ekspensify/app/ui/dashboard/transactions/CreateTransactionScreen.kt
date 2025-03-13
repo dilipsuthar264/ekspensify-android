@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ekspensify.app.R
 import com.ekspensify.app.components.AppBar
 import com.ekspensify.app.components.FilledButton
@@ -59,6 +58,7 @@ import com.ekspensify.app.utils.fromJson
 import com.ekspensify.app.utils.handleApiResponse
 import com.ekspensify.app.utils.toastUtils.CustomToast
 import com.ekspensify.app.utils.toastUtils.CustomToastModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun CreateTransactionScreen(
@@ -159,7 +159,9 @@ fun CreateTransactionScreen(
     )
 
     Scaffold(
-        modifier = Modifier.fillMaxSize().background(linearGradient),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(linearGradient),
 //        containerColor = bgColor,
         contentColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
@@ -209,8 +211,9 @@ fun CreateTransactionScreen(
                     stringResource(R.string.add)
                 },
                 textModifier = Modifier.padding(vertical = 17.dp),
-                enabled = amountState.value.text.trim()
-                    .isNotEmpty() && selectedAccount.value.id != null && selectedCategory.value.id != null,
+                enabled = (amountState.value.text.trim()
+                    .isNotEmpty() && amountState.value.text.trim()
+                    .toInt() != 0) && selectedAccount.value.id != null && selectedCategory.value.id != null,
                 onClick = {
                     val transactionRequestModel = TransactionRequestModel(
                         amount = amountState.value.text.trim().toInt(),

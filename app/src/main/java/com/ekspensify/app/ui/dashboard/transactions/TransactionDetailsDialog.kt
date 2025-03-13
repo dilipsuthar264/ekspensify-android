@@ -6,6 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.FlowRowScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -115,22 +118,8 @@ fun TransactionDetailsDialog(
                             .clickable { navController.navigate(PicturePreviewScreenRoute(it)) },
                         contentScale = ContentScale.Crop
                     )
-                } ?: run {
-                    Text(
-                        "No Image\nAttached",
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(MaterialTheme.extendedColors.imageBg)
-                            .wrapContentHeight(Alignment.CenterVertically),
-                    )
+                    HorizontalSpace(20.dp)
                 }
-                HorizontalSpace(20.dp)
                 ActionsBtnGroup(
                     modifier = Modifier.weight(1f),
                     onDeleteClick = singleClick {
@@ -296,14 +285,16 @@ private fun AttachmentPreview(attachment: String?, onClick: () -> Unit) {
 }
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ActionsBtnGroup(
     modifier: Modifier,
     onDeleteClick: () -> Unit, onEditClick: () -> Unit, onCloseClick: () -> Unit
 ) {
-    Column(
+    FlowRow(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
+        horizontalArrangement = Arrangement.spacedBy(10.dp,Alignment.CenterHorizontally)
     ) {
         val iconColor = MaterialTheme.extendedColors.iconColor
         val border = Modifier.border(
@@ -318,14 +309,15 @@ private fun ActionsBtnGroup(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun EditDeleteBtn(
+fun FlowRowScope.EditDeleteBtn(
     border: Modifier, iconColor: Color, onDeleteClick: () -> Unit, onEditClick: () -> Unit
 ) {
     Row(modifier = Modifier
         .let { border }
         .height(IntrinsicSize.Max)
-        .fillMaxWidth(),
+        .weight(1f) ,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -348,14 +340,16 @@ fun EditDeleteBtn(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun CloseBtn(
+private fun FlowRowScope.CloseBtn(
     border: Modifier, iconColor: Color, onClick: () -> Unit
 ) {
     Row(
         modifier = border
             .clip(RoundedCornerShape(15.dp))
-            .fillMaxWidth()
+            .weight(1f)
+            .fillMaxHeight()
             .clickable {
                 onClick()
             },

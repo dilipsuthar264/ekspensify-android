@@ -61,15 +61,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:host="api.esquaregames.in" />
-            </intent-filter>
+<!--            <intent-filter android:autoVerify="true">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+<!--                <data android:scheme="https" />-->
+<!--                <data android:host="play.google.com" />-->
+<!--                <data android:pathPrefix="/store/apps/details" />-->
+<!--                <data android:query="id=com.ekspensify.app" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <receiver

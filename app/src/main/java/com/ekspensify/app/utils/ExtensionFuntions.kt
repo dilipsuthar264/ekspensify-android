@@ -58,6 +58,11 @@ fun Int.formatRupees(): String {
     return if (this < 0) "- ₹ $formattedVal" else "₹ $formattedVal"
 }
 
+fun Double.formatRupees(): String {
+    val format = NumberFormat.getNumberInstance(Locale("en", "IN"))
+    val formattedVal = format.format(kotlin.math.abs(this))
+    return if (this < 0) "- ₹ $formattedVal" else "₹ $formattedVal"
+}
 
 @Composable
 fun Modifier.drawImageCutoutCenter(
