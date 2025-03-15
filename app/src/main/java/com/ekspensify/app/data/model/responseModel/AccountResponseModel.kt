@@ -27,7 +27,7 @@ data class AccountResponseModel(
 
     @SerializedName("balance")
     @Expose
-    var balance: Int? = null,
+    var balance: Double? = null,
 
     @SerializedName("created_at")
     @Expose

@@ -7,12 +7,12 @@ import java.io.Serializable
 data class AcSummaryResponseModel(
     @SerializedName("total")
     @Expose
-    var total: Int? = null,
+    var total: Double? = null,
     @SerializedName("credit")
     @Expose
-    var credit: Int? = null,
+    var credit: Double? = null,
 
     @SerializedName("debit")
     @Expose
-    var debit: Int? = null
+    var debit: Double? = null
 ) : Serializable

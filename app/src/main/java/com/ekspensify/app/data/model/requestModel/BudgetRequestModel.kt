@@ -8,7 +8,7 @@ import java.time.LocalDate
 
 data class BudgetRequestModel(
     @SerializedName("limit")
-    val limit: Int = 0,
+    val limit: Double = 0.0,
 
     @SerializedName("account_ids")
     val accountIds: List<Int>? = null,

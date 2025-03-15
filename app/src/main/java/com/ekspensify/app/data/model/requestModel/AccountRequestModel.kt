@@ -15,5 +15,5 @@ data class AccountRequestModel(
 
     @SerializedName("balance")
     @Expose
-    val balance: Int? = null,
+    val balance: Double? = null,
 ) : Serializable

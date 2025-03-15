@@ -1,6 +1,9 @@
 package com.ekspensify.app.ui.dashboard.home.components
 
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.size
@@ -14,13 +17,23 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastSumBy
 import com.ekspensify.app.data.model.responseModel.CategoryInsightsResponseModel
 import com.ekspensify.app.ui.theme.EmptyGrey
 import com.ekspensify.app.utils.getColor
 
 @Composable
 fun Chart(items: List<CategoryInsightsResponseModel>) {
+
+    val animatedSweepAngles =
+        items.map { item ->
+            animateFloatAsState(
+                targetValue = ((item.amount ?: 0.0).toFloat() / items.sumOf { it.amount ?: 0.0 }
+                    .toFloat()) * 360f,
+                animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
+                label = ""
+            )
+        }
+
     Canvas(
         modifier = Modifier
             .size(150.dp)
@@ -32,7 +45,7 @@ fun Chart(items: List<CategoryInsightsResponseModel>) {
             val strokeWidth = radius * .6f
             var startAngle = 0f
 
-            val total = items.fastSumBy { it.amount ?: 0 }
+            val total = items.sumOf { it.amount ?: 0.0 }
             if (items.isEmpty()) {
                 drawArc(
                     color = EmptyGrey,
@@ -49,8 +62,9 @@ fun Chart(items: List<CategoryInsightsResponseModel>) {
                     )
                 )
             } else {
-                items.forEach { item ->
-                    val sweepAngle = ((item.amount ?: 0).toFloat() / total) * 360f
+                items.forEachIndexed { index, item->
+//                    val sweepAngle = ((item.amount ?: 0.0).toFloat() / total).toFloat() * 360f
+                    val sweepAngle = animatedSweepAngles[index].value
                     val gap = if (items.size == 1) 0f else 2f
                     drawArc(
                         color = getColor(item.category?.icFillColor),

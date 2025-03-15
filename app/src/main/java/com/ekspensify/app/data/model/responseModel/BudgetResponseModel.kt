@@ -8,10 +8,10 @@ data class BudgetResponseModel(
     var id: Int? = null,
 
     @SerializedName("limit")
-    var limit: Int? = null,
+    var limit: Double? = null,
 
     @SerializedName("spent")
-    var spent: Int? = null,
+    var spent: Double? = null,
 
     @SerializedName("accounts")
     var accounts: List<AccountResponseModel>? = null,

@@ -73,17 +73,20 @@ fun CustomOutlineTextField(
             value = state.value.text,
             singleLine = !isExpendable,
             enabled = !disable,
-            onValueChange = {
-                if (it.length <= maxLength) {
+            onValueChange = { input->
+                if (input.length <= maxLength) {
                     when (type) {
                         TextFieldType.NUMBER -> {
-                            if (it.isDigitsOnly()) {
-                                state.value = state.value.copy(text = it, error = null)
+                            if (input.all { it in '1'..'9' || it == '.' }) {
+                                state.value = state.value.copy(text = input, error = null)
                             }
+////                            if (it.isDigitsOnly()) {
+//                                state.value = state.value.copy(text = it, error = null)
+////                            }
                         }
 
                         else -> {
-                            state.value = state.value.copy(text = it, error = null)
+                            state.value = state.value.copy(text = input, error = null)
                         }
                     }
                 }
@@ -136,7 +139,6 @@ fun CustomOutlineTextField(
                     .padding(horizontal = 12.dp, vertical = 2.dp)
             )
         }
-
     }
 }
 

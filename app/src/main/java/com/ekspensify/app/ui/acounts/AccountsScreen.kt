@@ -106,7 +106,7 @@ fun AccountsScreen(
                         )
                     } else {
                         TotalBalance(
-                            accountList.fastSumBy { it.balance ?: 0 }.toString(),
+                            accountList.sumOf { it.balance ?: 0.0 }.toString(),
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
                         VerticalSpace(38.dp)

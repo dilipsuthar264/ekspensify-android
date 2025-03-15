@@ -126,8 +126,8 @@ private fun BudgetSpentLimitRow(budget: BudgetResponseModel?) {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         BudgetSpentLimitText(
-            spent = budget?.spent ?: 0,
-            limit = budget?.limit ?: 0,
+            spent = budget?.spent ?: 0.0,
+            limit = budget?.limit ?: 0.0,
             color = color
         )
         if (budget.isBudgetExceed()) {
@@ -213,8 +213,8 @@ private fun BudgetTagRow(
 
 @Composable
 fun BudgetSpentLimitText(
-    spent: Int,
-    limit: Int,
+    spent: Double,
+    limit: Double,
     color: Color,
     spentTextSize: TextUnit = 22.sp,
     limitTextSize: TextUnit = 16.sp

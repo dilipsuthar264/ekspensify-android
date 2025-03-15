@@ -77,11 +77,11 @@ fun getPeriodDateFormated(startDate: String?, endDate: String?): String {
 
 
 fun BudgetResponseModel?.isBudgetExceed(): Boolean {
-    return (this?.limit ?: 0) < (this?.spent ?: 0)
+    return (this?.limit ?: 0.0) < (this?.spent ?: 0.0)
 }
 
-fun isBudgetExceed(limit: Int?, spent: Int?): Boolean {
-    return (limit ?: 0) < (spent ?: 0)
+fun isBudgetExceed(limit: Double?, spent: Double?): Boolean {
+    return (limit ?: 0.0) < (spent ?: 0.0)
 }
 
 fun BudgetResponseModel?.getProgressValue(): Float {

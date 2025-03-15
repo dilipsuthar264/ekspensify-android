@@ -1,6 +1,7 @@
 package com.ekspensify.app.ui.dashboard.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -122,7 +123,7 @@ fun HomeScreen(
             }
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().animateContentSize(),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 item {

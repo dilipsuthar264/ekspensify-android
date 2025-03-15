@@ -8,13 +8,13 @@ data class BudgetReportResponseModel(
     var id: Int? = null,
 
     @SerializedName("amount")
-    var amount: Int? = null,
+    var amount: Double? = null,
 
     @SerializedName("period_no")
     var periodNo: Int? = null,
 
     @SerializedName("total_transactions")
-    var totalTransactions: Int? = null,
+    var totalTransactions: Double? = null,
 
     @SerializedName("period_start_date")
     var periodStartDate: String? = null,

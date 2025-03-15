@@ -199,7 +199,7 @@ private fun AmountSection(
     CreateBudgetSectionCard(title = "Budget Amount") {
         CustomOutlineTextField(state = amountState,
             isExpendable = false,
-            maxLength = 6,
+            maxLength = 10,
             modifier = Modifier.background(
                 MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp)
             ),

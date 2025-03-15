@@ -1,5 +1,6 @@
 package com.ekspensify.app.ui.dashboard.home.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,6 +50,7 @@ fun CategoryInsightCard(
             .clip(RoundedCornerShape(16.dp))
             .background(Dark15.copy(alpha = 0.6f))
             .padding(16.dp)
+            .animateContentSize()
     ) {
         Column {
             CategoryHeaderRow(

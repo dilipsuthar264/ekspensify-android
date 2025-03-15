@@ -213,10 +213,10 @@ fun CreateTransactionScreen(
                 textModifier = Modifier.padding(vertical = 17.dp),
                 enabled = (amountState.value.text.trim()
                     .isNotEmpty() && amountState.value.text.trim()
-                    .toInt() != 0) && selectedAccount.value.id != null && selectedCategory.value.id != null,
+                    .toDouble() != 0.0) && selectedAccount.value.id != null && selectedCategory.value.id != null,
                 onClick = {
                     val transactionRequestModel = TransactionRequestModel(
-                        amount = amountState.value.text.trim().toInt(),
+                        amount = amountState.value.text.trim().toDouble(),
                         note = noteState.value.text.trim(),
                         accountId = selectedAccount.value.id,
                         categoryId = selectedCategory.value.id,
@@ -257,7 +257,7 @@ private fun AmountDisplayView(amountState: MutableState<TextFieldStateModel>) {
             )
         )
         Text(
-            amountState.value.text.ifEmpty { "0" }.toInt().formatRupees(),
+            amountState.value.text.ifEmpty { "0" }.toDouble().formatRupees(),
             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 50.sp)
         )
     }

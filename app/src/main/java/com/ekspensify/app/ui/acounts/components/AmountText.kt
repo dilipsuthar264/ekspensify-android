@@ -18,7 +18,7 @@ fun AmountText(
     size: TextUnit = 50.sp,
     fontWeight: FontWeight = FontWeight.SemiBold
 ) {
-    val formattedBalance = balance.ifEmpty { "0" }.toInt().formatRupees()
+    val formattedBalance = balance.ifEmpty { "0" }.toDouble().formatRupees()
     Text(
         text = formattedBalance,
         style = MaterialTheme.typography.titleLarge.copy(

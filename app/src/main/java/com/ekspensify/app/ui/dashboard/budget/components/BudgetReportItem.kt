@@ -61,7 +61,7 @@ private fun BudgetReportTrailing(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         Text(
-            (report?.amount ?: 0).formatRupees(),
+            (report?.amount ?: 0.0).formatRupees(),
             style = MaterialTheme.typography.bodyLarge.copy(color = color)
         )
         DrawableEndText(

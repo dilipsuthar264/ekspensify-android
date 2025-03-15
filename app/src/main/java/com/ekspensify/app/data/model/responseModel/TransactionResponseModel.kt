@@ -23,7 +23,7 @@ data class TransactionResponseModel(
 
     @SerializedName("amount")
     @Expose
-    var amount: Int? = null,
+    var amount: Double? = null,
 
     @SerializedName("note")
     @Expose

@@ -131,12 +131,12 @@ fun CreateTransactionFromOptions(
         CustomOutlineTextField(
             state = amountState,
             isExpendable = false,
-            maxLength = 6,
+            maxLength = 10,
             disable = isUpdate,
             placeholder = "Amount",
             type = TextFieldType.NUMBER,
             prefix = { TextFieldRupeePrefix() },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
         )
 
         // Note Input

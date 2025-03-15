@@ -26,7 +26,7 @@ class BudgetFormState @Inject constructor(
     val formState = _formState.asStateFlow()
 
     fun updateBudgetAmount(amount: String?) {
-        _formState.value = _formState.value.copy(limit = amount?.toInt()?:0)
+        _formState.value = _formState.value.copy(limit = amount?.toDouble()?:0.0)
     }
 
     fun updateAccountId(accountId: Int?) {

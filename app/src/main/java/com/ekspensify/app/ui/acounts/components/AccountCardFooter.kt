@@ -22,7 +22,7 @@ fun AccountCardFooter(
         accountList.filter { it.type == selectedAccountType.toString() }
     }
     val totalBalance = remember(filteredList) {
-        filteredList.fastSumBy { it.balance ?: 0 }
+        filteredList.sumOf { it.balance ?: 0.0 }
     }
     CustomListItem(
         title = stringResource(R.string.total),
