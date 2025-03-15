@@ -23,10 +23,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.memeusix.ekspensify" />
-                  <option name="mobileSdkAppId" value="1:727578414899:android:c5107e39dd1d5a70cfb846" />
-                  <option name="projectId" value="ekspensify" />
-                  <option name="projectNumber" value="727578414899" />
+                  <option name="appId" value="com.ekspensify.app" />
+                  <option name="mobileSdkAppId" value="1:258236644212:android:34c630db8facc2b6a70a21" />
+                  <option name="projectId" value="ekspensify-ba721" />
+                  <option name="projectNumber" value="258236644212" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

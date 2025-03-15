@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.memeusix.ekspensify">
+    package="com.ekspensify.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,7 +13,7 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+<!--    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>-->
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -35,11 +35,12 @@
 
 
     <application
-        android:name="com.memeusix.ekspensify.EkspensifyApp"
+        android:name="com.ekspensify.app.EkspensifyApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="true"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -47,7 +48,7 @@
         android:theme="@style/Theme.Ekspensify"
         tools:targetApi="35">
         <activity
-            android:name="com.memeusix.ekspensify.MainActivity"
+            android:name="com.ekspensify.app.MainActivity"
             android:configChanges="orientation"
             android:exported="true"
             android:launchMode="singleTask"
@@ -60,19 +61,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:host="api.esquaregames.in" />
-            </intent-filter>
+<!--            <intent-filter android:autoVerify="true">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+<!--                <data android:scheme="https" />-->
+<!--                <data android:host="play.google.com" />-->
+<!--                <data android:pathPrefix="/store/apps/details" />-->
+<!--                <data android:query="id=com.ekspensify.app" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <receiver
-            android:name="com.memeusix.ekspensify.utils.smsReceiver.SmsReceiver"
+            android:name="com.ekspensify.app.utils.smsReceiver.SmsReceiver"
             android:exported="true"
             android:enabled="true"
             android:permission="android.permission.BROADCAST_SMS">

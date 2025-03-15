@@ -32,10 +32,10 @@
 }
 
 # Keep all classes and methods in your app package
--keep class com.memeusix.ekspensify.** { *; }
+-keep class com.ekspensify.app.** { *; }
 
 # Keep custom UI components and inner classes
--keep class com.memeusix.ekspensify.ui.** { *; }
+-keep class com.ekspensify.app.ui.** { *; }
 
 # Ensure Composer constructor is not removed or obfuscated
 -keepclassmembers class * {
