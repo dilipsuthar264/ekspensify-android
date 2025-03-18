@@ -3,6 +3,7 @@ package com.ekspensify.app.data.model.responseModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
+import java.math.BigDecimal
 
 data class CategoryInsightsResponseModel(
     @SerializedName("category")
@@ -10,5 +11,5 @@ data class CategoryInsightsResponseModel(
     var category: CategoryResponseModel? = null,
     @SerializedName("amount")
     @Expose
-    var amount: Double? = 0.0
+    var amount: BigDecimal? = BigDecimal.ZERO
 ) : Serializable

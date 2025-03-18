@@ -14,6 +14,7 @@ import com.ekspensify.app.utils.BudgetType
 import com.ekspensify.app.utils.DateFormat
 import com.ekspensify.app.utils.formatDateTime
 import com.ekspensify.app.utils.getFirstWord
+import java.math.BigDecimal
 
 fun BudgetResponseModel?.getTagValues(): Triple<String, Color, Int> {
     return when (this?.status) {
@@ -77,13 +78,16 @@ fun getPeriodDateFormated(startDate: String?, endDate: String?): String {
 
 
 fun BudgetResponseModel?.isBudgetExceed(): Boolean {
-    return (this?.limit ?: 0.0) < (this?.spent ?: 0.0)
+    return (this?.limit ?: BigDecimal.ZERO) < (this?.spent ?: BigDecimal.ZERO)
 }
 
 fun isBudgetExceed(limit: Double?, spent: Double?): Boolean {
     return (limit ?: 0.0) < (spent ?: 0.0)
 }
 
+fun isBudgetExceed(limit: BigDecimal?, spent: BigDecimal?): Boolean {
+    return (limit ?: BigDecimal.ZERO) < (spent ?: BigDecimal.ZERO)
+}
 fun BudgetResponseModel?.getProgressValue(): Float {
     val limit = this?.limit ?: 0
     val spent = this?.spent ?: 0

@@ -14,6 +14,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -43,6 +49,7 @@ import com.ekspensify.app.ui.theme.extendedColors
 import com.ekspensify.app.ui.theme.interFontFamily
 import com.ekspensify.app.utils.formatRupees
 import com.ekspensify.app.utils.roundedBorder
+import java.math.BigDecimal
 
 @Composable
 fun BudgetItem(
@@ -120,24 +127,26 @@ fun BudgetDatePeriodRow(
 @Composable
 private fun BudgetSpentLimitRow(budget: BudgetResponseModel?) {
     val color = budget.getColor()
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.SpaceBetween
+//        verticalAlignment = Alignment.Bottom,
+//        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         BudgetSpentLimitText(
-            spent = budget?.spent ?: 0.0,
-            limit = budget?.limit ?: 0.0,
+            spent = budget?.spent ?: BigDecimal.ZERO,
+            limit = budget?.limit ?: BigDecimal.ZERO,
             color = color
         )
         if (budget.isBudgetExceed()) {
+            VerticalSpace(5.dp)
             Text(
                 stringResource(R.string.you_ve_exceed_the_limit),
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontSize = 10.sp,
                     color = Red100
                 ),
-                modifier = Modifier.padding(0.dp)
+                textAlign = TextAlign.End,
+                modifier = Modifier.padding(0.dp).fillMaxWidth()
             )
         }
     }
@@ -213,12 +222,16 @@ private fun BudgetTagRow(
 
 @Composable
 fun BudgetSpentLimitText(
-    spent: Double,
-    limit: Double,
+    spent: BigDecimal,
+    limit: BigDecimal,
     color: Color,
     spentTextSize: TextUnit = 22.sp,
     limitTextSize: TextUnit = 16.sp
 ) {
+
+    var finalSpentTextSize : TextUnit by remember { mutableStateOf(spentTextSize) }
+    var finalLimitTextSize : TextUnit by remember { mutableStateOf(limitTextSize) }
+
     Text(
         text = buildAnnotatedString {
             append(spent.formatRupees())
@@ -226,7 +239,7 @@ fun BudgetSpentLimitText(
             withStyle(
                 style = SpanStyle(
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = limitTextSize,
+                    fontSize = finalLimitTextSize,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.Medium
                 )
@@ -235,8 +248,17 @@ fun BudgetSpentLimitText(
             }
         },
         style = MaterialTheme.typography.titleMedium.copy(
-            fontSize = spentTextSize, color = color
+            fontSize = finalSpentTextSize, color = color
         ),
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        onTextLayout = {textLayoutResult ->
+            val currentMaxLinesIndex=  textLayoutResult.lineCount -1
+            if (textLayoutResult.isLineEllipsized(currentMaxLinesIndex)){
+                finalSpentTextSize *= 0.9
+                finalLimitTextSize *= 0.9
+            }
+        },
     )
 }
 

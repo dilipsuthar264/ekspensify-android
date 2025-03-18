@@ -54,6 +54,7 @@ import com.ekspensify.app.utils.getViewModelStoreOwner
 import com.ekspensify.app.utils.handleApiResponse
 import com.ekspensify.app.utils.toastUtils.CustomToast
 import com.ekspensify.app.utils.toastUtils.CustomToastModel
+import java.math.BigDecimal
 
 @Composable
 fun CreateBudgetScreen(
@@ -68,7 +69,7 @@ fun CreateBudgetScreen(
     val amountState = remember { mutableStateOf(TextFieldStateModel()) }
     val formState by createBudgetState.formState.collectAsState()
     val isValid = remember(formState) {
-        formState.limit > 0
+        formState.limit > BigDecimal.ZERO
                 && formState.period.isNotEmpty()
                 && formState.type.isNotEmpty()
                 && formState.startDate.isNotEmpty()

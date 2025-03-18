@@ -3,16 +3,17 @@ package com.ekspensify.app.data.model.responseModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
+import java.math.BigDecimal
 
 data class AcSummaryResponseModel(
     @SerializedName("total")
     @Expose
-    var total: Double? = null,
+    var total: BigDecimal? = null,
     @SerializedName("credit")
     @Expose
-    var credit: Double? = null,
+    var credit: BigDecimal? = null,
 
     @SerializedName("debit")
     @Expose
-    var debit: Double? = null
+    var debit: BigDecimal? = null
 ) : Serializable

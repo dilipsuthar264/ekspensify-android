@@ -4,11 +4,12 @@ import com.google.gson.annotations.SerializedName
 import com.ekspensify.app.utils.BudgetPeriod
 import com.ekspensify.app.utils.BudgetType
 import java.io.Serializable
+import java.math.BigDecimal
 import java.time.LocalDate
 
 data class BudgetRequestModel(
     @SerializedName("limit")
-    val limit: Double = 0.0,
+    val limit: BigDecimal = BigDecimal.ZERO,
 
     @SerializedName("account_ids")
     val accountIds: List<Int>? = null,
