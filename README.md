@@ -11,8 +11,8 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
 [![Google Play](https://img.shields.io/endpoint?color=green&logo=google-play&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.ekspensify.app%26l%3DGoogle%2520Play%26m%3Dv%24version)](https://play.google.com/store/apps/details?id=com.ekspensify.app)
 [![Google Play](https://img.shields.io/endpoint?color=green&logo=google-play&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.ekspensify.app%26l%3Ddownloads%26m%3D%24totalinstalls)](https://play.google.com/store/apps/details?id=com.ekspensify.app)
-[![GitHub all releases](https://img.shields.io/github/downloads/dilipsuthar264/ekspensify/total?logo=github&cacheSeconds=3600)](https://github.com/dilipsuthar264/ekspensify/releases/latest)
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/dilipsuthar264/ekspensify.svg?logo=github&label=GitHub&cacheSeconds=3600)](https://github.com/dilipsuthar264/ekspensify/releases/latest)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/dilipsuthar264/ekspensify/total?logo=github)](https://github.com/dilipsuthar264/ekspensify/releases/latest)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/dilipsuthar264/ekspensify?logo=github&label=GitHub&cacheSeconds=3600)](https://github.com/dilipsuthar264/ekspensify/releases/latest)
 ![GitHub repo size](https://img.shields.io/github/repo-size/dilipsuthar264/ekspensify.svg?logo=github)
 
 
