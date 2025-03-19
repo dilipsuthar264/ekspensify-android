@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.util.fastSumBy
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -51,11 +50,13 @@ import com.ekspensify.app.utils.formatRupees
 import com.ekspensify.app.utils.getViewModelStoreOwner
 import com.ekspensify.app.utils.singleClick
 import com.ekspensify.app.utils.toJson
+import java.math.BigDecimal
 
 @Composable
 fun AccountsScreen(
     navController: NavHostController,
     args: AccountScreenRoute,
+//    viewModel: AccountViewModel = hiltViewModel()
     viewModel: AccountViewModel = hiltViewModel(navController.getViewModelStoreOwner())
 ) {
     val getAllAccounts by viewModel.getAllAccounts.collectAsStateWithLifecycle()
@@ -65,6 +66,7 @@ fun AccountsScreen(
 
 
     LaunchedEffect(Unit) {
+        viewModel.loadAccounts()
         // Check if the response contains bank accounts and set the selectedAccountType accordingly
         if (getAllAccounts is ApiResponse.Success) {
             val bankAccountsExist =
@@ -99,14 +101,17 @@ fun AccountsScreen(
                 getAllAccounts.data?.let { accountList ->
                     if (accountList.isEmpty()) {
                         EmptyAccountsView(
-                            modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 20.dp),
                             onClick = singleClick {
                                 goToCreateAccount(navController, args, accountList)
                             }
                         )
                     } else {
+                        println(accountList)
                         TotalBalance(
-                            accountList.sumOf { it.balance ?: 0.0 }.toString(),
+                            accountList.sumOf { it.balance ?: BigDecimal.ZERO }.toString(),
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
                         VerticalSpace(38.dp)

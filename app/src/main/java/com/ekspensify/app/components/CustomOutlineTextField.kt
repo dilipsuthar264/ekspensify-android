@@ -35,7 +35,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.text.isDigitsOnly
 import com.ekspensify.app.R
 import com.ekspensify.app.data.model.TextFieldStateModel
 import com.ekspensify.app.ui.theme.Red100
@@ -59,6 +58,7 @@ fun CustomOutlineTextField(
     isExpendable: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     focusRequester: FocusRequester = FocusRequester(),
+    isNegativeAllow: Boolean = false,
     prefix: @Composable() (() -> Unit)? = null
 ) {
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -73,16 +73,20 @@ fun CustomOutlineTextField(
             value = state.value.text,
             singleLine = !isExpendable,
             enabled = !disable,
-            onValueChange = { input->
+            onValueChange = { input ->
                 if (input.length <= maxLength) {
                     when (type) {
                         TextFieldType.NUMBER -> {
-                            if (input.all { it in '1'..'9' || it == '.' }) {
-                                state.value = state.value.copy(text = input, error = null)
+                            val filteredInput = input.filterIndexed { index, char ->
+                                char.isDigit() || char == '.' || (isNegativeAllow && char == '-' && index == 0)
                             }
-////                            if (it.isDigitsOnly()) {
-//                                state.value = state.value.copy(text = it, error = null)
-////                            }
+                            val isValidNegative =
+                                !(filteredInput.count { it == '-' } > 1 || (filteredInput.contains(
+                                    '-'
+                                ) && filteredInput.first() != '-'))
+                            if (isValidNegative && filteredInput.count { it == '.' } <= 1 && (filteredInput.isEmpty() || filteredInput.first() != '.')) {
+                                state.value = state.value.copy(text = filteredInput, error = null)
+                            }
                         }
 
                         else -> {

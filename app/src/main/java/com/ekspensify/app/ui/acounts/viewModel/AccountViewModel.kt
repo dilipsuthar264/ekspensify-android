@@ -28,7 +28,7 @@ class AccountViewModel @Inject constructor(
     val getAllAccounts = _getAllAccounts.asStateFlow()
 
 
-    private fun loadAccounts() {
+    fun loadAccounts() {
         spUtilsManager.accountData.value?.accounts?.takeIf { it.isNotEmpty() }?.let {
             _getAllAccounts.value = ApiResponse.success(it)
         } ?: run {

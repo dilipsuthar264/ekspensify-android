@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.ekspensify.app.data.model.responseModel.CategoryInsightsResponseModel
 import com.ekspensify.app.ui.theme.EmptyGrey
 import com.ekspensify.app.utils.getColor
+import java.math.BigDecimal
 
 @Composable
 fun Chart(items: List<CategoryInsightsResponseModel>) {
@@ -27,7 +28,7 @@ fun Chart(items: List<CategoryInsightsResponseModel>) {
     val animatedSweepAngles =
         items.map { item ->
             animateFloatAsState(
-                targetValue = ((item.amount ?: 0.0).toFloat() / items.sumOf { it.amount ?: 0.0 }
+                targetValue = ((item.amount ?: BigDecimal.ZERO).toFloat() / items.sumOf { it.amount ?: BigDecimal.ZERO }
                     .toFloat()) * 360f,
                 animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing),
                 label = ""
@@ -45,7 +46,7 @@ fun Chart(items: List<CategoryInsightsResponseModel>) {
             val strokeWidth = radius * .6f
             var startAngle = 0f
 
-            val total = items.sumOf { it.amount ?: 0.0 }
+            val total = items.sumOf { it.amount ?: BigDecimal.ZERO }
             if (items.isEmpty()) {
                 drawArc(
                     color = EmptyGrey,

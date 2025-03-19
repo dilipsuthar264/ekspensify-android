@@ -29,6 +29,7 @@ import com.ekspensify.app.data.model.responseModel.AuthResponseModel
 import com.ekspensify.app.navigation.AccountScreenRoute
 import com.ekspensify.app.navigation.BottomNavRoute
 import com.ekspensify.app.ui.theme.extendedColors
+import java.math.BigDecimal
 import java.util.Locale
 
 fun String.isValidEmail(): Boolean {
@@ -62,6 +63,11 @@ fun Double.formatRupees(): String {
     val format = NumberFormat.getNumberInstance(Locale("en", "IN"))
     val formattedVal = format.format(kotlin.math.abs(this))
     return if (this < 0) "- ₹ $formattedVal" else "₹ $formattedVal"
+}
+fun BigDecimal.formatRupees(): String {
+    val format = NumberFormat.getNumberInstance(Locale("en", "IN"))
+    val formattedVal = format.format(this.abs())
+    return if (this < BigDecimal.ZERO) "- ₹ $formattedVal" else "₹ $formattedVal"
 }
 
 @Composable

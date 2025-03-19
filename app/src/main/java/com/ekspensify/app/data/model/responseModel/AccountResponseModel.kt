@@ -3,6 +3,7 @@ package com.ekspensify.app.data.model.responseModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
+import java.math.BigDecimal
 
 data class AccountResponseModel(
     @SerializedName("id")
@@ -27,7 +28,7 @@ data class AccountResponseModel(
 
     @SerializedName("balance")
     @Expose
-    var balance: Double? = null,
+    var balance: BigDecimal? = null,
 
     @SerializedName("created_at")
     @Expose

@@ -123,7 +123,7 @@ fun PendingTransactionScreen(
                                     isPending = true,
                                     transactionType = transaction.type!!,
                                     transactionResponseModelArgs = TransactionResponseModel(
-                                        amount = transaction.amount?.toDouble(),
+                                        amount = transaction.amount?.toBigDecimal(),
                                         type = transaction.type.name,
                                         account = account,
                                         pendingId = transaction.id

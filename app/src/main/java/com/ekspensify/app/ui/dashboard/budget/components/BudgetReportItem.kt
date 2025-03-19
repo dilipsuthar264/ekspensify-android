@@ -22,6 +22,7 @@ import com.ekspensify.app.ui.dashboard.budget.helper.isBudgetExceed
 import com.ekspensify.app.ui.theme.Green100
 import com.ekspensify.app.ui.theme.Red100
 import com.ekspensify.app.utils.formatRupees
+import java.math.BigDecimal
 
 @Composable
 fun BudgetReportItem(
@@ -61,7 +62,7 @@ private fun BudgetReportTrailing(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         Text(
-            (report?.amount ?: 0.0).formatRupees(),
+            (report?.amount ?: BigDecimal.ZERO).formatRupees(),
             style = MaterialTheme.typography.bodyLarge.copy(color = color)
         )
         DrawableEndText(

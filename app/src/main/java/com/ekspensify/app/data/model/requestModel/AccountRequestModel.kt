@@ -3,6 +3,7 @@ package com.ekspensify.app.data.model.requestModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
+import java.math.BigDecimal
 
 data class AccountRequestModel(
     @SerializedName("name")
@@ -15,5 +16,5 @@ data class AccountRequestModel(
 
     @SerializedName("balance")
     @Expose
-    val balance: Double? = null,
+    val balance: BigDecimal? = null,
 ) : Serializable

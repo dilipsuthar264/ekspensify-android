@@ -12,6 +12,7 @@ import com.ekspensify.app.components.CustomListItem
 import com.ekspensify.app.data.model.responseModel.AccountResponseModel
 import com.ekspensify.app.utils.AccountType
 import com.ekspensify.app.utils.formatRupees
+import java.math.BigDecimal
 
 @Composable
 fun AccountCardFooter(
@@ -22,7 +23,7 @@ fun AccountCardFooter(
         accountList.filter { it.type == selectedAccountType.toString() }
     }
     val totalBalance = remember(filteredList) {
-        filteredList.sumOf { it.balance ?: 0.0 }
+        filteredList.sumOf { it.balance ?: BigDecimal.ZERO }
     }
     CustomListItem(
         title = stringResource(R.string.total),

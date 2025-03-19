@@ -135,6 +135,7 @@ fun CreateAccountScreen(
             accountLists, argsAccountDetails
         )
         argsAccountDetails?.let { details ->
+            println(details)
             balanceState.value = balanceState.value.copy(
                 text = (details.balance ?: 0.0).toString()
             )
@@ -217,7 +218,7 @@ fun CreateAccountScreen(
                         AccountType.BANK -> selectedBank.value?.name
                     },
                     type = selectedAccountType.value.toString(),
-                    balance = balanceState.value.text.ifEmpty { "0" }.toDouble(),
+                    balance = balanceState.value.text.ifEmpty { "0" }.toBigDecimal(),
                 )
                 viewModel.updateAccount(argsAccountDetails.id!!, accountRequestModel)
                 updateDialogState = false
@@ -269,7 +270,8 @@ fun CreateAccountScreen(
                     state = balanceState,
                     placeholder = stringResource(R.string.balance),
                     isExpendable = false,
-                    maxLength = 15,
+                    maxLength = 10,
+                    isNegativeAllow = true,
                     prefix = { TextFieldRupeePrefix() },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
@@ -324,7 +326,7 @@ fun CreateAccountScreen(
                             AccountType.BANK -> selectedBank.value?.name
                         },
                         type = selectedAccountType.value.toString(),
-                        balance = balanceState.value.text.ifEmpty { "0" }.toDouble(),
+                        balance = balanceState.value.text.ifEmpty { "0" }.toBigDecimal(),
                     )
                     argsAccountDetails?.let {
                         updateDialogState = true

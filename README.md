@@ -1,5 +1,22 @@
 # 🎉 Ekspensify - Your Personal Finance Buddy!
 
+![Android](https://img.shields.io/badge/Android-%233DDC84.svg?style=for-the-badge&logo=android&logoColor=white)
+![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-%2300C853.svg?style=for-the-badge&logo=jetpack-compose&logoColor=white)
+![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
+
+
+
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](LICENSE)
+[![Google Play](https://img.shields.io/endpoint?color=green&logo=google-play&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.ekspensify.app%26l%3DGoogle%2520Play%26m%3Dv%24version)](https://play.google.com/store/apps/details?id=com.ekspensify.app)
+[![Google Play](https://img.shields.io/endpoint?color=green&logo=google-play&url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.ekspensify.app%26l%3Ddownloads%26m%3D%24totalinstalls)](https://play.google.com/store/apps/details?id=com.ekspensify.app)
+[![GitHub all releases](https://img.shields.io/github/downloads/dilipsuthar264/ekspensify/total?logo=github&cacheSeconds=3600)](https://github.com/dilipsuthar264/ekspensify/releases/latest)
+[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/dilipsuthar264/ekspensify.svg?logo=github&label=GitHub&cacheSeconds=3600)](https://github.com/dilipsuthar264/ekspensify/releases/latest)
+![GitHub repo size](https://img.shields.io/github/repo-size/dilipsuthar264/ekspensify.svg?logo=github)
+
+
+
 ## **🚀 Overview**
 
 Welcome to **Ekspensify**, your personal finance tracking app made with **Kotlin** and **Jetpack Compose**! This project is all about making financial management simple, fun, and stress-free. Whether you’re budgeting like a pro or just starting, **Ekspensify** helps you stay on top of your money! 💰✨
@@ -25,9 +42,7 @@ I wanted a **clean, intuitive, and fun way** to track income and expenses. No mo
 
 You can get the latest version of the app from the Google Play Store:
 
-**✨ Latest Version:** 1.0
-
-[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80"/>](https://play.google.com/store/apps/details?id=com.memeusix.ekspensify)
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80"/>](https://play.google.com/store/apps/details?id=com.ekspensify.app)
 
 
 ## **🛠 Tech Stack**
@@ -45,7 +60,9 @@ You can get the latest version of the app from the Google Play Store:
 - **Paging3** – For efficient paginated data retrieval and display in the UI.
 
 ## **📸 Screenshots**
-<img src="ekspensify_preview.svg" alt="preview"/>
+<img src="https://ekspensify-aws-bucket.s3.ap-south-1.amazonaws.com/Feature+graphic-1.png" alt="preview"/>
+<br>  
+<img src="https://ekspensify-aws-bucket.s3.ap-south-1.amazonaws.com/Feature+graphic.png" alt="preview"/>
 
 ## **🔧 Installation & Setup**
 

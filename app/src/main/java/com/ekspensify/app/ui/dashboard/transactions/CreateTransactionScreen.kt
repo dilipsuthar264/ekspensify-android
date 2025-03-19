@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -204,38 +206,46 @@ fun CreateTransactionScreen(
                         .padding(top = 30.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
                 )
             }
-            FilledButton(
-                text = if (isUpdate.value) {
-                    stringResource(R.string.update)
-                } else {
-                    stringResource(R.string.add)
-                },
-                textModifier = Modifier.padding(vertical = 17.dp),
-                enabled = (amountState.value.text.trim()
-                    .isNotEmpty() && amountState.value.text.trim()
-                    .toDouble() != 0.0) && selectedAccount.value.id != null && selectedCategory.value.id != null,
-                onClick = {
-                    val transactionRequestModel = TransactionRequestModel(
-                        amount = amountState.value.text.trim().toDouble(),
-                        note = noteState.value.text.trim(),
-                        accountId = selectedAccount.value.id,
-                        categoryId = selectedCategory.value.id,
-                        attachmentId = selectedAttachment.value.attachmentId,
-                        type = args.transactionType.toString()
-                    )
-                    if (isUpdate.value && transactionArgs?.id != null) {
-                        transactionViewModel.updateTransaction(
-                            transactionArgs.id!!,
-                            transactionRequestModel
-                        )
-                    } else {
-                        transactionViewModel.createTransaction(transactionRequestModel)
-                    }
-                },
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(20.dp)
-            )
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxWidth()
+            ) {
+                FilledButton(
+                    text = if (isUpdate.value) {
+                        stringResource(R.string.update)
+                    } else {
+                        stringResource(R.string.add)
+                    },
+                    textModifier = Modifier.padding(vertical = 17.dp),
+                    enabled = (amountState.value.text.trim()
+                        .isNotEmpty() && amountState.value.text.trim()
+                        .toDouble() != 0.0) && selectedAccount.value.id != null && selectedCategory.value.id != null,
+                    onClick = {
+                        val transactionRequestModel = TransactionRequestModel(
+                            amount = amountState.value.text.trim().toBigDecimal(),
+                            note = noteState.value.text.trim(),
+                            accountId = selectedAccount.value.id,
+                            categoryId = selectedCategory.value.id,
+                            attachmentId = selectedAttachment.value.attachmentId,
+                            type = args.transactionType.toString()
+                        )
+                        if (isUpdate.value && transactionArgs?.id != null) {
+                            transactionViewModel.updateTransaction(
+                                transactionArgs.id!!,
+                                transactionRequestModel
+                            )
+                        } else {
+                            transactionViewModel.createTransaction(transactionRequestModel)
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = 20.dp, vertical = 5.dp)
+                        .padding(bottom = 15.dp)
+                )
+            }
         }
         //Show Loader
         ShowLoader(isLoading)
@@ -244,6 +254,7 @@ fun CreateTransactionScreen(
 
 @Composable
 private fun AmountDisplayView(amountState: MutableState<TextFieldStateModel>) {
+    var textSize by remember { mutableStateOf(50.sp) }
     Column(
         modifier = Modifier
             .padding(horizontal = 20.dp, vertical = 20.dp)
@@ -257,8 +268,16 @@ private fun AmountDisplayView(amountState: MutableState<TextFieldStateModel>) {
             )
         )
         Text(
-            amountState.value.text.ifEmpty { "0" }.toDouble().formatRupees(),
-            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 50.sp)
+            amountState.value.text.ifEmpty { "0" }.toBigDecimal().formatRupees(),
+            style = MaterialTheme.typography.bodyLarge.copy(fontSize = textSize),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            onTextLayout = { textLayoutResult ->
+                val currentMaxLinesIndex = textLayoutResult.lineCount - 1
+                if (textLayoutResult.isLineEllipsized(currentMaxLinesIndex)) {
+                    textSize *= 0.9
+                }
+            },
         )
     }
 }

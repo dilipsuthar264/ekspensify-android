@@ -8,6 +8,7 @@ import com.ekspensify.app.utils.spUtils.SpUtilsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.math.BigDecimal
 import javax.inject.Inject
 
 
@@ -26,7 +27,7 @@ class BudgetFormState @Inject constructor(
     val formState = _formState.asStateFlow()
 
     fun updateBudgetAmount(amount: String?) {
-        _formState.value = _formState.value.copy(limit = amount?.toDouble()?:0.0)
+        _formState.value = _formState.value.copy(limit = amount?.toBigDecimal() ?: BigDecimal.ZERO)
     }
 
     fun updateAccountId(accountId: Int?) {

@@ -2,16 +2,17 @@ package com.ekspensify.app.data.model.responseModel
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
+import java.math.BigDecimal
 
 data class BudgetResponseModel(
     @SerializedName("id")
     var id: Int? = null,
 
     @SerializedName("limit")
-    var limit: Double? = null,
+    var limit: BigDecimal? = null,
 
     @SerializedName("spent")
-    var spent: Double? = null,
+    var spent: BigDecimal? = null,
 
     @SerializedName("accounts")
     var accounts: List<AccountResponseModel>? = null,
