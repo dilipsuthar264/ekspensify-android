@@ -86,6 +86,17 @@ This is a complete Android app that interacts with a backend server. While you c
 
 </aside>
 
+## Related Repositories
+
+### 🔧 Backend
+You can find the backend code here:  
+➡️ [Backend Repository | ekspensify-backend](https://github.com/gokulsuthar22/ekspensify-backend)
+
+### 🌐 Website
+You can find the landing web page code here:  
+➡️ [Website Repository | ekspensify-web](https://github.com/vipulsuthar1144/ekspensify-web)
+
+
 ## **🤝 Contributing**
 
 Love this project? Want to make it even better? Feel free to **open issues, submit pull requests, or just drop feedback**! Let’s build something amazing together. 💡💻
