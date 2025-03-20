@@ -114,7 +114,7 @@ private fun PieChartRow(
                     contentDescription = null,
                 )
                 VerticalSpace(15.dp)
-                Text("No Date Found!", style = MaterialTheme.typography.bodyMedium)
+                Text("No Data Found!", style = MaterialTheme.typography.bodyMedium)
             }
         } else {
             Chart(categoryList)
