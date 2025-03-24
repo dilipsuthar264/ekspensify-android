@@ -7,6 +7,12 @@ import android.telephony.SmsMessage
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
+/**
+ * We removed all SMS permissions and the SMS Receiver.
+ * Instead, we are using the Notification Service to track SMS transactions.
+ *
+ * For more details, @see /utils/notificationListener/NotificationListenerService.kt
+ */
 
 class SmsReceiver : BroadcastReceiver() {
 

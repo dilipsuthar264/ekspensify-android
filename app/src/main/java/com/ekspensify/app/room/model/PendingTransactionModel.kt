@@ -12,6 +12,9 @@ data class PendingTransactionModel(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
+    @ColumnInfo(name = "notification_id")
+    val notificationId: String? = null,
+
     @ColumnInfo(name = "amount")
     val amount: Int? = null,
 
@@ -23,7 +26,7 @@ data class PendingTransactionModel(
 
     @ColumnInfo(name = "description")
     val description: String? = null,
-    
+
     @ColumnInfo(name = "created_at")
     val createdAt: String? = null
 )

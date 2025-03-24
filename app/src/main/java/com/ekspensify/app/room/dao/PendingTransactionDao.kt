@@ -19,4 +19,7 @@ interface PendingTransactionDao {
 
     @Query("SELECT * FROM pending_transaction ORDER BY created_at DESC")
     fun getPendingTransactions(): PagingSource<Int, PendingTransactionModel>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM pending_transaction WHERE notification_id = :notificationId)")
+    suspend fun doesNotificationIdExist(notificationId: String): Boolean
 }

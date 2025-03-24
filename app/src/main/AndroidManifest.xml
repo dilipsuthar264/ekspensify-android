@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ekspensify.app">
@@ -26,12 +27,12 @@
 
 
     <!--  Permissions for Sms Access for auto tracking    -->
-    <uses-feature
-        android:name="android.hardware.telephony"
-        android:required="false" />
+<!--    <uses-feature-->
+<!--        android:name="android.hardware.telephony"-->
+<!--        android:required="false" />-->
 
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.READ_SMS" />
+<!--    <uses-permission android:name="android.permission.RECEIVE_SMS" />-->
+<!--    <uses-permission android:name="android.permission.READ_SMS" />-->
 
 
     <application
@@ -72,15 +73,25 @@
 <!--            </intent-filter>-->
         </activity>
 
-        <receiver
-            android:name="com.ekspensify.app.utils.smsReceiver.SmsReceiver"
-            android:exported="true"
+<!--        <receiver-->
+<!--            android:name="com.ekspensify.app.utils.smsReceiver.SmsReceiver"-->
+<!--            android:exported="true"-->
+<!--            android:enabled="true"-->
+<!--            android:permission="android.permission.BROADCAST_SMS">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.provider.Telephony.SMS_RECEIVED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
+
+        <service
+            android:name=".utils.notificationListener.NotificationListenerService"
+            android:exported="false"
             android:enabled="true"
-            android:permission="android.permission.BROADCAST_SMS">
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
-        </receiver>
+        </service>
 
 
         <provider

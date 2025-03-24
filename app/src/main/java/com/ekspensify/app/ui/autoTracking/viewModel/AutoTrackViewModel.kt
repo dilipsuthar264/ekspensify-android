@@ -3,7 +3,7 @@ package com.ekspensify.app.ui.autoTracking.viewModel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.ekspensify.app.room.repository.PendingTransactionRepo
-import com.ekspensify.app.utils.smsReceiver.SmsHelper.updateReceiverState
+import com.ekspensify.app.utils.smsReceiver.SmsHelper
 import com.ekspensify.app.utils.spUtils.SpUtilsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -23,9 +23,16 @@ class AutoTrackViewModel @Inject constructor(
     val isSmsFeatureEnable = _isSmsFeatureEnable.asStateFlow()
 
     fun toggleSmsFeature(enable: Boolean) {
-        updateReceiverState(context, enable)
+
+        if (enable) {
+            if (!SmsHelper.isNotificationAccessEnable(context)) {
+                SmsHelper.requestNotificationAccess(context)
+                return
+            }
+        }
         _isSmsFeatureEnable.value = enable
         spUtilsManager.updateAutoTracking(enable)
+//        updateReceiverState(context, enable)
     }
 
 }
