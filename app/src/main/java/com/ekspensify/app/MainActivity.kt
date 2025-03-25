@@ -22,7 +22,7 @@ import com.ekspensify.app.navigation.SplashScreenRoute
 import com.ekspensify.app.navigation.viewmodel.NavigationViewModel
 import com.ekspensify.app.ui.theme.EkspensifyTheme
 import com.ekspensify.app.utils.internet.InternetChecker
-import com.ekspensify.app.utils.smsReceiver.SmsHelper.updateReceiverState
+import com.ekspensify.app.utils.smsReceiver.SmsHelper
 import com.ekspensify.app.utils.spUtils.SpUtilsManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -49,11 +49,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        updateReceiverState(this, spUtilsManager.isAutoTrackingEnable.value)
+
+        //* We change sms based auto tracking to Notification based
+        // updateReceiverState(this, spUtilsManager.isAutoTrackingEnable.value)
+
+        if (!SmsHelper.isNotificationAccessEnable(this)) {
+            spUtilsManager.updateAutoTracking(false)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.auto(
                 android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT
@@ -87,7 +94,6 @@ class MainActivity : AppCompatActivity() {
 //                        }
 //                        OfflineText(!isConnected && !isSplash)
 //                    }
-
                     NavGraph(navController, navigationViewModel, Modifier.fillMaxSize()) {
                         isSplash = it?.route == SplashScreenRoute::class.java.canonicalName
                     }

@@ -58,8 +58,6 @@ import androidx.wear.compose.material.FractionalThreshold
 import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import coil.compose.rememberAsyncImagePainter
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.ekspensify.app.R
 import com.ekspensify.app.components.AppBar
 import com.ekspensify.app.components.VerticalSpace
@@ -70,6 +68,8 @@ import com.ekspensify.app.ui.theme.Light100
 import com.ekspensify.app.ui.theme.Orange
 import com.ekspensify.app.utils.dynamicImePadding
 import com.ekspensify.app.utils.roundedBorder
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -123,17 +123,24 @@ fun AutoTrackingScreen(
             AutoTrackingSection(
                 smsFeatureState = smsFeatureState,
                 onEnable = {
-                    if (it) {
-                        if (permissionState.allPermissionsGranted) {
-                            autoTrackingViewModel.toggleSmsFeature(
-                                true
-                            )
-                        } else {
-                            showSmsPermissionDialog = true
-                        }
-                    } else {
-                        autoTrackingViewModel.toggleSmsFeature(false)
-                    }
+                    autoTrackingViewModel.toggleSmsFeature(it)
+
+                    /**
+                     * We Removed SMS PERMISSIONS AND SMS SERVICES TO TRACK Transactions
+                     * instead we are using notification service to track sms transactions
+                     * so permission request dialog not required
+                     */
+//                    if (it) {
+//                        if (permissionState.allPermissionsGranted) {
+//                            autoTrackingViewModel.toggleSmsFeature(
+//                                true
+//                            )
+//                        } else {
+//                            showSmsPermissionDialog = true
+//                        }
+//                    } else {
+//                        autoTrackingViewModel.toggleSmsFeature(false)
+//                    }
                 }
             )
             SafeAndSecureSection()

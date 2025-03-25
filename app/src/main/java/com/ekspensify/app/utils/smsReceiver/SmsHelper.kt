@@ -2,7 +2,10 @@ package com.ekspensify.app.utils.smsReceiver
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.PowerManager
+import android.provider.Settings
 import com.ekspensify.app.room.model.PendingTransactionModel
 import com.ekspensify.app.ui.acounts.data.BankModel
 import com.ekspensify.app.utils.TransactionType
@@ -67,7 +70,7 @@ object SmsHelper {
     }
 
 
-    /*
+    /**
      * toggle Broadcast receiver Enable disable
      */
 
@@ -97,6 +100,53 @@ object SmsHelper {
             "credited" -> TransactionType.CREDIT
             else -> null
         }
+    }
+
+
+    /**
+     *  changing auto tracking to notification based
+     *  so not sms access required
+     */
+
+
+    fun requestNotificationAccess(context: Context) {
+        val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
+    fun isNotificationAccessEnable(context: Context): Boolean {
+        val packageName = context.packageName
+        val enabledListener = Settings.Secure.getString(
+            context.contentResolver,
+            "enabled_notification_listeners"
+        )
+        return enabledListener?.contains(packageName) == true
+    }
+
+    fun isNotificationAccessAndBatteryOptimized(context: Context): Boolean {
+        val packageName = context.packageName
+
+        // Check if Notification Access is enabled
+        val enabledListeners = Settings.Secure.getString(
+            context.contentResolver,
+            "enabled_notification_listeners"
+        )
+        val isNotificationAccessEnabled = enabledListeners?.contains(packageName) == true
+
+        // Check if Battery Optimization is disabled
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val isIgnoringBatteryOptimizations =
+            powerManager.isIgnoringBatteryOptimizations(packageName)
+
+        return isNotificationAccessEnabled && isIgnoringBatteryOptimizations
+    }
+
+
+    fun disableBatteryOptimization(context: Context) {
+        val intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
 }

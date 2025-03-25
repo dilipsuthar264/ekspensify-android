@@ -50,4 +50,14 @@ class PendingTransactionRepo @Inject constructor(
             emptyFlow()
         }
     }
+
+    // * is Notification Id Exist
+
+    suspend fun doesNotificationIdExist(notificationId: String): Boolean {
+        return try {
+            pendingTransactionDao.doesNotificationIdExist(notificationId)
+        } catch (e: Exception) {
+            true
+        }
+    }
 }

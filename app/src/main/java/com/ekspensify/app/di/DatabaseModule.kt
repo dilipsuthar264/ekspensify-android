@@ -25,7 +25,9 @@ object DatabaseModule {
             context = context,
             klass = EkspensifyDatabase::class.java,
             name = "ekspensify_db"
-        ).build()
+        )
+            .addMigrations(EkspensifyDatabase.MIGRATION_2_3)
+            .build()
     }
 
     @Provides

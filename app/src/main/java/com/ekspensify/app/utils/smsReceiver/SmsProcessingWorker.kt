@@ -6,6 +6,14 @@ import androidx.work.WorkerParameters
 import com.ekspensify.app.room.database.EkspensifyDatabase
 import com.ekspensify.app.room.repository.PendingTransactionRepo
 
+
+/**
+ * We removed all SMS permissions and the SMS Receiver.
+ * Instead, we are using the Notification Service to track SMS transactions.
+ *
+ * For more details, @see /utils/notificationListener/NotificationListenerService.kt
+ */
+
 class SmsProcessingWorker(
     appContext: Context,
     workParam: WorkerParameters,
